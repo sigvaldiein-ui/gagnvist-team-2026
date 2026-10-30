@@ -269,7 +269,7 @@ gagnvist ask "..."
 | `ssh refuses to use ... because others may read it` / `UNPROTECTED PRIVATE KEY FILE` | `icacls $HOME\.ssh\id_ed25519_lumi /inheritance:r /grant:r "$(whoami):R"` (your key's file). |
 | `Connection timed out` (step 7) | The network blocks ssh (port 22): try another one, such as your phone's hotspot. |
 | `Permission denied (publickey)` (step 7) | Check the username and the key file. A key added in MyCSC in the last couple of hours may not have reached LUMI yet. |
-| `LUMI did not accept the SSH key` | Check the username and the key path in `.env`. A key added in MyCSC in the last couple of hours may not have reached LUMI yet. |
+| `LUMI did not accept the SSH key` | Check the username and key path in `.env`. A key added in MyCSC in the last couple of hours may not have reached LUMI yet. |
 | `too deep for Windows` | Clone the starter kit again into `C:\gagnvist-starter` and do steps 3 to 6 there. (A folder that is set up cannot simply be moved: its `.venv` remembers where it was.) |
 | `port 8765 ... is already in use` / `does not let programs use port` | Add `GAGNVIST_LOCAL_PORT=8790` to `.env`. |
 | `the shared models are not running right now` | Tell the organizers. |
