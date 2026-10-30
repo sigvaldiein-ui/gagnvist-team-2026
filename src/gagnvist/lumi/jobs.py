@@ -448,7 +448,7 @@ def list_jobs(lumi: Lumi) -> list[Job]:
     output = lumi.run(
         """
         if queue=$(squeue --me -h -o '@job %i|%j|%T|%B|%L'); then
-            printf '%s\n' "$queue"
+            printf '%s\\n' "$queue"
         else
             echo "@slurm failed"
         fi
