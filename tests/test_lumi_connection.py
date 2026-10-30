@@ -35,7 +35,7 @@ def test_commands_go_through_your_own_key_and_a_login_shell(lumi: Lumi, tmp_path
     assert arguments[:2] == ["-i", str(tmp_path / "my key")]
     assert "IdentitiesOnly=yes" in arguments
     assert arguments[-2] == "testuser@lumi.example"
-    assert arguments[-1] == "bash -lc 'squeue --me -o '"'"'%i %j'"'"''"
+    assert arguments[-1] == "bash -lc 'squeue --me -o '\\"'\\"'%i %j'\\"'\\"''"
 
 
 def test_a_tunnel_listens_on_this_computer_only(
