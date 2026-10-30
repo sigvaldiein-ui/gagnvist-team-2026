@@ -81,3 +81,94 @@ preserved as individual commits if a squash merge is later separately approved.
 - [ ] Merge authorization (not granted)
 
 **Review-only**: nothing in this document authorizes merging into `main`.
+
+
+## Full upstream comparison — final sweep (post-cleanup)
+
+Compared the **complete, non-truncated recursive Git trees** of this review branch
+at `7fccf344ece3cf6577044b0ea92c004eaf1d9db8` and the official upstream at `f2ad3bede71b387857a2731bd57e78c6eb6f476d`.
+This was a Git-object integrity comparison; **no runtime or data-value tests were performed**.
+
+| Measure | Verified result |
+| --- | --- |
+| Upstream tracked files | 122 |
+| Files in this review branch | 99 |
+| Files from upstream present in branch | 98 |
+| Present upstream files with identical Git blob SHA | 98 |
+| Present upstream files with differing SHA | 0 |
+| Missing upstream files | 24 |
+| Additional review-branch files | 1 (`UPSTREAM_BASELINE.md`, this audit) |
+| Accidental `docs/.probe-delete-me` in final tree | Absent |
+| Git tree truncated | No (both) |
+
+**Scope qualification / review blocker:** this is **not** a byte-identical or
+reproducibly runnable full copy of upstream: 24 upstream blobs have not
+been imported. These are the four large card files, six split data archives, two vector-index
+files and twelve `data.px` test fixtures. Their absence must be resolved through
+an approved data-mount/download method, or imported where permitted, before
+claiming full upstream parity or running end-to-end test baselines.
+
+**Cards and table metadata (4)**
+
+| Missing path in this branch | Upstream blob SHA |
+| --- | --- |
+| `cards/cards-en.jsonl` | `6b964898c1cf8b54f778a165535d5af9b97cce8b` |
+| `cards/cards-is.jsonl` | `4783a7f7f6c58aedb5508f87856b73867b73631e` |
+| `cards/cards.csv` | `7bede07420978313ff411a0f819c43d4184d3b89` |
+| `cards/pairs.csv` | `c871dc02772c7179287d339512f76be174a10b0d` |
+
+**Dataset archive (6)**
+
+| Missing path in this branch | Upstream blob SHA |
+| --- | --- |
+| `data-release/gagnvist-pxweb-data-2026-10-18.zip.part01` | `fade33c87c4f235380ff5908f13a617eda878a79` |
+| `data-release/gagnvist-pxweb-data-2026-10-18.zip.part02` | `1814bf909c0d4be4f1e017319c51a2de6d0d7cb5` |
+| `data-release/gagnvist-pxweb-data-2026-10-18.zip.part03` | `36b4389fba70f750b05526e482449e738674133f` |
+| `data-release/gagnvist-pxweb-data-2026-10-18.zip.part04` | `ec39629649d1c8552edd5401f1caac3b03113350` |
+| `data-release/gagnvist-pxweb-data-2026-10-18.zip.part05` | `5faff678ca11d317fa2159f4cfbb9ba97242dfe4` |
+| `data-release/gagnvist-pxweb-data-2026-10-18.zip.part06` | `612b1262ccc434926fb6e04003f807d65b52d067` |
+
+**Vector index (2)**
+
+| Missing path in this branch | Upstream blob SHA |
+| --- | --- |
+| `index/cards.jsonl` | `9ff8d84da9b0137354bef78803d479b31e2f38bb` |
+| `index/vectors.npy` | `14fb2eef1468fcbd3be238691cad0c6d010b89b9` |
+
+**PX test fixtures (12)**
+
+| Missing path in this branch | Upstream blob SHA |
+| --- | --- |
+| `tests/fixtures/data/Business_Sectors/en/ferdathjonusta/gisting/4_eldraefni/SAM91452/data.px` | `c0fd67e9dd7754c9e4d3dc3d42c806feea6d5ac9` |
+| `tests/fixtures/data/Business_Sectors/is/ferdathjonusta/Gisting/4_eldraefni/SAM91452/data.px` | `e7ba51f9c7b12143611820c402c324b43a6233e1` |
+| `tests/fixtures/data/Economy/en/visitolur/2_byggingarvisitala/byggingarvisitala/VIS13401/data.px` | `b010ac8a470edc2c86963770bc0fa3a91a01acb4` |
+| `tests/fixtures/data/Economy/is/visitolur/2_byggingarvisitala/byggingarvisitala/VIS13401/data.px` | `28485964b238e8fc652cb25e33a4157a1f860d3c` |
+| `tests/fixtures/data/Population/en/kosningar/althingi/althkjosendur/KOS02105/data.px` | `266b3e8ed0923d150c9213de443d0ab8167bc29b` |
+| `tests/fixtures/data/Population/en/kosningar/forsetakosningar/KOS07112/data.px` | `7c27bc552e738fa53358226782a57779cd29301e` |
+| `tests/fixtures/data/Population/is/kosningar/althingi/althkjosendur/KOS02105/data.px` | `5d90b084d1f47d315396152da3d379fcd4403430` |
+| `tests/fixtures/data/Population/is/kosningar/forsetakosningar/KOS07112/data.px` | `85c86cf5ae29deda574ee45e79059422f886364e` |
+| `tests/fixtures/data/Society/en/felagsmal/jafnrettismal/2_kkahrifastodur/HEI02601/data.px` | `8b3fa46b76edfd9aa3f8e362442b16809bec0ef9` |
+| `tests/fixtures/data/Society/en/felagsmal/jafnrettismal/3_kk75/HEI11505/data.px` | `6e9f4581b6a27ff3b84089241d91d693f38a7ac2` |
+| `tests/fixtures/data/Society/is/felagsmal/jafnrettismal/2_kkahrifastodur/HEI02601/data.px` | `d11b2bc51cb08156e4cb3700a53174b61521e661` |
+| `tests/fixtures/data/Society/is/felagsmal/jafnrettismal/3_kk75/HEI11505/data.px` | `82ce81c7add70d3b7ce09160e55ae1d198f7c7a5` |
+
+### Post-cleanup change isolation
+
+Compared three non-truncated Git trees in sequence:
+
+1. Before cleanup: `3a2acfe0b90c86cb68df17e2644c18bd53ca1707`.
+2. After cleanup: `494061a6b1426ed22a137fc554502589c72c9100`
+   — **only** `docs/.probe-delete-me` (blob
+   `c1b0730e0133447badcfd47fd144e254807b06e1`) was removed.
+3. After documentation: `7fccf344ece3cf6577044b0ea92c004eaf1d9db8`
+   — **only** `UPSTREAM_BASELINE.md` was added. No other blob changed
+   across these two commits.
+
+The expected `docs/setup-windows.md` and `src/gagnvist/lumi/jobs.py`
+SHAs are intact. Every other present upstream-tracked file matches its
+upstream blob SHA at the pinned original commit. No unapproved source,
+test, or data file modifications are detected in the final reviewed tree.
+
+**Status: ready for independent Claude review of the *partial* baseline and
+cleanup; NOT ready for merge or end-to-end claim.** No force-push, reset,
+branch recreation, or merge was performed.
