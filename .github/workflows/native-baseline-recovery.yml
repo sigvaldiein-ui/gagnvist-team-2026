@@ -1,0 +1,120 @@
+# One-time, bounded recovery of pinned official Gagnvist source.
+# This workflow lives ONLY on automation/native-baseline-recovery-2026-10-30.
+# It never modifies main or the legacy upstream/baseline-f2ad3be branch.
+name: Native upstream baseline recovery (one-time)
+
+on:
+  push:
+    branches:
+      - automation/native-baseline-recovery-2026-10-30
+    paths:
+      - .github/workflows/native-baseline-recovery.yml
+
+concurrency:
+  group: native-gagnvist-baseline-recovery
+  cancel-in-progress: false
+
+permissions: {}
+
+env:
+  OFFICIAL_REMOTE: https://github.com/SyedMuhammadAzhar/gagnvist-starter.git
+  OFFICIAL_SHA: f2ad3bede71b387857a2731bd57e78c6eb6f476d
+  OFFICIAL_TREE: 576d2280b17e2a6ac50824fa02467b095698fe2c
+  NATIVE_BRANCH: upstream/baseline-f2ad3be-native
+  REVIEW_BRANCH: review/upstream-baseline-f2ad3be-snapshot
+
+jobs:
+  verify:
+    name: Verify pinned source and 365 CPU tests (read-only)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout isolated automation branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Fetch exact pinned upstream commit and verify tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git remote add official "${OFFICIAL_REMOTE}"
+          git fetch --no-tags official main
+          test "$(git cat-file -t "${OFFICIAL_SHA}")" = commit
+          test "$(git rev-parse "${OFFICIAL_SHA}^{tree}")" = "${OFFICIAL_TREE}"
+          test "$(git ls-tree -r --name-only "${OFFICIAL_SHA}" | wc -l | tr -d ' ')" = 122
+          git worktree add --detach /tmp/gagnvist-upstream "${OFFICIAL_SHA}"
+          test "$(git -C /tmp/gagnvist-upstream rev-parse HEAD)" = "${OFFICIAL_SHA}"
+          echo "Verified pinned upstream SHA, tree SHA, and all 122 file paths." >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dev dependencies and run full upstream CPU suite
+        shell: bash
+        env:
+          PIP_DISABLE_PIP_VERSION_CHECK: '1'
+        run: |
+          set -euo pipefail
+          python -m pip install -e "/tmp/gagnvist-upstream[dev]"
+          cd /tmp/gagnvist-upstream
+          python -m pytest -q | tee /tmp/gagnvist-pytest-result.txt
+          grep -Eq '(^|[[:space:]])365 passed([[:space:]]|$)' /tmp/gagnvist-pytest-result.txt
+          echo "CPU test suite: **365 passed**, 0 failed (verified from pytest output)." >> "${GITHUB_STEP_SUMMARY}"
+
+  publish:
+    name: Publish new refs ONLY after verified tests
+    needs: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout authorized repository from its automation branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Fetch pinned upstream and create two new branches
+        shell: bash
+        run: |
+          set -euo pipefail
+          git remote add official "${OFFICIAL_REMOTE}"
+          git fetch --no-tags official main
+          test "$(git cat-file -t "${OFFICIAL_SHA}")" = commit
+          test "$(git rev-parse "${OFFICIAL_SHA}^{tree}")" = "${OFFICIAL_TREE}"
+          test "$(git ls-tree -r --name-only "${OFFICIAL_SHA}" | wc -l | tr -d ' ')" = 122
+
+          # Fail closed if either destination branch exists.
+          test -z "$(git ls-remote --heads origin "refs/heads/${NATIVE_BRANCH}")"
+          test -z "$(git ls-remote --heads origin "refs/heads/${REVIEW_BRANCH}")"
+
+          # Identity-preserving branch: HEAD is the original upstream commit.
+          git push origin "${OFFICIAL_SHA}:refs/heads/${NATIVE_BRANCH}"
+          actual="$(git ls-remote --heads origin "refs/heads/${NATIVE_BRANCH}" | cut -f1)"
+          test "${actual}" = "${OFFICIAL_SHA}"
+
+          # Review branch shares main ancestry, but copies the exact pinned Git tree
+          # (all 122 blob SHAs). This enables a normal PR without changing main.
+          git fetch origin main
+          git switch --detach origin/main
+          git switch -c "${REVIEW_BRANCH}"
+          git read-tree --reset -u "${OFFICIAL_SHA}^{tree}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: import complete pinned Gagnvist upstream snapshot for review"
+          test "$(git rev-parse 'HEAD^{tree}')" = "${OFFICIAL_TREE}"
+          test "$(git ls-tree -r --name-only HEAD | wc -l | tr -d ' ')" = 122
+          git push origin "HEAD:refs/heads/${REVIEW_BRANCH}"
+
+          actual_review="$(git ls-remote --heads origin "refs/heads/${REVIEW_BRANCH}" | cut -f1)"
+          test "${actual_review}" = "$(git rev-parse HEAD)"
+          echo "Original Git commit preserved: \`${OFFICIAL_SHA}\` on \`${NATIVE_BRANCH}\`." >> "${GITHUB_STEP_SUMMARY}"
+          echo "Review snapshot: \`${actual_review}\` on \`${REVIEW_BRANCH}\` (exact 122-file upstream tree)." >> "${GITHUB_STEP_SUMMARY}"
+          echo "No main changes; no old-branch changes; no merge." >> "${GITHUB_STEP_SUMMARY}"
