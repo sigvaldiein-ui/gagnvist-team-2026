@@ -12,7 +12,15 @@ from pathlib import Path
 
 from gagnvist.answering.choose_categories import Selection
 from gagnvist.data.catalogue import CatalogueEntry, Category, Dimension, TableMetadata
-from gagnvist.data.px_reader import MARKERS, Cell, PxError, PxFile
+from gagnvist.data.px_reader import (
+    MARKERS,
+    Cell,
+    PxError,
+    PxFile,
+    _items,
+    _parse_statements,
+    _read_header,
+)
 
 
 @dataclass(frozen=True)
@@ -21,6 +29,7 @@ class Fact:
 
     categories: tuple[tuple[Dimension, Category], ...]  # one per dimension, in table order
     cell: Cell
+    unit: str = ""  # verbatim PX unit declaration plus selected measure categories
 
     @property
     def text(self) -> str:
@@ -51,7 +60,22 @@ def read_numbers(
             "table's description lists it (Statistics Iceland's description and data "
             "disagree here)"
         ) from None
-    return [Fact(combination, cell) for combination, cell in zip(combinations, cells, strict=True)]
+    # Reuse the existing PX parser without changing its grammar or data behavior.
+    header, _ = _read_header(data_folder / entry.folder / "data.px")
+    statements = _parse_statements(header)
+    raw_unit = " / ".join(
+        _items(statements.get(f"UNITS[{entry.language}]", statements.get("UNITS", "")))
+    )
+    from gagnvist.answering.category_guard import is_measure
+
+    return [
+        Fact(
+            combination,
+            cell,
+            raw_unit + "".join(f"; {d.code}={c.label}" for d, c in combination if is_measure(d)),
+        )
+        for combination, cell in zip(combinations, cells, strict=True)
+    ]
 
 
 def format_cell(cell: Cell) -> str:

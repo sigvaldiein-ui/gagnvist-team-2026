@@ -50,9 +50,32 @@ class Card:
 
 
 @dataclass(frozen=True)
+class RetrievalSignal:
+    query: str
+    source: str
+    rank: int
+    raw_score: float
+    rrf: float
+
+
+@dataclass(frozen=True)
+class RerankSignal:
+    source_rank: int
+    temporal_state: str
+    word_count: int
+    matched_terms: tuple[str, ...]
+    unmatched_dimensions: int
+    complete_categories: bool
+    requested_periods: tuple[str, ...]
+    available_periods: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class Match:
     card: Card
-    score: float  # cosine similarity: 1 is identical, 0 unrelated
+    score: float  # original dense/RRF/interleaving score; rerank evidence is separate
+    signals: tuple[RetrievalSignal, ...] = ()
+    rerank: RerankSignal | None = None
 
 
 def card_text(entry: CatalogueEntry, metadata: TableMetadata) -> str:

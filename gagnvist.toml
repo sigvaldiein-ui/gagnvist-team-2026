@@ -28,3 +28,20 @@ download_url = ""                        # only if the zip is published elsewher
 [search]
 index = "index"                          # the vector index used to find tables (see README)
 cards = "cards"                          # the table cards, both languages (see cards/README.md)
+
+# Fixed general defaults for 5B-1; no period/metric reranking or answer planning.
+[retrieval]
+mode = "hybrid"
+candidate_limit = 100
+dense_weight = 1.0
+lexical_weight = 1.0
+rrf_k = 60.0
+bm25_k1 = 1.2
+bm25_b = 0.75
+decompose = false
+fusion = "interleave"
+prefix = true
+prefix_language = "is"
+rerank = true
+max_subqueries = 3
+subquery_weight = 0.5

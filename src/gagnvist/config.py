@@ -18,9 +18,11 @@ from __future__ import annotations
 import os
 import re
 import tomllib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+
+from gagnvist.search.hybrid import RetrievalConfig
 
 DEFAULT_CONFIG_FILE = Path("gagnvist.toml")
 ENV_FILE = ".env"  # next to gagnvist.toml
@@ -113,6 +115,7 @@ class Settings:
     data: DataSettings
     search: SearchSettings
     project_folder: Path  # the folder gagnvist.toml is in
+    retrieval: RetrievalConfig = field(default_factory=RetrievalConfig)
 
     @property
     def local_folder(self) -> Path:
@@ -221,6 +224,10 @@ def load_settings(path: Path = DEFAULT_CONFIG_FILE) -> Settings:
     search = _section(raw, "search")
     ssh_key = _text(lumi, "lumi", "ssh_key", required=False)
     archive = _text(data, "data", "archive", required=False)
+    try:
+        retrieval = RetrievalConfig(**raw.get("retrieval", {}))
+    except (TypeError, ValueError) as e:
+        raise ConfigError(f"invalid [retrieval] settings: {e}") from e
     return Settings(
         lumi=LumiSettings(
             username=_text(lumi, "lumi", "username", required=False),
@@ -255,6 +262,7 @@ def load_settings(path: Path = DEFAULT_CONFIG_FILE) -> Settings:
             cards=base / (_text(search, "search", "cards", required=False) or "cards"),
         ),
         project_folder=base,
+        retrieval=retrieval,
     )
 
 

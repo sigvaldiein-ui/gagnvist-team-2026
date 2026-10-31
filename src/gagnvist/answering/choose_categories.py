@@ -56,8 +56,11 @@ def choose_categories(
 ) -> Choice:
     """Ask the model which categories the question needs, then check its proposal."""
     messages = prompts.choose_categories_messages(question, title, metadata)
-    reply = client.chat_json(messages, prompts.CHOOSE_CATEGORIES_SCHEMA)
-    return check_proposal(reply.get("categories"), metadata)
+    reply = client.chat_json(messages, prompts.CHOOSE_CATEGORIES_SCHEMA, max_tokens=1024)
+    choice = check_proposal(reply.get("categories"), metadata)
+    from gagnvist.answering.category_guard import guard_totals
+
+    return guard_totals(question, metadata, choice, reply.get("dimension_scope"))
 
 
 def check_proposal(proposal: object, metadata: TableMetadata) -> Choice:

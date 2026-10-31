@@ -1,0 +1,2284 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Gagnvist 5B-3 review</title><style>body{max-width:1100px;margin:32px auto;padding:16px;font:16px system-ui;color:#20232a}h1{color:#9c2020}.status{background:#fee7e7;padding:16px;font-weight:700}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px ui-monospace,monospace}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid #ddd}th{background:#eef1f5}summary{padding:10px;background:#f3f4f6;cursor:pointer}details{margin:6px 0}</style><h1>5B-3: measurement stopped</h1><p class="status">3 right · 1 wrong · 1 error · 55 not run. Incomplete — NO MERGE.</p><pre># 5B-3 — STOPPED / INCOMPLETE / NO MERGE
+
+**460 tests pass, but the live 60-question measurement stopped on its fifth case.**
+3 right, 1 wrong, 1 execution error; 55 NOT_RUN. No 60-question accuracy or improvement claim.
+
+Frozen executable: `94346a68309b7bf0b84b9c761bab02cbb27c839f`; tree `202bad310065e5617ff0a082c6a56f3d6b24b9b7`.
+All application/evaluation source remained frozen after measurement began. Historical 4/60 and 7/60 are preserved.
+
+## Failure
+
+`births-2024-en`: `ModelError: the model did not answer with JSON: &#x27;[]&#x27;`.
+Category selection returned an object. The answer-plan call returned an empty array, not an object with outputs. ModelClient rejected it before the new gate could render a visible structured rejection; the harness then stopped. GPU/services remained healthy. The server-side reason for violating the supplied schema is not established. No retry or post-result tuning was performed.
+
+## Six cells (incomplete, not a full comparison)
+
+| Language | Level | Original 4/60 | 5B-2 7/60 | Right observed | Wrong | Error | NOT_RUN |
+|---|---|---:|---:|---:|---:|---:|---:|
+| is | easy | 3 | 1 | 1 | 1 | 0 | 8 |
+| is | medium | 0 | 0 | 0 | 0 | 0 | 10 |
+| is | hard | 0 | 0 | 0 | 0 | 0 | 10 |
+| en | easy | 1 | 5 | 2 | 0 | 1 | 7 |
+| en | medium | 0 | 1 | 0 | 0 | 0 | 10 |
+| en | hard | 0 | 0 | 0 | 0 | 0 | 10 |
+
+## Validation and limitations
+
+460/460 tests (428 previous + 32 new); Ruff, format and mypy PASS. The integration coverage missed malformed live planner JSON: new tests directly exercise the gate, while the old stand-in does not implement this failure path.
+Four returned cell values and labels were reread from the original PX files and all four verified outputs independently recomputed. No completed answer had unsupported numbers. No nontrivial calculation completed before the stop.
+The 14/60, IS-easy 3/10 and regression gates are NOT EVALUABLE. The unsupported gate holds only for the three observed correct answers. These are not passed release gates.
+Full 60-case status table, partial timing values, raw plan/category trace, cell references, logs, source archive, Git tree and byte-identity manifest are included. NOT_RUN fields are null. No closed tests were accessed.
+
+## Proposed next change — for review, not implemented
+
+See NEXT_CHANGE_PROPOSAL.md: typed handling of malformed structured replies at the planner boundary, explicit rejection/provenance, failure-path trace, and API-level regression tests. Freeze a new reviewed commit before a fresh full measurement; preserve this attempt.
+
+## Operations
+
+Existing A40 remains RUNNING at 0.59 USD/hour, 32,621 / 46,068 MiB used (70.8%). Qwen and BGE-M3 remain localhost-only. Network volume: 27G used, 67G available at the recorded check. No infrastructure lifecycle changes. Silli decides when to stop it.
+</pre><h2>All 60 cases</h2><table><thead><tr><th>ID</th><th>Language</th><th>Level</th><th>Status</th><th>Seconds</th></tr></thead><tbody><tr><td>population-iceland-2026-en</td><td>en</td><td>easy</td><td>right</td><td>8.447568356990814</td></tr><tr><td>population-iceland-2026-is</td><td>is</td><td>easy</td><td>right</td><td>8.259625246049836</td></tr><tr><td>population-reykjavik-en</td><td>en</td><td>easy</td><td>right</td><td>7.680059503996745</td></tr><tr><td>population-reykjavik-is</td><td>is</td><td>easy</td><td>WRONG</td><td>6.3559877870138735</td></tr><tr><td>births-2024-en</td><td>en</td><td>easy</td><td>error</td><td>6.196794483112171</td></tr><tr><td>births-2024-is</td><td>is</td><td>easy</td><td>NOT_RUN</td><td>None</td></tr><tr><td>cpi-2026-09-en</td><td>en</td><td>easy</td><td>NOT_RUN</td><td>None</td></tr><tr><td>cpi-2026-09-is</td><td>is</td><td>easy</td><td>NOT_RUN</td><td>None</td></tr><tr><td>wage-index-2026-08-en</td><td>en</td><td>easy</td><td>NOT_RUN</td><td>None</td></tr><tr><td>wage-index-2026-08-is</td><td>is</td><td>easy</td><td>NOT_RUN</td><td>None</td></tr><tr><td>unemployment-2026q2-en</td><td>en</td><td>easy</td><td>NOT_RUN</td><td>None</td></tr><tr><td>unemployment-2026q2-is</td><td>is</td><td>easy</td><td>NOT_RUN</td><td>None</td></tr><tr><td>gdp-2025-en</td><td>en</td><td>easy</td><td>NOT_RUN</td><td>None</td></tr><tr><td>gdp-2025-is</td><td>is</td><td>easy</td><td>NOT_RUN</td><td>None</td></tr><tr><td>overnight-stays-2025-en</td><td>en</td><td>easy</td><td>NOT_RUN</td><td>None</td></tr><tr><td>overnight-stays-2025-is</td><td>is</td><td>easy</td><td>NOT_RUN</td><td>None</td></tr><tr><td>immigrants-2026-en</td><td>en</td><td>easy</td><td>NOT_RUN</td><td>None</td></tr><tr><td>immigrants-2026-is</td><td>is</td><td>easy</td><td>NOT_RUN</td><td>None</td></tr><tr><td>vigdis-1980-en</td><td>en</td><td>easy</td><td>NOT_RUN</td><td>None</td></tr><tr><td>vigdis-1980-is</td><td>is</td><td>easy</td><td>NOT_RUN</td><td>None</td></tr><tr><td>reykjavik-growth-2026-en</td><td>en</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>reykjavik-growth-2026-is</td><td>is</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>reykjavik-share-2026-en</td><td>en</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>reykjavik-share-2026-is</td><td>is</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>reykjavik-kopavogur-2026-en</td><td>en</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>reykjavik-kopavogur-2026-is</td><td>is</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>men-minus-women-2026-en</td><td>en</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>men-minus-women-2026-is</td><td>is</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>cpi-points-2026-en</td><td>en</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>cpi-points-2026-is</td><td>is</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>overnight-stays-change-2025-en</td><td>en</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>overnight-stays-change-2025-is</td><td>is</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>women-share-2026-en</td><td>en</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>women-share-2026-is</td><td>is</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>wage-index-points-2026-08-en</td><td>en</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>wage-index-points-2026-08-is</td><td>is</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>immigrants-growth-2026-en</td><td>en</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>immigrants-growth-2026-is</td><td>is</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>foreign-stays-share-2025-en</td><td>en</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>foreign-stays-share-2025-is</td><td>is</td><td>medium</td><td>NOT_RUN</td><td>None</td></tr><tr><td>population-and-cpi-2026-en</td><td>en</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>population-and-cpi-2026-is</td><td>is</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>wages-and-prices-2026-08-en</td><td>en</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>wages-and-prices-2026-08-is</td><td>is</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>stays-and-population-2025-en</td><td>en</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>stays-and-population-2025-is</td><td>is</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>gdp-and-births-2025-en</td><td>en</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>gdp-and-births-2025-is</td><td>is</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>stays-per-inhabitant-2025-en</td><td>en</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>stays-per-inhabitant-2025-is</td><td>is</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>births-per-1000-2025-en</td><td>en</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>births-per-1000-2025-is</td><td>is</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>wages-and-unemployment-2026-en</td><td>en</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>wages-and-unemployment-2026-is</td><td>is</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>gdp-and-stays-2025-en</td><td>en</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>gdp-and-stays-2025-is</td><td>is</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>births-and-immigrants-2026-en</td><td>en</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>births-and-immigrants-2026-is</td><td>is</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>cpi-and-unemployment-2026-en</td><td>en</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr><tr><td>cpi-and-unemployment-2026-is</td><td>is</td><td>hard</td><td>NOT_RUN</td><td>None</td></tr></tbody></table><h2>Recorded evidence per case</h2><details><summary>population-iceland-2026-en — right</summary><pre>{
+  &quot;id&quot;: &quot;population-iceland-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;How many people lived in Iceland on 1 January 2026?&quot;,
+  &quot;correct&quot;: true,
+  &quot;verdict&quot;: &quot;right&quot;,
+  &quot;right_table&quot;: true,
+  &quot;numbers_right&quot;: true,
+  &quot;why&quot;: &quot;&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;seconds&quot;: 8.447568356990814,
+  &quot;answer&quot;: &quot;Municipality: Total; Citizenship: Total; Sex: Total; Year: 2026 = 394324&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN04203 \&quot;Population by sex, municipality and citizenship 1 January 1998-2026\&quot; (updated 2026-06-10): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/3_bakgrunnur/Rikisfang/MAN04203.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/en/mannfjoldi/3_bakgrunnur/Rikisfang/MAN04203&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN04203&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;unsupported_without_calculations&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Municipality: Total; Citizenship: Total; Sex: Total; Year: 2026 = 394324&quot;
+  ],
+  &quot;cell_references&quot;: [
+    {
+      &quot;id&quot;: &quot;cell-aa&quot;,
+      &quot;table_folder&quot;: &quot;Population/en/mannfjoldi/3_bakgrunnur/Rikisfang/MAN04203&quot;,
+      &quot;table_code&quot;: &quot;MAN04203&quot;,
+      &quot;api_url&quot;: &quot;https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/3_bakgrunnur/Rikisfang/MAN04203.px&quot;,
+      &quot;data_path&quot;: &quot;Population/en/mannfjoldi/3_bakgrunnur/Rikisfang/MAN04203/data.px&quot;,
+      &quot;categories&quot;: {
+        &quot;Sveitarfélag&quot;: &quot;IS&quot;,
+        &quot;Ríkisfang&quot;: &quot;01&quot;,
+        &quot;Kyn&quot;: &quot;0&quot;,
+        &quot;Ár&quot;: &quot;2026&quot;
+      },
+      &quot;labels&quot;: {
+        &quot;Municipality&quot;: &quot;Total&quot;,
+        &quot;Citizenship&quot;: &quot;Total&quot;,
+        &quot;Sex&quot;: &quot;Total&quot;,
+        &quot;Year&quot;: &quot;2026&quot;
+      },
+      &quot;value&quot;: 394324.0,
+      &quot;marker&quot;: null,
+      &quot;unit&quot;: &quot;Number&quot;,
+      &quot;periods&quot;: {
+        &quot;Ár&quot;: &quot;2026&quot;
+      },
+      &quot;period_mode&quot;: &quot;single_period&quot;
+    }
+  ],
+  &quot;period_mode&quot;: &quot;single_period&quot;,
+  &quot;calculations&quot;: [
+    {
+      &quot;proposal&quot;: {
+        &quot;operation&quot;: &quot;value&quot;,
+        &quot;cell_references&quot;: [
+          &quot;cell-aa&quot;
+        ],
+        &quot;operand_roles&quot;: [
+          &quot;value&quot;
+        ],
+        &quot;period_mode&quot;: &quot;single_period&quot;
+      },
+      &quot;status&quot;: &quot;verified&quot;,
+      &quot;operation&quot;: &quot;value&quot;,
+      &quot;cell_references&quot;: [
+        &quot;cell-aa&quot;
+      ],
+      &quot;operand_roles&quot;: [
+        &quot;value&quot;
+      ],
+      &quot;period_mode&quot;: &quot;single_period&quot;,
+      &quot;operands&quot;: [
+        &quot;394324.0&quot;
+      ],
+      &quot;exact_decimal&quot;: &quot;394324.0&quot;,
+      &quot;displayed&quot;: &quot;394324&quot;,
+      &quot;unit&quot;: &quot;Number&quot;
+    }
+  ],
+  &quot;answer_plan&quot;: {
+    &quot;outputs&quot;: [
+      {
+        &quot;operation&quot;: &quot;value&quot;,
+        &quot;cell_references&quot;: [
+          &quot;cell-aa&quot;
+        ],
+        &quot;operand_roles&quot;: [
+          &quot;value&quot;
+        ],
+        &quot;period_mode&quot;: &quot;single_period&quot;
+      }
+    ]
+  },
+  &quot;years_not_covered&quot;: [],
+  &quot;same_candidate_order_as_5b2&quot;: true,
+  &quot;execution_status&quot;: &quot;COMPLETED&quot;,
+  &quot;first_candidate&quot;: {
+    &quot;folder&quot;: &quot;Population/en/mannfjoldi/3_bakgrunnur/Rikisfang/MAN04203&quot;,
+    &quot;score&quot;: 0.1111111111111111,
+    &quot;signals&quot;: [
+      {
+        &quot;query&quot;: &quot;How many people lived in Iceland on 1 January 2026?&quot;,
+        &quot;source&quot;: &quot;bm25&quot;,
+        &quot;rank&quot;: 5,
+        &quot;raw_score&quot;: 7.714755690546872,
+        &quot;rrf&quot;: 0.0
+      }
+    ],
+    &quot;rerank&quot;: {
+      &quot;source_rank&quot;: 9,
+      &quot;temporal_state&quot;: &quot;UNKNOWN&quot;,
+      &quot;word_count&quot;: 2,
+      &quot;matched_terms&quot;: [
+        &quot;iceland&quot;,
+        &quot;january&quot;
+      ],
+      &quot;unmatched_dimensions&quot;: 2,
+      &quot;complete_categories&quot;: true,
+      &quot;requested_periods&quot;: [
+        &quot;2026M01&quot;
+      ],
+      &quot;available_periods&quot;: [
+        &quot;1998&quot;,
+        &quot;1999&quot;,
+        &quot;2000&quot;,
+        &quot;2001&quot;,
+        &quot;2002&quot;,
+        &quot;2003&quot;,
+        &quot;2004&quot;,
+        &quot;2005&quot;,
+        &quot;2006&quot;,
+        &quot;2007&quot;,
+        &quot;2008&quot;,
+        &quot;2009&quot;,
+        &quot;2010&quot;,
+        &quot;2011&quot;,
+        &quot;2012&quot;,
+        &quot;2013&quot;,
+        &quot;2014&quot;,
+        &quot;2015&quot;,
+        &quot;2016&quot;,
+        &quot;2017&quot;,
+        &quot;2018&quot;,
+        &quot;2019&quot;,
+        &quot;2020&quot;,
+        &quot;2021&quot;,
+        &quot;2022&quot;,
+        &quot;2023&quot;,
+        &quot;2024&quot;,
+        &quot;2025&quot;,
+        &quot;2026&quot;
+      ]
+    }
+  },
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: true,
+    &quot;verdict&quot;: &quot;right&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN04203&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/en/mannfjoldi/3_bakgrunnur/Rikisfang/MAN04203&quot;
+    ]
+  }
+}</pre></details><details><summary>population-iceland-2026-is — right</summary><pre>{
+  &quot;id&quot;: &quot;population-iceland-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hve margir bjuggu á Íslandi 1. janúar 2026?&quot;,
+  &quot;correct&quot;: true,
+  &quot;verdict&quot;: &quot;right&quot;,
+  &quot;right_table&quot;: true,
+  &quot;numbers_right&quot;: true,
+  &quot;why&quot;: &quot;&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;seconds&quot;: 8.259625246049836,
+  &quot;answer&quot;: &quot;Sveitarfélag: Alls; Aldur: Alls; Ár: 2026; Kyn: Alls = 394324&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN02005 \&quot;Mannfjöldi eftir kyni, aldri og sveitarfélögum 1998-2026 - Sveitarfélagaskipan 1. janúar 2026\&quot; (updated 2026-03-12): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/sveitarfelog/MAN02005.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/is/mannfjoldi/2_byggdir/sveitarfelog/MAN02005&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN02005&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;unsupported_without_calculations&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Sveitarfélag: Alls; Aldur: Alls; Ár: 2026; Kyn: Alls = 394324&quot;
+  ],
+  &quot;cell_references&quot;: [
+    {
+      &quot;id&quot;: &quot;cell-aa&quot;,
+      &quot;table_folder&quot;: &quot;Population/is/mannfjoldi/2_byggdir/sveitarfelog/MAN02005&quot;,
+      &quot;table_code&quot;: &quot;MAN02005&quot;,
+      &quot;api_url&quot;: &quot;https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/sveitarfelog/MAN02005.px&quot;,
+      &quot;data_path&quot;: &quot;Population/is/mannfjoldi/2_byggdir/sveitarfelog/MAN02005/data.px&quot;,
+      &quot;categories&quot;: {
+        &quot;Sveitarfélag&quot;: &quot;9999&quot;,
+        &quot;Aldur&quot;: &quot;-1&quot;,
+        &quot;Ár&quot;: &quot;2026&quot;,
+        &quot;Kyn&quot;: &quot;0&quot;
+      },
+      &quot;labels&quot;: {
+        &quot;Sveitarfélag&quot;: &quot;Alls&quot;,
+        &quot;Aldur&quot;: &quot;Alls&quot;,
+        &quot;Ár&quot;: &quot;2026&quot;,
+        &quot;Kyn&quot;: &quot;Alls&quot;
+      },
+      &quot;value&quot;: 394324.0,
+      &quot;marker&quot;: null,
+      &quot;unit&quot;: &quot;Fjöldi&quot;,
+      &quot;periods&quot;: {
+        &quot;Ár&quot;: &quot;2026&quot;
+      },
+      &quot;period_mode&quot;: &quot;single_period&quot;
+    }
+  ],
+  &quot;period_mode&quot;: &quot;single_period&quot;,
+  &quot;calculations&quot;: [
+    {
+      &quot;proposal&quot;: {
+        &quot;operation&quot;: &quot;value&quot;,
+        &quot;cell_references&quot;: [
+          &quot;cell-aa&quot;
+        ],
+        &quot;operand_roles&quot;: [
+          &quot;value&quot;
+        ],
+        &quot;period_mode&quot;: &quot;single_period&quot;
+      },
+      &quot;status&quot;: &quot;verified&quot;,
+      &quot;operation&quot;: &quot;value&quot;,
+      &quot;cell_references&quot;: [
+        &quot;cell-aa&quot;
+      ],
+      &quot;operand_roles&quot;: [
+        &quot;value&quot;
+      ],
+      &quot;period_mode&quot;: &quot;single_period&quot;,
+      &quot;operands&quot;: [
+        &quot;394324.0&quot;
+      ],
+      &quot;exact_decimal&quot;: &quot;394324.0&quot;,
+      &quot;displayed&quot;: &quot;394324&quot;,
+      &quot;unit&quot;: &quot;Fjöldi&quot;
+    }
+  ],
+  &quot;answer_plan&quot;: {
+    &quot;outputs&quot;: [
+      {
+        &quot;operation&quot;: &quot;value&quot;,
+        &quot;cell_references&quot;: [
+          &quot;cell-aa&quot;
+        ],
+        &quot;operand_roles&quot;: [
+          &quot;value&quot;
+        ],
+        &quot;period_mode&quot;: &quot;single_period&quot;
+      }
+    ]
+  },
+  &quot;years_not_covered&quot;: [],
+  &quot;same_candidate_order_as_5b2&quot;: true,
+  &quot;execution_status&quot;: &quot;COMPLETED&quot;,
+  &quot;first_candidate&quot;: {
+    &quot;folder&quot;: &quot;Population/is/mannfjoldi/2_byggdir/sveitarfelog/MAN02005&quot;,
+    &quot;score&quot;: 1.0,
+    &quot;signals&quot;: [
+      {
+        &quot;query&quot;: &quot;Hve margir bjuggu á Íslandi 1. janúar 2026?&quot;,
+        &quot;source&quot;: &quot;bm25&quot;,
+        &quot;rank&quot;: 1,
+        &quot;raw_score&quot;: 8.13420496377616,
+        &quot;rrf&quot;: 0.0
+      },
+      {
+        &quot;query&quot;: &quot;Hve margir bjuggu á Íslandi 1. janúar 2026?&quot;,
+        &quot;source&quot;: &quot;dense&quot;,
+        &quot;rank&quot;: 41,
+        &quot;raw_score&quot;: 0.4364234507083893,
+        &quot;rrf&quot;: 0.0
+      }
+    ],
+    &quot;rerank&quot;: {
+      &quot;source_rank&quot;: 1,
+      &quot;temporal_state&quot;: &quot;UNKNOWN&quot;,
+      &quot;word_count&quot;: 1,
+      &quot;matched_terms&quot;: [
+        &quot;janúar&quot;
+      ],
+      &quot;unmatched_dimensions&quot;: 3,
+      &quot;complete_categories&quot;: true,
+      &quot;requested_periods&quot;: [
+        &quot;2026M01&quot;
+      ],
+      &quot;available_periods&quot;: [
+        &quot;1998&quot;,
+        &quot;1999&quot;,
+        &quot;2000&quot;,
+        &quot;2001&quot;,
+        &quot;2002&quot;,
+        &quot;2003&quot;,
+        &quot;2004&quot;,
+        &quot;2005&quot;,
+        &quot;2006&quot;,
+        &quot;2007&quot;,
+        &quot;2008&quot;,
+        &quot;2009&quot;,
+        &quot;2010&quot;,
+        &quot;2011&quot;,
+        &quot;2012&quot;,
+        &quot;2013&quot;,
+        &quot;2014&quot;,
+        &quot;2015&quot;,
+        &quot;2016&quot;,
+        &quot;2017&quot;,
+        &quot;2018&quot;,
+        &quot;2019&quot;,
+        &quot;2020&quot;,
+        &quot;2021&quot;,
+        &quot;2022&quot;,
+        &quot;2023&quot;,
+        &quot;2024&quot;,
+        &quot;2025&quot;,
+        &quot;2026&quot;
+      ]
+    }
+  },
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: true,
+    &quot;verdict&quot;: &quot;right&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN02005&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/is/mannfjoldi/2_byggdir/sveitarfelog/MAN02005&quot;
+    ]
+  }
+}</pre></details><details><summary>population-reykjavik-en — right</summary><pre>{
+  &quot;id&quot;: &quot;population-reykjavik-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;How many people lived in Reykjavík on 1 January 2026?&quot;,
+  &quot;correct&quot;: true,
+  &quot;verdict&quot;: &quot;right&quot;,
+  &quot;right_table&quot;: true,
+  &quot;numbers_right&quot;: true,
+  &quot;why&quot;: &quot;&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;seconds&quot;: 7.680059503996745,
+  &quot;answer&quot;: &quot;Districts: Total; Age: Total; Year: 2026; Sex: Total = 139804&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN03270 \&quot;Population in Reykjavík by districts, sex and age 1 January 1998-2026\&quot; (updated 2026-03-12): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN03270&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;unsupported_without_calculations&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Districts: Total; Age: Total; Year: 2026; Sex: Total = 139804&quot;
+  ],
+  &quot;cell_references&quot;: [
+    {
+      &quot;id&quot;: &quot;cell-aa&quot;,
+      &quot;table_folder&quot;: &quot;Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;,
+      &quot;table_code&quot;: &quot;MAN03270&quot;,
+      &quot;api_url&quot;: &quot;https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px&quot;,
+      &quot;data_path&quot;: &quot;Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270/data.px&quot;,
+      &quot;categories&quot;: {
+        &quot;Hverfi&quot;: &quot;00&quot;,
+        &quot;Aldur&quot;: &quot;-1&quot;,
+        &quot;Ár&quot;: &quot;2026&quot;,
+        &quot;Kyn&quot;: &quot;0&quot;
+      },
+      &quot;labels&quot;: {
+        &quot;Districts&quot;: &quot;Total&quot;,
+        &quot;Age&quot;: &quot;Total&quot;,
+        &quot;Year&quot;: &quot;2026&quot;,
+        &quot;Sex&quot;: &quot;Total&quot;
+      },
+      &quot;value&quot;: 139804.0,
+      &quot;marker&quot;: null,
+      &quot;unit&quot;: &quot;Number&quot;,
+      &quot;periods&quot;: {
+        &quot;Ár&quot;: &quot;2026&quot;
+      },
+      &quot;period_mode&quot;: &quot;single_period&quot;
+    }
+  ],
+  &quot;period_mode&quot;: &quot;single_period&quot;,
+  &quot;calculations&quot;: [
+    {
+      &quot;proposal&quot;: {
+        &quot;operation&quot;: &quot;value&quot;,
+        &quot;cell_references&quot;: [
+          &quot;cell-aa&quot;
+        ],
+        &quot;operand_roles&quot;: [
+          &quot;value&quot;
+        ],
+        &quot;period_mode&quot;: &quot;single_period&quot;
+      },
+      &quot;status&quot;: &quot;verified&quot;,
+      &quot;operation&quot;: &quot;value&quot;,
+      &quot;cell_references&quot;: [
+        &quot;cell-aa&quot;
+      ],
+      &quot;operand_roles&quot;: [
+        &quot;value&quot;
+      ],
+      &quot;period_mode&quot;: &quot;single_period&quot;,
+      &quot;operands&quot;: [
+        &quot;139804.0&quot;
+      ],
+      &quot;exact_decimal&quot;: &quot;139804.0&quot;,
+      &quot;displayed&quot;: &quot;139804&quot;,
+      &quot;unit&quot;: &quot;Number&quot;
+    }
+  ],
+  &quot;answer_plan&quot;: {
+    &quot;outputs&quot;: [
+      {
+        &quot;operation&quot;: &quot;value&quot;,
+        &quot;cell_references&quot;: [
+          &quot;cell-aa&quot;
+        ],
+        &quot;operand_roles&quot;: [
+          &quot;value&quot;
+        ],
+        &quot;period_mode&quot;: &quot;single_period&quot;
+      }
+    ]
+  },
+  &quot;years_not_covered&quot;: [],
+  &quot;same_candidate_order_as_5b2&quot;: true,
+  &quot;execution_status&quot;: &quot;COMPLETED&quot;,
+  &quot;first_candidate&quot;: {
+    &quot;folder&quot;: &quot;Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;,
+    &quot;score&quot;: 1.0,
+    &quot;signals&quot;: [
+      {
+        &quot;query&quot;: &quot;How many people lived in Reykjavík on 1 January 2026?&quot;,
+        &quot;source&quot;: &quot;bm25&quot;,
+        &quot;rank&quot;: 1,
+        &quot;raw_score&quot;: 12.208829590887134,
+        &quot;rrf&quot;: 0.0
+      },
+      {
+        &quot;query&quot;: &quot;How many people lived in Reykjavík on 1 January 2026?&quot;,
+        &quot;source&quot;: &quot;dense&quot;,
+        &quot;rank&quot;: 1,
+        &quot;raw_score&quot;: 0.6312164068222046,
+        &quot;rrf&quot;: 0.0
+      }
+    ],
+    &quot;rerank&quot;: {
+      &quot;source_rank&quot;: 1,
+      &quot;temporal_state&quot;: &quot;UNKNOWN&quot;,
+      &quot;word_count&quot;: 2,
+      &quot;matched_terms&quot;: [
+        &quot;january&quot;,
+        &quot;reykjavík&quot;
+      ],
+      &quot;unmatched_dimensions&quot;: 3,
+      &quot;complete_categories&quot;: true,
+      &quot;requested_periods&quot;: [
+        &quot;2026M01&quot;
+      ],
+      &quot;available_periods&quot;: [
+        &quot;1998&quot;,
+        &quot;1999&quot;,
+        &quot;2000&quot;,
+        &quot;2001&quot;,
+        &quot;2002&quot;,
+        &quot;2003&quot;,
+        &quot;2004&quot;,
+        &quot;2005&quot;,
+        &quot;2006&quot;,
+        &quot;2007&quot;,
+        &quot;2008&quot;,
+        &quot;2009&quot;,
+        &quot;2010&quot;,
+        &quot;2011&quot;,
+        &quot;2012&quot;,
+        &quot;2013&quot;,
+        &quot;2014&quot;,
+        &quot;2015&quot;,
+        &quot;2016&quot;,
+        &quot;2017&quot;,
+        &quot;2018&quot;,
+        &quot;2019&quot;,
+        &quot;2020&quot;,
+        &quot;2021&quot;,
+        &quot;2022&quot;,
+        &quot;2023&quot;,
+        &quot;2024&quot;,
+        &quot;2025&quot;,
+        &quot;2026&quot;
+      ]
+    }
+  },
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: true,
+    &quot;verdict&quot;: &quot;right&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN03270&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+    ]
+  }
+}</pre></details><details><summary>population-reykjavik-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;population-reykjavik-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hve margir bjuggu í Reykjavík 1. janúar 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;right_table&quot;: true,
+  &quot;numbers_right&quot;: false,
+  &quot;why&quot;: &quot;does not state 139,804 people&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;seconds&quot;: 6.3559877870138735,
+  &quot;answer&quot;: &quot;Hverfi: 7 Árbær; Aldur: Alls; Ár: 2026; Kyn: Alls = 12139&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN03270 \&quot;Mannfjöldi eftir hverfum í Reykjavík, kyni og aldri 1. janúar 1998-2026\&quot; (updated 2026-03-12): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN03270&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;unsupported_without_calculations&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Aldur: no category chosen, using &#x27;Alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Hverfi: 7 Árbær; Aldur: Alls; Ár: 2026; Kyn: Alls = 12139&quot;
+  ],
+  &quot;cell_references&quot;: [
+    {
+      &quot;id&quot;: &quot;cell-aa&quot;,
+      &quot;table_folder&quot;: &quot;Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;,
+      &quot;table_code&quot;: &quot;MAN03270&quot;,
+      &quot;api_url&quot;: &quot;https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px&quot;,
+      &quot;data_path&quot;: &quot;Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270/data.px&quot;,
+      &quot;categories&quot;: {
+        &quot;Hverfi&quot;: &quot;7&quot;,
+        &quot;Aldur&quot;: &quot;-1&quot;,
+        &quot;Ár&quot;: &quot;2026&quot;,
+        &quot;Kyn&quot;: &quot;0&quot;
+      },
+      &quot;labels&quot;: {
+        &quot;Hverfi&quot;: &quot;7 Árbær&quot;,
+        &quot;Aldur&quot;: &quot;Alls&quot;,
+        &quot;Ár&quot;: &quot;2026&quot;,
+        &quot;Kyn&quot;: &quot;Alls&quot;
+      },
+      &quot;value&quot;: 12139.0,
+      &quot;marker&quot;: null,
+      &quot;unit&quot;: &quot;Fjöldi&quot;,
+      &quot;periods&quot;: {
+        &quot;Ár&quot;: &quot;2026&quot;
+      },
+      &quot;period_mode&quot;: &quot;single_period&quot;
+    }
+  ],
+  &quot;period_mode&quot;: &quot;single_period&quot;,
+  &quot;calculations&quot;: [
+    {
+      &quot;proposal&quot;: {
+        &quot;operation&quot;: &quot;value&quot;,
+        &quot;cell_references&quot;: [
+          &quot;cell-aa&quot;
+        ],
+        &quot;operand_roles&quot;: [
+          &quot;value&quot;
+        ],
+        &quot;period_mode&quot;: &quot;single_period&quot;
+      },
+      &quot;status&quot;: &quot;verified&quot;,
+      &quot;operation&quot;: &quot;value&quot;,
+      &quot;cell_references&quot;: [
+        &quot;cell-aa&quot;
+      ],
+      &quot;operand_roles&quot;: [
+        &quot;value&quot;
+      ],
+      &quot;period_mode&quot;: &quot;single_period&quot;,
+      &quot;operands&quot;: [
+        &quot;12139.0&quot;
+      ],
+      &quot;exact_decimal&quot;: &quot;12139.0&quot;,
+      &quot;displayed&quot;: &quot;12139&quot;,
+      &quot;unit&quot;: &quot;Fjöldi&quot;
+    }
+  ],
+  &quot;answer_plan&quot;: {
+    &quot;outputs&quot;: [
+      {
+        &quot;operation&quot;: &quot;value&quot;,
+        &quot;cell_references&quot;: [
+          &quot;cell-aa&quot;
+        ],
+        &quot;operand_roles&quot;: [
+          &quot;value&quot;
+        ],
+        &quot;period_mode&quot;: &quot;single_period&quot;
+      }
+    ]
+  },
+  &quot;years_not_covered&quot;: [],
+  &quot;same_candidate_order_as_5b2&quot;: true,
+  &quot;execution_status&quot;: &quot;COMPLETED&quot;,
+  &quot;first_candidate&quot;: {
+    &quot;folder&quot;: &quot;Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;,
+    &quot;score&quot;: 1.0,
+    &quot;signals&quot;: [
+      {
+        &quot;query&quot;: &quot;Hve margir bjuggu í Reykjavík 1. janúar 2026?&quot;,
+        &quot;source&quot;: &quot;bm25&quot;,
+        &quot;rank&quot;: 1,
+        &quot;raw_score&quot;: 11.591647464277859,
+        &quot;rrf&quot;: 0.0
+      },
+      {
+        &quot;query&quot;: &quot;Hve margir bjuggu í Reykjavík 1. janúar 2026?&quot;,
+        &quot;source&quot;: &quot;dense&quot;,
+        &quot;rank&quot;: 1,
+        &quot;raw_score&quot;: 0.5807620286941528,
+        &quot;rrf&quot;: 0.0
+      }
+    ],
+    &quot;rerank&quot;: {
+      &quot;source_rank&quot;: 1,
+      &quot;temporal_state&quot;: &quot;UNKNOWN&quot;,
+      &quot;word_count&quot;: 2,
+      &quot;matched_terms&quot;: [
+        &quot;janúar&quot;,
+        &quot;reykja&quot;
+      ],
+      &quot;unmatched_dimensions&quot;: 3,
+      &quot;complete_categories&quot;: true,
+      &quot;requested_periods&quot;: [
+        &quot;2026M01&quot;
+      ],
+      &quot;available_periods&quot;: [
+        &quot;1998&quot;,
+        &quot;1999&quot;,
+        &quot;2000&quot;,
+        &quot;2001&quot;,
+        &quot;2002&quot;,
+        &quot;2003&quot;,
+        &quot;2004&quot;,
+        &quot;2005&quot;,
+        &quot;2006&quot;,
+        &quot;2007&quot;,
+        &quot;2008&quot;,
+        &quot;2009&quot;,
+        &quot;2010&quot;,
+        &quot;2011&quot;,
+        &quot;2012&quot;,
+        &quot;2013&quot;,
+        &quot;2014&quot;,
+        &quot;2015&quot;,
+        &quot;2016&quot;,
+        &quot;2017&quot;,
+        &quot;2018&quot;,
+        &quot;2019&quot;,
+        &quot;2020&quot;,
+        &quot;2021&quot;,
+        &quot;2022&quot;,
+        &quot;2023&quot;,
+        &quot;2024&quot;,
+        &quot;2025&quot;,
+        &quot;2026&quot;
+      ]
+    }
+  },
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN03270&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+    ]
+  }
+}</pre></details><details><summary>births-2024-en — error</summary><pre>{
+  &quot;id&quot;: &quot;births-2024-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;How many children were born in Iceland in 2024?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;error&quot;,
+  &quot;right_table&quot;: false,
+  &quot;numbers_right&quot;: false,
+  &quot;why&quot;: &quot;ModelError: the model did not answer with JSON: &#x27;[]&#x27;&quot;,
+  &quot;error&quot;: &quot;ModelError: the model did not answer with JSON: &#x27;[]&#x27;&quot;,
+  &quot;seconds&quot;: 6.196794483112171,
+  &quot;answer&quot;: null,
+  &quot;source&quot;: null,
+  &quot;table_folders&quot;: [],
+  &quot;table_codes&quot;: [],
+  &quot;unsupported&quot;: [],
+  &quot;unsupported_without_calculations&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [],
+  &quot;cell_references&quot;: [],
+  &quot;period_mode&quot;: null,
+  &quot;calculations&quot;: [],
+  &quot;answer_plan&quot;: {},
+  &quot;years_not_covered&quot;: [],
+  &quot;same_candidate_order_as_5b2&quot;: false,
+  &quot;execution_status&quot;: &quot;ERROR&quot;,
+  &quot;first_candidate&quot;: null,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;CEN0026&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/en/manntal/1981/1_einstaklingar/CEN0026&quot;
+    ]
+  }
+}</pre></details><details><summary>births-2024-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;births-2024-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hve mörg börn fæddust á Íslandi árið 2024?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;SKO01109&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Society/is/skolamal/1_leikskolastig/0_lsNemendur/SKO01109&quot;
+    ]
+  }
+}</pre></details><details><summary>cpi-2026-09-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;cpi-2026-09-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;What was the consumer price index in September 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;VIS01303&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/en/visitolur/1_vnv/4_eldraefni/VIS01303&quot;
+    ]
+  }
+}</pre></details><details><summary>cpi-2026-09-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;cpi-2026-09-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hver var vísitala neysluverðs í september 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;VIS01303&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/is/visitolur/1_vnv/4_eldraefni/VIS01303&quot;
+    ]
+  }
+}</pre></details><details><summary>wage-index-2026-08-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;wage-index-2026-08-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;What was the wage index in August 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: true,
+    &quot;verdict&quot;: &quot;right&quot;,
+    &quot;table_codes&quot;: [
+      &quot;LAU04000&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Society/en/launogtekjur/2_lvt/1_manadartolur/LAU04000&quot;
+    ]
+  }
+}</pre></details><details><summary>wage-index-2026-08-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;wage-index-2026-08-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hver var launavísitalan í ágúst 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;VIS02504&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/is/visitolur/2_samraemdvnv/samraemdvnv/VIS02504&quot;
+    ]
+  }
+}</pre></details><details><summary>unemployment-2026q2-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;unemployment-2026q2-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;What was the unemployment rate in Iceland in the second quarter of 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;VIN00910&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Society/en/vinnumarkadur/vinnumarkadsrannsokn/2_arsfjordungstolur/VIN00910&quot;
+    ]
+  }
+}</pre></details><details><summary>unemployment-2026q2-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;unemployment-2026q2-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hvert var atvinnuleysi á Íslandi á öðrum ársfjórðungi 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;UMH31109&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Environment/is/2_losunlofttegunda/2_losunlofttegunda_aea/UMH31109&quot;
+    ]
+  }
+}</pre></details><details><summary>gdp-2025-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;gdp-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;What was Iceland&#x27;s gross domestic product in 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;THJ08401&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/en/thjodhagsreikningar/framluppgj_ISAT2008/THJ08401&quot;
+    ]
+  }
+}</pre></details><details><summary>gdp-2025-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;gdp-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hver var verg landsframleiðsla á Íslandi árið 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;THJ01102&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/is/thjodhagsreikningar/landsframl/1_landsframleidsla/THJ01102&quot;
+    ]
+  }
+}</pre></details><details><summary>overnight-stays-2025-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;overnight-stays-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;How many overnight stays were there in registered accommodation in Iceland in 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: true,
+    &quot;verdict&quot;: &quot;right&quot;,
+    &quot;table_codes&quot;: [
+      &quot;SAM01601&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Business_Sectors/en/ferdathjonusta/gisting/3_allartegundirgististada/SAM01601&quot;
+    ]
+  }
+}</pre></details><details><summary>overnight-stays-2025-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;overnight-stays-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hve margar gistinætur voru á skráðum gististöðum á Íslandi árið 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;SAM01603&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Business_Sectors/is/ferdathjonusta/Gisting/3_allartegundirgististada/SAM01603&quot;
+    ]
+  }
+}</pre></details><details><summary>immigrants-2026-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;immigrants-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;How many immigrants lived in Iceland on 1 January 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN43005&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/en/mannfjoldi/3_bakgrunnur/Uppruni/MAN43005&quot;
+    ]
+  }
+}</pre></details><details><summary>immigrants-2026-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;immigrants-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hve margir innflytjendur bjuggu á Íslandi 1. janúar 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN43005&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/is/mannfjoldi/3_bakgrunnur/Uppruni/MAN43005&quot;
+    ]
+  }
+}</pre></details><details><summary>vigdis-1980-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;vigdis-1980-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;How many valid votes did Vigdís Finnbogadóttir get in Reykjavík in the 1980 presidential election?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: true,
+    &quot;verdict&quot;: &quot;right&quot;,
+    &quot;table_codes&quot;: [
+      &quot;KOS07112&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/en/kosningar/forsetakosningar/KOS07112&quot;
+    ]
+  }
+}</pre></details><details><summary>vigdis-1980-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;vigdis-1980-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hve mörg gild atkvæði fékk Vigdís Finnbogadóttir í Reykjavík í forsetakjörinu 1980?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;KOS07112&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/is/kosningar/forsetakosningar/KOS07112&quot;
+    ]
+  }
+}</pre></details><details><summary>reykjavik-growth-2026-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;reykjavik-growth-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;By how many people did the population of Reykjavík grow from 1 January 2025 to 1 January 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN03270&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+    ]
+  }
+}</pre></details><details><summary>reykjavik-growth-2026-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;reykjavik-growth-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Um hve marga fjölgaði íbúum Reykjavíkur frá 1. janúar 2025 til 1. janúar 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN03270&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+    ]
+  }
+}</pre></details><details><summary>reykjavik-share-2026-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;reykjavik-share-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;What percentage of Iceland&#x27;s population lived in Reykjavík on 1 January 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN03270&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+    ]
+  }
+}</pre></details><details><summary>reykjavik-share-2026-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;reykjavik-share-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Hve stórt hlutfall landsmanna bjó í Reykjavík 1. janúar 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN03270&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+    ]
+  }
+}</pre></details><details><summary>reykjavik-kopavogur-2026-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;reykjavik-kopavogur-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;How many people lived in Reykjavík and Kópavogur together on 1 January 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN03270&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+    ]
+  }
+}</pre></details><details><summary>reykjavik-kopavogur-2026-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;reykjavik-kopavogur-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Hve margir bjuggu samtals í Reykjavík og Kópavogi 1. janúar 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN02005&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/is/mannfjoldi/2_byggdir/sveitarfelog/MAN02005&quot;
+    ]
+  }
+}</pre></details><details><summary>men-minus-women-2026-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;men-minus-women-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;How many more men than women lived in Iceland on 1 January 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;HEI02103&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Society/en/felagsmal/jafnrettismal/2_kkahrifastodur/HEI02103&quot;
+    ]
+  }
+}</pre></details><details><summary>men-minus-women-2026-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;men-minus-women-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Hve mörgum fleiri karlar en konur bjuggu á Íslandi 1. janúar 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN02005&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/is/mannfjoldi/2_byggdir/sveitarfelog/MAN02005&quot;
+    ]
+  }
+}</pre></details><details><summary>cpi-points-2026-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;cpi-points-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;By how many points did the consumer price index rise from September 2025 to September 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;VIS01303&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/en/visitolur/1_vnv/4_eldraefni/VIS01303&quot;
+    ]
+  }
+}</pre></details><details><summary>cpi-points-2026-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;cpi-points-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Um hve mörg stig hækkaði vísitala neysluverðs frá september 2025 til september 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;VIS02001&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/is/visitolur/2_samraemdvnv/samraemdvnveldra/VIS02001&quot;
+    ]
+  }
+}</pre></details><details><summary>overnight-stays-change-2025-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;overnight-stays-change-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;By what percentage did the number of overnight stays in registered accommodation in Iceland increase from 2024 to 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;SAM01601&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Business_Sectors/en/ferdathjonusta/gisting/3_allartegundirgististada/SAM01601&quot;
+    ]
+  }
+}</pre></details><details><summary>overnight-stays-change-2025-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;overnight-stays-change-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Um hve mörg prósent fjölgaði gistinóttum á skráðum gististöðum á Íslandi frá 2024 til 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;SAM01603&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Business_Sectors/is/ferdathjonusta/Gisting/3_allartegundirgististada/SAM01603&quot;
+    ]
+  }
+}</pre></details><details><summary>women-share-2026-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;women-share-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;What percentage of Iceland&#x27;s population on 1 January 2026 were women?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN04203&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/en/mannfjoldi/3_bakgrunnur/Rikisfang/MAN04203&quot;
+    ]
+  }
+}</pre></details><details><summary>women-share-2026-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;women-share-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Hve stórt hlutfall landsmanna 1. janúar 2026 voru konur?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN02005&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/is/mannfjoldi/2_byggdir/sveitarfelog/MAN02005&quot;
+    ]
+  }
+}</pre></details><details><summary>wage-index-points-2026-08-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;wage-index-points-2026-08-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;By how many points did the wage index rise from August 2025 to August 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: true,
+    &quot;verdict&quot;: &quot;right&quot;,
+    &quot;table_codes&quot;: [
+      &quot;LAU04000&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Society/en/launogtekjur/2_lvt/1_manadartolur/LAU04000&quot;
+    ]
+  }
+}</pre></details><details><summary>wage-index-points-2026-08-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;wage-index-points-2026-08-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Um hve mörg stig hækkaði launavísitalan frá ágúst 2025 til ágúst 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;VIS02504&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/is/visitolur/2_samraemdvnv/samraemdvnv/VIS02504&quot;
+    ]
+  }
+}</pre></details><details><summary>immigrants-growth-2026-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;immigrants-growth-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;By how many people did the number of immigrants living in Iceland grow from 1 January 2025 to 1 January 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;SKO03135&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Society/en/skolamal/3_framhaldsskolastig/0_fsNemendur/SKO03135&quot;
+    ]
+  }
+}</pre></details><details><summary>immigrants-growth-2026-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;immigrants-growth-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Um hve marga fjölgaði innflytjendum á Íslandi frá 1. janúar 2025 til 1. janúar 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN43005&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/is/mannfjoldi/3_bakgrunnur/Uppruni/MAN43005&quot;
+    ]
+  }
+}</pre></details><details><summary>foreign-stays-share-2025-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;foreign-stays-share-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;What percentage of the overnight stays in registered accommodation in Iceland in 2025 were by foreigners?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;SAM01601&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Business_Sectors/en/ferdathjonusta/gisting/3_allartegundirgististada/SAM01601&quot;
+    ]
+  }
+}</pre></details><details><summary>foreign-stays-share-2025-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;foreign-stays-share-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Hve stórt hlutfall gistinátta á skráðum gististöðum á Íslandi árið 2025 voru gistinætur útlendinga?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;SAM01603&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Business_Sectors/is/ferdathjonusta/Gisting/3_allartegundirgististada/SAM01603&quot;
+    ]
+  }
+}</pre></details><details><summary>population-and-cpi-2026-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;population-and-cpi-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;How many people lived in Iceland on 1 January 2026, and what was the consumer price index in September 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;VIS02400&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/en/visitolur/2_samraemdvnv/samraemdvnveldra/VIS02400&quot;
+    ]
+  }
+}</pre></details><details><summary>population-and-cpi-2026-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;population-and-cpi-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hve margir bjuggu á Íslandi 1. janúar 2026 og hver var vísitala neysluverðs í september 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;VIS02508&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/is/visitolur/2_samraemdvnv/samraemdvnv/VIS02508&quot;
+    ]
+  }
+}</pre></details><details><summary>wages-and-prices-2026-08-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;wages-and-prices-2026-08-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;What were the wage index and the consumer price index in August 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;VIS01503&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/en/visitolur/1_vnv/4_eldraefni/VIS01503&quot;
+    ]
+  }
+}</pre></details><details><summary>wages-and-prices-2026-08-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;wages-and-prices-2026-08-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hver var launavísitalan og hver var vísitala neysluverðs í ágúst 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;VIS01103&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/is/visitolur/1_vnv/3_greiningarvisitolur/VIS01103&quot;
+    ]
+  }
+}</pre></details><details><summary>stays-and-population-2025-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;stays-and-population-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;How many overnight stays were there in registered accommodation in Iceland in 2025, and how many people lived in Iceland on 1 January 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;SAM01601&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Business_Sectors/en/ferdathjonusta/gisting/3_allartegundirgististada/SAM01601&quot;
+    ]
+  }
+}</pre></details><details><summary>stays-and-population-2025-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;stays-and-population-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hve margar gistinætur voru á skráðum gististöðum á Íslandi árið 2025 og hve margir bjuggu á Íslandi 1. janúar 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;SAM01603&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Business_Sectors/is/ferdathjonusta/Gisting/3_allartegundirgististada/SAM01603&quot;
+    ]
+  }
+}</pre></details><details><summary>gdp-and-births-2025-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;gdp-and-births-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;What was Iceland&#x27;s gross domestic product in 2025, and how many children were born in Iceland in 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;THJ08401&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/en/thjodhagsreikningar/framluppgj_ISAT2008/THJ08401&quot;
+    ]
+  }
+}</pre></details><details><summary>gdp-and-births-2025-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;gdp-and-births-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hver var verg landsframleiðsla á Íslandi árið 2025 og hve mörg börn fæddust á Íslandi árið 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;THJ01102&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/is/thjodhagsreikningar/landsframl/1_landsframleidsla/THJ01102&quot;
+    ]
+  }
+}</pre></details><details><summary>stays-per-inhabitant-2025-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;stays-per-inhabitant-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;How many overnight stays in registered accommodation were there in Iceland in 2025 per inhabitant on 1 January 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;SAM01601&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Business_Sectors/en/ferdathjonusta/gisting/3_allartegundirgististada/SAM01601&quot;
+    ]
+  }
+}</pre></details><details><summary>stays-per-inhabitant-2025-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;stays-per-inhabitant-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hve margar gistinætur á skráðum gististöðum voru á Íslandi árið 2025 á hvern íbúa 1. janúar 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;SAM01603&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Business_Sectors/is/ferdathjonusta/Gisting/3_allartegundirgististada/SAM01603&quot;
+    ]
+  }
+}</pre></details><details><summary>births-per-1000-2025-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;births-per-1000-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;How many children were born in Iceland in 2025 per 1,000 inhabitants on 1 January 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;HEI04101&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Society/en/heilbrigdismal/heilbrigdisthjonusta/HEI04101&quot;
+    ]
+  }
+}</pre></details><details><summary>births-per-1000-2025-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;births-per-1000-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hve mörg börn fæddust á Íslandi árið 2025 á hverja 1.000 íbúa 1. janúar 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN07300&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/is/fjolsk/Fjolskyldan/MAN07300&quot;
+    ]
+  }
+}</pre></details><details><summary>wages-and-unemployment-2026-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;wages-and-unemployment-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;What was the wage index in August 2026, and what was the unemployment rate in Iceland in the second quarter of 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;VIN00910&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Society/en/vinnumarkadur/vinnumarkadsrannsokn/2_arsfjordungstolur/VIN00910&quot;
+    ]
+  }
+}</pre></details><details><summary>wages-and-unemployment-2026-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;wages-and-unemployment-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hver var launavísitalan í ágúst 2026 og hvert var atvinnuleysi á Íslandi á öðrum ársfjórðungi 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;JVS00001&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Society/is/vinnumarkadur/lausstorf/JVS00001&quot;
+    ]
+  }
+}</pre></details><details><summary>gdp-and-stays-2025-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;gdp-and-stays-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;What was Iceland&#x27;s gross domestic product in 2025, and how many overnight stays were there in registered accommodation in Iceland in 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;SAM01601&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Business_Sectors/en/ferdathjonusta/gisting/3_allartegundirgististada/SAM01601&quot;
+    ]
+  }
+}</pre></details><details><summary>gdp-and-stays-2025-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;gdp-and-stays-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hver var verg landsframleiðsla á Íslandi árið 2025 og hve margar gistinætur voru á skráðum gististöðum á Íslandi árið 2025?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;SAM01603&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Business_Sectors/is/ferdathjonusta/Gisting/3_allartegundirgististada/SAM01603&quot;
+    ]
+  }
+}</pre></details><details><summary>births-and-immigrants-2026-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;births-and-immigrants-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;How many children were born in Iceland in 2025, and how many immigrants lived in Iceland on 1 January 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN43005&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/en/mannfjoldi/3_bakgrunnur/Uppruni/MAN43005&quot;
+    ]
+  }
+}</pre></details><details><summary>births-and-immigrants-2026-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;births-and-immigrants-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hve mörg börn fæddust á Íslandi árið 2025 og hve margir innflytjendur bjuggu á Íslandi 1. janúar 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;MAN43005&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Population/is/mannfjoldi/3_bakgrunnur/Uppruni/MAN43005&quot;
+    ]
+  }
+}</pre></details><details><summary>cpi-and-unemployment-2026-en — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;cpi-and-unemployment-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;What was the consumer price index in September 2026, and what was the unemployment rate in Iceland in the second quarter of 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;VIS01000&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/en/visitolur/1_vnv/1_vnv/VIS01000&quot;
+    ]
+  }
+}</pre></details><details><summary>cpi-and-unemployment-2026-is — NOT_RUN</summary><pre>{
+  &quot;id&quot;: &quot;cpi-and-unemployment-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hver var vísitala neysluverðs í september 2026 og hvert var atvinnuleysi á Íslandi á öðrum ársfjórðungi 2026?&quot;,
+  &quot;execution_status&quot;: &quot;NOT_RUN&quot;,
+  &quot;correct&quot;: null,
+  &quot;verdict&quot;: &quot;NOT_RUN&quot;,
+  &quot;answer&quot;: null,
+  &quot;seconds&quot;: null,
+  &quot;source&quot;: null,
+  &quot;cell_references&quot;: null,
+  &quot;calculations&quot;: null,
+  &quot;unsupported&quot;: null,
+  &quot;period_mode&quot;: null,
+  &quot;error&quot;: null,
+  &quot;why&quot;: &quot;Stopped after the first execution error; no retry or post-measurement tuning.&quot;,
+  &quot;phase5b2&quot;: {
+    &quot;correct&quot;: false,
+    &quot;verdict&quot;: &quot;WRONG&quot;,
+    &quot;table_codes&quot;: [
+      &quot;VIS02508&quot;
+    ],
+    &quot;table_folders&quot;: [
+      &quot;Economy/is/visitolur/2_samraemdvnv/samraemdvnv/VIS02508&quot;
+    ]
+  }
+}</pre></details><h2>Next change proposal</h2><pre># Narrow follow-up proposal — review required, not implemented
+
+Problem: a live planner returned `[]`. The shared client raised ModelError before
+the calculation gate could preserve a rejected proposal. The 60-case run stopped.
+
+1. Add a typed invalid-structured-reply exception retaining the raw reply. Keep
+network/authentication/timeout failures distinct; do not broadly catch ModelError.
+2. At the answer planner boundary only, turn that typed protocol error into an
+explicit unverified-answer status with the original reply and fetched references.
+Do not coerce arbitrary numbers into cells or pretend malformed JSON met the schema.
+3. Record failed as well as successful API calls, with stage and timing. No keys.
+4. Add integration tests through MockTransport and the real ModelClient/Pipeline:
+empty array, invalid JSON, missing outputs, fabricated operands and service failure.
+Assert that no unsupported result is rendered as fact and transport failures remain
+visible. Existing questions/evaluator/retrieval stay frozen.
+5. After Kiddi/Gisli review and Silli&#x27;s required go, freeze a new executable commit
+and run the same 60 open cases. Preserve this incomplete attempt and earlier 4/60
+and 7/60. Do not retune category selection or prompts from these answer keys.
+
+Separate audit concern: model-supplied dimension_scope remains semantic evidence,
+not a proof that no subgroup was requested. Review this explicitly without widening
+the current implementation or silently relaxing the acceptance gates.
+
+No merge, closed tests, new GPU/storage, stop or restart is authorized by this proposal.
+</pre></html>

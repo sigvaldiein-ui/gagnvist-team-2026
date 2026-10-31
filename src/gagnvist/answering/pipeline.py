@@ -13,18 +13,22 @@ Each step is a small module; improve one at a time and measure the effect with
 from __future__ import annotations
 
 import unicodedata
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from types import TracebackType
+from typing import Any
 
 from gagnvist.answering.choose_categories import choose_categories, years_not_covered
 from gagnvist.answering.find_tables import find_tables
+from gagnvist.answering.grounded_answer import grounded_answer
 from gagnvist.answering.language import guess_language
 from gagnvist.answering.read_numbers import Fact, read_numbers
-from gagnvist.answering.write_answer import unsupported_numbers, write_answer
+from gagnvist.answering.write_answer import unsupported_numbers
 from gagnvist.config import ConfigError, Settings
 from gagnvist.data.catalogue import CatalogueEntry
 from gagnvist.models.client import ModelClient
+from gagnvist.search.hybrid import HybridRetriever, RetrievalConfig
+from gagnvist.search.rerank import MetadataReranker
 from gagnvist.search.table_index import TableIndex
 from gagnvist.search.vector_search import Match, VectorIndex
 
@@ -47,6 +51,11 @@ class Answer:
     # More tables, for an answer built from several (the starter kit uses one): evaluate
     # counts every table in `tables` when it checks where the numbers came from.
     extra_tables: tuple[CatalogueEntry, ...] = ()
+    cell_references: list[dict[str, Any]] = field(default_factory=list)
+    calculations: list[dict[str, Any]] = field(default_factory=list)
+    answer_plan: dict[str, Any] = field(default_factory=dict)
+    period_mode: str = "not_applicable"
+    unsupported_without_calculations: list[str] = field(default_factory=list)
 
     @property
     def tables(self) -> tuple[CatalogueEntry, ...]:
@@ -66,12 +75,21 @@ class Pipeline:
     """Everything needed to answer questions: the tables, the search and the models."""
 
     def __init__(
-        self, data_folder: Path, tables: TableIndex, vectors: VectorIndex, client: ModelClient
+        self,
+        data_folder: Path,
+        tables: TableIndex,
+        vectors: VectorIndex,
+        client: ModelClient,
+        *,
+        retrieval_config: RetrievalConfig | None = None,
     ) -> None:
         self.data_folder = data_folder
         self.tables = tables
         self.vectors = vectors
         self.client = client
+        self.retrieval_config = retrieval_config
+        self._retriever: HybridRetriever | None = None
+        self._reranker: MetadataReranker | None = None
 
     @classmethod
     def from_settings(cls, settings: Settings) -> Pipeline:
@@ -80,6 +98,7 @@ class Pipeline:
             TableIndex(settings.table_database),
             open_vector_index(settings),
             ModelClient.from_settings(settings),
+            retrieval_config=settings.retrieval,
         )
 
     def close(self) -> None:
@@ -102,7 +121,17 @@ class Pipeline:
         # one form for every letter: text pasted on a Mac can write í as i + accent
         question = unicodedata.normalize("NFC", question)
         language = language or guess_language(question)
-        candidates = find_tables(question, language, self.vectors, self.client)
+        if self.retrieval_config is None:
+            # Preserve direct-constructor API behavior; configured pipelines opt in.
+            candidates = find_tables(question, language, self.vectors, self.client)
+        else:
+            if self._retriever is None or self._retriever.index is not self.vectors:
+                self._retriever = HybridRetriever(self.vectors, self.retrieval_config)
+            candidates = self._retriever.search(question, language, self.client)
+            if self.retrieval_config.rerank:
+                if self._reranker is None:
+                    self._reranker = MetadataReranker(self.tables)
+                candidates = self._reranker.rerank(question, language, candidates)
         if not candidates:
             raise AnswerError(f"the vector index has no tables in language {language!r}")
         try:
@@ -116,7 +145,8 @@ class Pipeline:
 
         choice = choose_categories(question, table.title, metadata, self.client)
         facts = read_numbers(self.data_folder, table, metadata, choice.selection)
-        text = write_answer(question, language, table.title, facts, self.client)
+        grounded = grounded_answer(question, language, table, facts, self.client)
+        text = grounded.text
 
         sources = [question, table.title, *(fact.text for fact in facts)]
         return Answer(
@@ -126,9 +156,14 @@ class Pipeline:
             table=table,
             facts=facts,
             candidates=candidates,
-            notes=choice.notes,
-            unsupported=unsupported_numbers(text, sources),
+            notes=[*choice.notes, *grounded.notes],
+            unsupported=unsupported_numbers(text, [*sources, *grounded.validated_numbers]),
             years_not_covered=years_not_covered(question, table.title, metadata),
+            cell_references=grounded.cell_references,
+            calculations=grounded.calculations,
+            answer_plan=grounded.plan,
+            period_mode=grounded.period_mode,
+            unsupported_without_calculations=unsupported_numbers(text, sources),
         )
 
 
