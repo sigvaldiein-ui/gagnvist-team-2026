@@ -32,6 +32,8 @@ class RetrievalConfig:
     decompose: bool = False
     fusion: str = "interleave"
     prefix: bool = True
+    prefix_language: str = "is"
+    rerank: bool = True
     max_subqueries: int = 3
     subquery_weight: float = 0.5
 
@@ -42,6 +44,10 @@ class RetrievalConfig:
             raise ValueError("candidate_limit must be an integer from 1 to 100")
         if type(self.max_subqueries) is not int or not 0 <= self.max_subqueries <= 3:
             raise ValueError("max_subqueries must be an integer from 0 to 3")
+        if self.prefix_language not in {"is", "all"}:
+            raise ValueError("prefix_language must be is or all (legacy ablation)")
+        if type(self.rerank) is not bool:
+            raise ValueError("rerank must be boolean")
         if self.fusion not in {"rrf", "interleave"}:
             raise ValueError("fusion must be rrf or interleave")
         if type(self.prefix) is not bool:
@@ -154,7 +160,7 @@ class HybridRetriever:
                 ],
                 config.bm25_k1,
                 config.bm25_b,
-                prefix=config.prefix,
+                prefix=config.prefix and (language == "is" or config.prefix_language == "all"),
             )
             for language in {c.language for c in index.cards}
         }

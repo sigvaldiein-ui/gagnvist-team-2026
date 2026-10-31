@@ -26,6 +26,7 @@ from gagnvist.config import ConfigError, Settings
 from gagnvist.data.catalogue import CatalogueEntry
 from gagnvist.models.client import ModelClient
 from gagnvist.search.hybrid import HybridRetriever, RetrievalConfig
+from gagnvist.search.rerank import MetadataReranker
 from gagnvist.search.table_index import TableIndex
 from gagnvist.search.vector_search import Match, VectorIndex
 
@@ -81,6 +82,7 @@ class Pipeline:
         self.client = client
         self.retrieval_config = retrieval_config
         self._retriever: HybridRetriever | None = None
+        self._reranker: MetadataReranker | None = None
 
     @classmethod
     def from_settings(cls, settings: Settings) -> Pipeline:
@@ -119,6 +121,10 @@ class Pipeline:
             if self._retriever is None or self._retriever.index is not self.vectors:
                 self._retriever = HybridRetriever(self.vectors, self.retrieval_config)
             candidates = self._retriever.search(question, language, self.client)
+            if self.retrieval_config.rerank:
+                if self._reranker is None:
+                    self._reranker = MetadataReranker(self.tables)
+                candidates = self._reranker.rerank(question, language, candidates)
         if not candidates:
             raise AnswerError(f"the vector index has no tables in language {language!r}")
         try:

@@ -59,10 +59,23 @@ class RetrievalSignal:
 
 
 @dataclass(frozen=True)
+class RerankSignal:
+    source_rank: int
+    temporal_state: str
+    word_count: int
+    matched_terms: tuple[str, ...]
+    unmatched_dimensions: int
+    complete_categories: bool
+    requested_periods: tuple[str, ...]
+    available_periods: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class Match:
     card: Card
-    score: float  # cosine for dense search, weighted RRF for hybrid (see signals)
+    score: float  # original dense/RRF/interleaving score; rerank evidence is separate
     signals: tuple[RetrievalSignal, ...] = ()
+    rerank: RerankSignal | None = None
 
 
 def card_text(entry: CatalogueEntry, metadata: TableMetadata) -> str:
