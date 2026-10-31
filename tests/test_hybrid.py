@@ -59,7 +59,7 @@ def test_no_cross_language_results_and_no_keyword_hits_are_not_invented():
 
 def test_rrf_formula_and_repeated_queries_are_deterministic():
     client = Client()
-    config = RetrievalConfig(decompose=False)
+    config = RetrievalConfig(decompose=False, fusion="rrf", prefix=False)
     retriever = HybridRetriever(index(), config)
     first = retriever.search("river flow", "en", client)
     assert first == retriever.search("river flow", "en", client)
@@ -103,7 +103,9 @@ def test_unicode_normalization_and_underscore_folder_tokens():
 
 
 def test_subquery_weight_budget_and_trace_are_preserved():
-    retriever = HybridRetriever(index())
+    retriever = HybridRetriever(
+        index(), RetrievalConfig(fusion="rrf", prefix=False, decompose=True)
+    )
     result = retriever.search("forest cover and river flow", "en", Client())
     assert result
     assert any(s.query == "river flow" for m in result for s in m.signals)
@@ -181,3 +183,50 @@ def test_configured_pipeline_uses_hybrid_signals_but_still_one_source(
         assert answer.candidates[0].signals
         assert answer.table.folder == answer.candidates[0].card.folder
         assert answer.extra_tables == ()
+
+
+@pytest.mark.parametrize(
+    "language,document,query",
+    [
+        ("en", "Forested habitats", "forestry"),
+        ("is", "Skógræktarsvæði", "skógræktin"),
+    ],
+)
+def test_general_six_character_prefix(language, document, query):
+    bm25 = BM25([("topic/" + language, document)], 1.2, 0.75, prefix=True)
+    assert bm25.search(query, 5)[0][0] == "topic/" + language
+    assert BM25([("topic", document)], 1.2, 0.75).search(query, 5) == []
+
+
+def test_prefix_keeps_short_numeric_and_normalized_terms_distinct():
+    bm25 = BM25(
+        [("a", "river riverside 20260101"), ("b", "riversides 20260102")], 1.2, 0.75, prefix=True
+    )
+    assert [f for f, _ in bm25.search("river", 5)] == ["a"]
+    assert [f for f, _ in bm25.search("20260101", 5)] == ["a"]
+    assert tokens("Sko\u0301grækt") == tokens("Skógrækt")
+
+
+def test_interleaving_is_lexical_first_with_full_folder_deduplication():
+    retriever = HybridRetriever(index(), RetrievalConfig(prefix=False))
+    result = retriever.search("river flow", "en", Client())
+    # Lexical B first, then dense A; B appearing in dense again is not duplicated.
+    assert [m.card.folder.rsplit("/", 1)[-1] for m in result] == ["B", "A"]
+    assert [m.score for m in result] == [1.0, 0.5]
+    assert all(s.rrf == 0 for m in result for s in m.signals)
+    assert {s.source for s in result[0].signals} == {"dense", "bm25"}
+
+
+def test_default_subqueries_disabled_and_empty_lexical_falls_back_to_dense():
+    client = Client()
+    retriever = HybridRetriever(index())
+    result = retriever.search("unknownword and unrelatedword", "en", client)
+    assert result
+    assert client.calls == ["unknownword and unrelatedword"]
+    assert all(s.source == "dense" for m in result for s in m.signals)
+
+
+@pytest.mark.parametrize("changes", [{"fusion": "invalid"}, {"prefix": "true"}])
+def test_round2_invalid_config(changes):
+    with pytest.raises(ValueError):
+        replace(RetrievalConfig(), **changes)

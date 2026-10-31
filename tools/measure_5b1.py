@@ -102,12 +102,16 @@ def main():
     index = VectorIndex.load(settings.search.index)
     live = ModelClient(Endpoint(settings.models.chat_url,'local-only',settings.models.chat),Endpoint(settings.models.embeddings_url,'local-only',settings.models.embeddings))
     client = CachedClient(live, questions, args.vectors)
+    legacy = RetrievalConfig(fusion='rrf', prefix=False, decompose=True)
     configs = {
-        'dense_top5': RetrievalConfig(mode='dense',candidate_limit=5,decompose=False),
-        'dense_top100': RetrievalConfig(mode='dense',decompose=False),
-        'lexical': RetrievalConfig(mode='lexical',decompose=False),
-        'hybrid': RetrievalConfig(decompose=False),
-        'hybrid_subqueries': settings.retrieval,
+        'round1_rrf_subqueries': legacy,
+        'interleave_only': replace(legacy, fusion='interleave'),
+        'prefix_only': replace(legacy, prefix=True),
+        'no_subqueries_only': replace(legacy, decompose=False),
+        'interleave_prefix': replace(legacy, fusion='interleave', prefix=True),
+        'round2_final': settings.retrieval,
+        'lexical_prefix': RetrievalConfig(mode='lexical', prefix=True, decompose=False),
+        'dense_top100': RetrievalConfig(mode='dense', decompose=False),
     }
     ablations = {}
     with (args.out/'retrieval-cases.jsonl').open('x') as trace:

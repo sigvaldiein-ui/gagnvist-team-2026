@@ -1,4 +1,4 @@
-"""General metadata BM25 and weighted reciprocal-rank fusion (no answer labels).
+"""General metadata BM25 with lexical-first interleaving or legacy RRF (no answer labels).
 
 Documents are shipped card text (title and dimension labels) plus folder tokens.
 No period/metric reranking, category selection, calculations or multi-table answers.
@@ -29,7 +29,9 @@ class RetrievalConfig:
     rrf_k: float = 60.0
     bm25_k1: float = 1.2
     bm25_b: float = 0.75
-    decompose: bool = True
+    decompose: bool = False
+    fusion: str = "interleave"
+    prefix: bool = True
     max_subqueries: int = 3
     subquery_weight: float = 0.5
 
@@ -40,6 +42,10 @@ class RetrievalConfig:
             raise ValueError("candidate_limit must be an integer from 1 to 100")
         if type(self.max_subqueries) is not int or not 0 <= self.max_subqueries <= 3:
             raise ValueError("max_subqueries must be an integer from 0 to 3")
+        if self.fusion not in {"rrf", "interleave"}:
+            raise ValueError("fusion must be rrf or interleave")
+        if type(self.prefix) is not bool:
+            raise ValueError("prefix must be boolean")
         if type(self.decompose) is not bool:
             raise ValueError("decompose must be boolean")
         values = (
@@ -98,22 +104,29 @@ def query_parts(question: str, maximum: int = 3) -> list[str]:
 
 
 class BM25:
-    def __init__(self, documents: Sequence[tuple[str, str]], k1: float, b: float) -> None:
+    def __init__(
+        self, documents: Sequence[tuple[str, str]], k1: float, b: float, *, prefix: bool = False
+    ) -> None:
         self.k1, self.b = k1, b
+        self.prefix = prefix
         self.lengths: dict[str, int] = {}
         self.postings: dict[str, dict[str, int]] = defaultdict(dict)
         for folder, text in documents:
-            counts = Counter(tokens(text))
+            counts = Counter(self.terms(text))
             self.lengths[folder] = sum(counts.values())
             for term, frequency in counts.items():
                 self.postings[term][folder] = frequency
         self.average = sum(self.lengths.values()) / len(documents) if documents else 1.0
         self.average = self.average or 1.0
 
+    def terms(self, text: str) -> list[str]:
+        """Six Unicode characters for alphabetic terms; short/numeric terms stay exact."""
+        return [term[:6] if self.prefix and term.isalpha() else term for term in tokens(text)]
+
     def search(self, query: str, limit: int) -> list[tuple[str, float]]:
         scores: dict[str, float] = defaultdict(float)
         n = len(self.lengths)
-        for term in sorted(set(tokens(query))):
+        for term in sorted(set(self.terms(query))):
             hits = self.postings.get(term, {})
             idf = math.log(1 + (n - len(hits) + 0.5) / (len(hits) + 0.5))
             for folder, frequency in hits.items():
@@ -141,6 +154,7 @@ class HybridRetriever:
                 ],
                 config.bm25_k1,
                 config.bm25_b,
+                prefix=config.prefix,
             )
             for language in {c.language for c in index.cards}
         }
@@ -163,6 +177,7 @@ class HybridRetriever:
                 limit=min(limit, cfg.candidate_limit),
                 language=language,
             )
+        channel_lists: list[list[tuple[str, float]]] = []
         for number, query in enumerate(queries):
             weight = 1.0 if number == 0 else cfg.subquery_weight / max(1, len(queries) - 1)
             lists: list[tuple[str, float, list[tuple[str, float]]]] = []
@@ -179,15 +194,36 @@ class HybridRetriever:
                         self.lexical[language].search(query, cfg.candidate_limit),
                     )
                 )
+            # Lexical first, dense second, for each query. Full query comes first.
+            lists.sort(key=lambda item: item[0] != "bm25")
+            channel_lists.extend(matches for _, _, matches in lists)
             for source, source_weight, matches in lists:
                 for rank, (folder, score) in enumerate(matches, 1):
-                    contribution = weight * source_weight / (cfg.rrf_k + rank)
-                    if contribution:
+                    contribution = (
+                        weight * source_weight / (cfg.rrf_k + rank) if cfg.fusion == "rrf" else 0.0
+                    )
+                    if contribution or cfg.fusion == "interleave":
                         signals[folder].append(
                             RetrievalSignal(query, source, rank, score, contribution)
                         )
-        ordered = sorted(signals, key=lambda f: (-sum(s.rrf for s in signals[f]), f))
+        if cfg.fusion == "interleave":
+            # Round-robin positions; duplicates consume their slot, never another result.
+            ordered = []
+            seen: set[str] = set()
+            for position in range(max((len(items) for items in channel_lists), default=0)):
+                for items in channel_lists:
+                    if position < len(items):
+                        folder = items[position][0]
+                        if folder not in seen:
+                            ordered.append(folder)
+                            seen.add(folder)
+        else:
+            ordered = sorted(signals, key=lambda f: (-sum(s.rrf for s in signals[f]), f))
         return [
-            Match(self.cards[f], sum(s.rrf for s in signals[f]), tuple(signals[f]))
-            for f in ordered[: min(limit, cfg.candidate_limit)]
+            Match(
+                self.cards[f],
+                1.0 / rank if cfg.fusion == "interleave" else sum(s.rrf for s in signals[f]),
+                tuple(signals[f]),
+            )
+            for rank, f in enumerate(ordered[: min(limit, cfg.candidate_limit)], 1)
         ]

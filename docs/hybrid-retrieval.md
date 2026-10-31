@@ -1,3 +1,35 @@
+# 5B-1 round 2: lexical-first interleaving
+
+Supersedes round-1 defaults documented below. Approved scope is exactly:
+lexical/dense interleaving, general six-character lexical prefixes, and disabled
+subqueries by default. No main merge, 5B-2, 5B-3 or closed-test access.
+
+Defaults: `fusion="interleave"`, `prefix=true`, `decompose=false`. Each list is
+built independently, then traversed lexical1, dense1, lexical2, dense2, etc.
+Repeated full folder paths consume their list position but are emitted only once.
+An empty lexical list falls back naturally to dense. Final results are capped at
+100. `Match.score` is reciprocal final position for interleaving, not cosine or
+BM25. Raw channel scores/ranks remain in signals; their legacy `rrf` field is zero
+because no RRF contribution is used. Legacy RRF remains available only for
+reproducible ablation. Channel weights do not reorder interleaving.
+
+Prefix matching maps every alphabetic token to its first six NFC/casefolded
+Unicode characters in both documents and queries. Terms shorter than six stay
+unchanged, as do numeric/alphanumeric identifiers. No synonyms or domain lists
+are added. Prefix collisions aggregate term frequency and document frequency
+before BM25 scoring, rather than double-counting exact and prefix hits.
+
+The 60 open questions are a development set. Configuration is frozen before the
+new answer measurement. Independent single-change and cumulative ablations are
+recorded; no tuning after results. Exact canonical folders are audited separately
+from accepted-code recall; alternative folders are not silently certified.
+
+Round-2 gates: at least 16/40 single-table questions with accepted first table,
+at least 4/60 correct answers, and no language/level cell down more than one
+answer from the 4/60 baseline. Tests do not grant merge approval.
+
+## Historical round-1 design (defaults below are historical)
+
 # 5B-1: metadata hybrid retrieval
 
 Related: Issue #4. Base: `a09746847e884190aa51ea9f91fab8c4c90c2088`.
