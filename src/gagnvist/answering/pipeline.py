@@ -25,6 +25,7 @@ from gagnvist.answering.write_answer import unsupported_numbers, write_answer
 from gagnvist.config import ConfigError, Settings
 from gagnvist.data.catalogue import CatalogueEntry
 from gagnvist.models.client import ModelClient
+from gagnvist.search.hybrid import HybridRetriever, RetrievalConfig
 from gagnvist.search.table_index import TableIndex
 from gagnvist.search.vector_search import Match, VectorIndex
 
@@ -66,12 +67,20 @@ class Pipeline:
     """Everything needed to answer questions: the tables, the search and the models."""
 
     def __init__(
-        self, data_folder: Path, tables: TableIndex, vectors: VectorIndex, client: ModelClient
+        self,
+        data_folder: Path,
+        tables: TableIndex,
+        vectors: VectorIndex,
+        client: ModelClient,
+        *,
+        retrieval_config: RetrievalConfig | None = None,
     ) -> None:
         self.data_folder = data_folder
         self.tables = tables
         self.vectors = vectors
         self.client = client
+        self.retrieval_config = retrieval_config
+        self._retriever: HybridRetriever | None = None
 
     @classmethod
     def from_settings(cls, settings: Settings) -> Pipeline:
@@ -80,6 +89,7 @@ class Pipeline:
             TableIndex(settings.table_database),
             open_vector_index(settings),
             ModelClient.from_settings(settings),
+            retrieval_config=settings.retrieval,
         )
 
     def close(self) -> None:
@@ -102,7 +112,13 @@ class Pipeline:
         # one form for every letter: text pasted on a Mac can write í as i + accent
         question = unicodedata.normalize("NFC", question)
         language = language or guess_language(question)
-        candidates = find_tables(question, language, self.vectors, self.client)
+        if self.retrieval_config is None:
+            # Preserve direct-constructor API behavior; configured pipelines opt in.
+            candidates = find_tables(question, language, self.vectors, self.client)
+        else:
+            if self._retriever is None or self._retriever.index is not self.vectors:
+                self._retriever = HybridRetriever(self.vectors, self.retrieval_config)
+            candidates = self._retriever.search(question, language, self.client)
         if not candidates:
             raise AnswerError(f"the vector index has no tables in language {language!r}")
         try:

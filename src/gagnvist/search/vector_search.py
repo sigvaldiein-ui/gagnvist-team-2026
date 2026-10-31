@@ -50,9 +50,19 @@ class Card:
 
 
 @dataclass(frozen=True)
+class RetrievalSignal:
+    query: str
+    source: str
+    rank: int
+    raw_score: float
+    rrf: float
+
+
+@dataclass(frozen=True)
 class Match:
     card: Card
-    score: float  # cosine similarity: 1 is identical, 0 unrelated
+    score: float  # cosine for dense search, weighted RRF for hybrid (see signals)
+    signals: tuple[RetrievalSignal, ...] = ()
 
 
 def card_text(entry: CatalogueEntry, metadata: TableMetadata) -> str:
