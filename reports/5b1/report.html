@@ -1,0 +1,1730 @@
+<!doctype html><meta charset="utf-8"><title>Gagnvist 5B-1 review</title><style>body{max-width:1100px;margin:32px auto;font:16px system-ui;padding:16px}pre{white-space:pre-wrap;overflow-wrap:anywhere}summary{padding:8px;background:#eee}</style><h1>5B-1 — YELLOW / NO MERGE</h1><p>4/60 → 2/60. 388 tests pass. Regression gate fails.</p><pre># 5B-1 — YELLOW / NO MERGE
+
+The fixed hybrid retrieval experiment regressed from 4/60 to 2/60 correct answers (58 wrong, 0 errors). Icelandic easy fell 3/10 → 0/10, exceeding the allowed one-answer drop. English easy rose 1/10 → 2/10; all four medium/hard cells remain 0/10. Do not merge or deploy this branch.
+
+Tested code: `41c2079ff108d21894fdc50d4c359830475a0ba2`. Subsequent report-only commit does not change executable code. Baseline main: `a09746847e884190aa51ea9f91fab8c4c90c2088`.
+
+## Implementation
+
+BM25 over card text and folder + dense top100; fixed equal-weight RRF (k=60), stable full-folder identity and raw provenance. Bounded conjunction fragments are retrieval only. No domain-specific synonyms, temporal reranking, category selection, deterministic arithmetic or extra_tables implementation. No tuning against the 60 answers.
+
+## Oracle before implementation
+
+Dense top100 finds at least one accepted part for 58/60 and all parts for 49/60. Of 100 required parts, 41 rank 1–10, 47 rank 11–100 and 12 outside 100. Local CPU p50 5.801 ms / p95 7.751 ms; embedding excluded.
+
+## Retrieval ablations
+
+Macro part recall; any/all counts use the unchanged accepted table-code alternatives.
+
+| Stage | @1 | @5 | @10 | @100 | Any / all @100 | CPU p50 / p95 ms |
+|---|---:|---:|---:|---:|---:|---:|
+| dense_top5 | 0.2333 | 0.3417 | 0.3417 | 0.3417 | 26 / 15 | 0.176 / 0.307 |
+| dense_top100 | 0.2333 | 0.3417 | 0.4333 | 0.8917 | 58 / 49 | 6.582 / 96.119 |
+| lexical | 0.4167 | 0.6833 | 0.7333 | 0.9333 | 57 / 55 | 0.804 / 1.183 |
+| hybrid | 0.2583 | 0.4917 | 0.6917 | 0.9250 | 58 / 53 | 2.467 / 95.087 |
+| hybrid_subqueries | 0.2417 | 0.4667 | 0.6917 | 0.9250 | 58 / 53 | 10.902 / 99.457 |
+
+Lexical alone has stronger top1 recall than the approved fixed fusion. Broader candidate coverage did not yield better answers. The current pipeline still answers from its first selected table. A revised ranking design needs review before further code changes; these measurements do not justify changing weights or enabling lexical-only by default.
+
+## Validation and evidence
+
+388 tests passed (365 original + 23 new), zero failures. Ruff, format and mypy pass. Questions and evaluator unchanged; exact hashes and all 60 answer texts/verdicts/sources are in measurement.json. Full 300 retrieval traces retain raw scores, full folders, metadata and signal contributions in the review bundle. Separate canonical-folder audit validates all 100 anchor-part cells; it does not certify every alternative folder.
+
+End-to-end answers p50 5.186 s / p95 8.114 s. Five rows contain six unsupported items. These are single-run results, not statistically established improvements. Full question retrieval embeddings are replayed Gate0 vectors; fragment embeddings were live and cached. Index construction and embedding timing are separate in retrieval-summary.json.
+
+Original source, evaluation, data and previous evidence preserved. Main unchanged; closed 12 questions not accessed. No new GPU/storage, stop or restart. GPU snapshot: 32,519 / 46,068 MiB; existing services remain localhost only. Silli decides shutdown.
+
+## Review request for Kiddi and Gummi
+
+Verify unchanged evaluator/questions and frozen source SHA, reproduce oracle and ablations, inspect the Icelandic easy regression and canonical-folder ambiguity, then return a revised design decision. This draft is evidence for review, not a merge recommendation.</pre><h2>All 60 answers</h2><details><summary>population-iceland-2026-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;population-iceland-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;How many people lived in Iceland on 1 January 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 4.377598864026368,
+  &quot;answer&quot;: &quot;On 1 January 2026, the total population living in the Capital Region of Iceland was 137,476.&quot;,
+  &quot;why&quot;: &quot;does not state 394,324 people; answered from VIN10012, expected MAN00101 (or 17 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIN10012 \&quot;Register based employment of persons with legal residence in Iceland by month, sex, age, origin and region 2003-2026\&quot; (updated 2026-10-07): https://px.hagstofa.is/pxen/api/v1/en/Samfelag/vinnumarkadur/vinnuaflskraargogn/VIN10012.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Society/en/vinnumarkadur/vinnuaflskraargogn/VIN10012&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIN10012&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Búseta: no category chosen, using &#x27;Capital Region&#x27;&quot;,
+    &quot;Kyn: no category chosen, using &#x27;Alls&#x27;&quot;,
+    &quot;Aldursflokkar: no category chosen, using &#x27;Total&#x27;&quot;,
+    &quot;Bakgrunnur: no category chosen, using &#x27;Total&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Month: 2026M01; Region: Capital Region; Sex: Alls; Age-groups: Total; Origin: Total = 137476&quot;
+  ]
+}</pre></details><details><summary>population-iceland-2026-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;population-iceland-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hve margir bjuggu á Íslandi 1. janúar 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 4.458409979939461,
+  &quot;answer&quot;: &quot;1. janúar 2026 bauð 137476 bjugga í Höfuðborgarsvæði.&quot;,
+  &quot;why&quot;: &quot;does not state 394,324 people; answered from VIN10012, expected MAN00101 (or 17 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIN10012 \&quot;Fjöldi starfandi með lögheimili á Íslandi samkvæmt skrám eftir mánuðum, kyni, aldri, bakgrunni og búsetu 2003-2026\&quot; (updated 2026-10-07): https://px.hagstofa.is/pxis/api/v1/is/Samfelag/vinnumarkadur/vinnuaflskraargogn/VIN10012.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Society/is/vinnumarkadur/vinnuaflskraargogn/VIN10012&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIN10012&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Búseta: no category chosen, using &#x27;Höfuðborgarsvæði&#x27;&quot;,
+    &quot;Kyn: no category chosen, using &#x27;Alls&#x27;&quot;,
+    &quot;Aldursflokkar: no category chosen, using &#x27;Alls&#x27;&quot;,
+    &quot;Bakgrunnur: no category chosen, using &#x27;Alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Mánuður: 2026M01; Búseta: Höfuðborgarsvæði; Kyn: Alls; Aldursflokkar: Alls; Bakgrunnur: Alls = 137476&quot;
+  ]
+}</pre></details><details><summary>population-reykjavik-en — right</summary><pre>{
+  &quot;id&quot;: &quot;population-reykjavik-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;How many people lived in Reykjavík on 1 January 2026?&quot;,
+  &quot;correct&quot;: true,
+  &quot;verdict&quot;: &quot;right&quot;,
+  &quot;numbers_right&quot;: true,
+  &quot;right_table&quot;: true,
+  &quot;seconds&quot;: 3.2685752040706575,
+  &quot;answer&quot;: &quot;On 1 January 2026, the total population of Reykjavík was 139,804.&quot;,
+  &quot;why&quot;: &quot;&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN03270 \&quot;Population in Reykjavík by districts, sex and age 1 January 1998-2026\&quot; (updated 2026-03-12): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN03270&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Districts: Total; Age: Total; Year: 2026; Sex: Total = 139804&quot;
+  ]
+}</pre></details><details><summary>population-reykjavik-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;population-reykjavik-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hve margir bjuggu í Reykjavík 1. janúar 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: true,
+  &quot;seconds&quot;: 3.4152178389485925,
+  &quot;answer&quot;: &quot;Bjugguð eru 12.139 í Reykjavík 1. janúar 2026.Þetta tala um aldur alls, kyn alls og hverfin 7 Árbær.&quot;,
+  &quot;why&quot;: &quot;does not state 139,804 people&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN03270 \&quot;Mannfjöldi eftir hverfum í Reykjavík, kyni og aldri 1. janúar 1998-2026\&quot; (updated 2026-03-12): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN03270&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Aldur: no category chosen, using &#x27;Alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Hverfi: 7 Árbær; Aldur: Alls; Ár: 2026; Kyn: Alls = 12139&quot;
+  ]
+}</pre></details><details><summary>births-2024-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;births-2024-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;How many children were born in Iceland in 2024?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 2.8946457328274846,
+  &quot;answer&quot;: &quot;No number for children born in Iceland in 2024 is published in the given facts.&quot;,
+  &quot;why&quot;: &quot;does not state 4,311 children; answered from UMH31220, expected MAN05101 (or 9 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table UMH31220 \&quot;Release of air pollutants from Iceland, summary 1990-2024\&quot; (updated 2026-09-01): https://px.hagstofa.is/pxen/api/v1/en/Umhverfi/2_losunlofttegunda/3_losunlofttegunda_lrtap/UMH31220.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Environment/en/2_losunlofttegunda/3_losunlofttegunda_lrtap/UMH31220&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;UMH31220&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Liður: no category chosen, using &#x27;Metal production&#x27;&quot;,
+    &quot;Efni: no category chosen, using &#x27;Carbon monoxide (CO)&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Item: Metal production; Year: 2024; Chemical: Carbon monoxide (CO) = 102478.20618389&quot;
+  ]
+}</pre></details><details><summary>births-2024-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;births-2024-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hve mörg börn fæddust á Íslandi árið 2024?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 3.6756645659916103,
+  &quot;answer&quot;: &quot;Árið 2024 fæddist 4 béarn á Íslandi.Þetta tala um allt kyn.&quot;,
+  &quot;why&quot;: &quot;does not state 4,311 children; answered from SKO01108, expected MAN05101 (or 9 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SKO01108 \&quot;Börn í leikskólum á skólaskyldualdri 1998-2024\&quot; (updated 2026-04-01): https://px.hagstofa.is/pxis/api/v1/is/Samfelag/skolamal/1_leikskolastig/0_lsNemendur/SKO01108.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Society/is/skolamal/1_leikskolastig/0_lsNemendur/SKO01108&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SKO01108&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Kyn: no category chosen, using &#x27;Alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Ár: 2024; Kyn: Alls = 4&quot;
+  ]
+}</pre></details><details><summary>cpi-2026-09-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;cpi-2026-09-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;What was the consumer price index in September 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 5.519890754017979,
+  &quot;answer&quot;: &quot;No consumer price index is published for September 2026 in the given facts. The table provided only shows that for September 2021, the Producer Price Index (PPI) does not have a published number (\&quot;..\&quot;).&quot;,
+  &quot;why&quot;: &quot;does not state 697.3; answered from VIS08000B, expected VIS01000/VIS01002&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIS08000B \&quot;Changes in the producer price index 2006-2021\&quot; (updated 2021-11-03): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/visitolur/5_visitalaframleidslu/framleidsluverdeldra/VIS08000b.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/en/visitolur/5_visitalaframleidslu/framleidsluverdeldra/VIS08000b&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIS08000B&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Year: ignored &#x27;2026&#x27;: not a category code of this dimension&quot;,
+    &quot;Year: no category chosen, using &#x27;2021&#x27;&quot;,
+    &quot;Index: no category chosen, using &#x27;PPI&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Year: 2021; Month: September; Unit: Index; Index: PPI = no number published (\&quot;..\&quot;: not available)&quot;
+  ]
+}</pre></details><details><summary>cpi-2026-09-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;cpi-2026-09-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hver var vísitala neysluverðs í september 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 5.985334059922025,
+  &quot;answer&quot;: &quot;Vísitala neysluverðs í september 2026 var 104.724.698. Óvirklegt að númerinn er tómt með tölustafi á sléttu millunu.&quot;,
+  &quot;why&quot;: &quot;does not state 697.3; answered from VIS01101, expected VIS01000/VIS01002&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIS01101 \&quot;Vísitala neysluverðs eftir eðli og uppruna\&quot; (updated 2026-09-29): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/1_vnv/3_greiningarvisitolur/VIS01101.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/visitolur/1_vnv/3_greiningarvisitolur/VIS01101&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIS01101&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Liður: no category chosen, using &#x27;Vísitala&#x27;&quot;,
+    &quot;Útgjaldaflokkur: no category chosen, using &#x27;Vísitala neysluverðs&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Mánuður: 2026M09; Liður: Vísitala; Útgjaldaflokkur: Vísitala neysluverðs = 104.724698&quot;
+  ]
+}</pre></details><details><summary>wage-index-2026-08-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;wage-index-2026-08-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;What was the wage index in August 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 2.3804212289396673,
+  &quot;answer&quot;: &quot;No wage index is published for August 2026 in the given facts.&quot;,
+  &quot;why&quot;: &quot;does not state 1,149.3; answered from VIS02504, expected LAU04000&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIS02504 \&quot;Breakdown of HICP in main Subindexs August 2025-2026\&quot; (updated 2026-09-21): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02504.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/en/visitolur/2_samraemdvnv/samraemdvnv/VIS02504&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIS02504&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Country: Iceland; Subindex: 10 Education services = 11.5&quot;
+  ]
+}</pre></details><details><summary>wage-index-2026-08-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;wage-index-2026-08-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hver var launavísitalan í ágúst 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 2.2092862671706825,
+  &quot;answer&quot;: &quot;Launavísitalan í ágúst 2026 var 5,8 veitingahús og gistiþjónusta í Ísland.&quot;,
+  &quot;why&quot;: &quot;does not state 1,149.3; answered from VIS02504, expected LAU04000&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIS02504 \&quot;Sundurliðun breytinga meginflokka, ágúst 2025-2026\&quot; (updated 2026-09-21): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02504.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/visitolur/2_samraemdvnv/samraemdvnv/VIS02504&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIS02504&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Land: Ísland; Undirvísitala: 11 Veitingahús og gistiþjónusta = 5.8&quot;
+  ]
+}</pre></details><details><summary>unemployment-2026q2-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;unemployment-2026q2-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;What was the unemployment rate in Iceland in the second quarter of 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: true,
+  &quot;seconds&quot;: 5.498045349959284,
+  &quot;answer&quot;: &quot;No unemployment rate is published for the second quarter of 2026 in the provided data.&quot;,
+  &quot;why&quot;: &quot;does not state 6.5%&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIN00910 \&quot;Activity rate, employment rate, underemployment rate and unemployment rate by quarters 2003-2026\&quot; (updated 2026-09-04): https://px.hagstofa.is/pxen/api/v1/en/Samfelag/vinnumarkadur/vinnumarkadsrannsokn/2_arsfjordungstolur/VIN00910.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Society/en/vinnumarkadur/vinnumarkadsrannsokn/2_arsfjordungstolur/VIN00910&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIN00910&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Landsvæði: ignored &#x27;Total&#x27;: not a category code of this dimension&quot;,
+    &quot;Landsvæði: no category chosen, using &#x27;Total&#x27;&quot;,
+    &quot;Kyn: ignored &#x27;Males and females&#x27;: not a category code of this dimension&quot;,
+    &quot;Kyn: no category chosen, using &#x27;Males and females&#x27;&quot;,
+    &quot;Aldur: ignored &#x27;16-74&#x27;: not a category code of this dimension&quot;,
+    &quot;Aldur: no category chosen, using &#x27;16-74&#x27;&quot;,
+    &quot;Hlutfall, %: ignored &#x27;Unemployment rate, % (of labour force)&#x27;: not a category code of this dimension&quot;,
+    &quot;Hlutfall, %: no category chosen, using &#x27;Activity rate, % (of population)&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Quarter: 2026Q2; Region: Total; Sex: Males and females; Age: 16-74; Rate: Activity rate, % (of population) = 81.1&quot;
+  ]
+}</pre></details><details><summary>unemployment-2026q2-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;unemployment-2026q2-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hvert var atvinnuleysi á Íslandi á öðrum ársfjórðungi 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: true,
+  &quot;seconds&quot;: 7.194064697949216,
+  &quot;answer&quot;: &quot;Atvinnuleysi á Íslandi á öðrum ársfjórðungi 2026 var 81.1%.Þetta tala um atvinnuleysinn fyrir all landsvæði, bæði karla og konur í aldur 16-74 ára.&quot;,
+  &quot;why&quot;: &quot;does not state 6.5%&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIN00910 \&quot;Atvinnuþátttaka, starfandi, vinnulitlir og atvinnuleysi, hlutfall eftir ársfjórðungum 2003-2026\&quot; (updated 2026-09-04): https://px.hagstofa.is/pxis/api/v1/is/Samfelag/vinnumarkadur/vinnumarkadsrannsokn/2_arsfjordungstolur/VIN00910.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Society/is/vinnumarkadur/vinnumarkadsrannsokn/2_arsfjordungstolur/VIN00910&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIN00910&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Ársfjórðungur: ignored &#x27;2026Á2&#x27;: not a category code of this dimension&quot;,
+    &quot;Ársfjórðungur: no category chosen, using &#x27;2026Á2&#x27;&quot;,
+    &quot;Landsvæði: no category chosen, using &#x27;Alls&#x27;&quot;,
+    &quot;Kyn: no category chosen, using &#x27;Karlar og konur&#x27;&quot;,
+    &quot;Aldur: no category chosen, using &#x27;16-74 ára&#x27;&quot;,
+    &quot;Hlutfall, %: no category chosen, using &#x27;Atvinnuþátttaka, % (af mannfjölda)&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Ársfjórðungur: 2026Á2; Landsvæði: Alls; Kyn: Karlar og konur; Aldur: 16-74 ára; Hlutfall, %: Atvinnuþátttaka, % (af mannfjölda) = 81.1&quot;
+  ]
+}</pre></details><details><summary>gdp-2025-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;gdp-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;What was Iceland&#x27;s gross domestic product in 2025?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 4.518614362925291,
+  &quot;answer&quot;: &quot;In 2025, Iceland&#x27;s gross domestic product, represented by the output of domestic producers at basic prices, was 8863756.504976 million Icelandic krónur.&quot;,
+  &quot;why&quot;: &quot;does not state 4,941,210.9167 ISK million (or 4,941.2109 ISK billion or 4.9412 ISK trillion); answered from SAM08004, expected THJ01102 (or 5 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SAM08004 \&quot;Total domestic supply and internal tourism consumption in Iceland 2009-2025\&quot; (updated 2026-05-26): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08004.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/en/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08004&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SAM08004&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Atvinnugrein: no category chosen, using &#x27;Total&#x27;&quot;,
+    &quot;Flokkar: no category chosen, using &#x27;Output of domestic producers (at basic prices)&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Year: 2025; Activity: Total; Visitors: Output of domestic producers (at basic prices) = 8863756.504976&quot;
+  ]
+}</pre></details><details><summary>gdp-2025-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;gdp-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hver var verg landsframleiðsla á Íslandi árið 2025?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: true,
+  &quot;seconds&quot;: 4.891158354002982,
+  &quot;answer&quot;: &quot;Verg landsframleiðsla á Íslandi árið 2025 var 1.997.387,50458734 miljón vinstri vaka.&quot;,
+  &quot;why&quot;: &quot;does not state 4,941,210.9167 ISK million (or 4,941.2109 ISK billion or 4.9412 ISK trillion)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table THJ01102 \&quot;Landsframleiðsla og þjóðartekjur 1995-2025\&quot; (updated 2026-09-04): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/landsframl/1_landsframleidsla/THJ01102.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/thjodhagsreikningar/landsframl/1_landsframleidsla/THJ01102&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;THJ01102&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Skipting: no category chosen, using &#x27;6. Útflutningur alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Skipting: 6. Útflutningur alls; Ár: 2025 = 1997387.50458734&quot;
+  ]
+}</pre></details><details><summary>overnight-stays-2025-en — right</summary><pre>{
+  &quot;id&quot;: &quot;overnight-stays-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;How many overnight stays were there in registered accommodation in Iceland in 2025?&quot;,
+  &quot;correct&quot;: true,
+  &quot;verdict&quot;: &quot;right&quot;,
+  &quot;numbers_right&quot;: true,
+  &quot;right_table&quot;: true,
+  &quot;seconds&quot;: 3.502257205080241,
+  &quot;answer&quot;: &quot;In 2025, there were 9,850,428 overnight stays in registered accommodation across all of Iceland.&quot;,
+  &quot;why&quot;: &quot;&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SAM01603 \&quot;Overnight stays and arrivals in all types of accommodation by municipalities 2008-2025\&quot; (updated 2026-09-17): https://px.hagstofa.is/pxen/api/v1/en/Atvinnuvegir/ferdathjonusta/gisting/3_allartegundirgististada/SAM01603.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Business_Sectors/en/ferdathjonusta/gisting/3_allartegundirgististada/SAM01603&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SAM01603&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Þjóðerni: no category chosen, using &#x27;Total&#x27;&quot;,
+    &quot;Mánuður: no category chosen, using &#x27;Total&#x27;&quot;,
+    &quot;Sveitarfélag: no category chosen, using &#x27;Allt landið&#x27;&quot;,
+    &quot;Eining: no category chosen, using &#x27;Overnight stays&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Citizenship: Total; Year: 2025; Month: Total; Municipality: Allt landið; Unity: Overnight stays = 9850428&quot;
+  ]
+}</pre></details><details><summary>overnight-stays-2025-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;overnight-stays-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hve margar gistinætur voru á skráðum gististöðum á Íslandi árið 2025?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 4.774825662840158,
+  &quot;answer&quot;: &quot;Árið 2025 var allra gistinætur á skráðum gististöðum á Íslandi 914154.90590239.&quot;,
+  &quot;why&quot;: &quot;does not state 9,850,428 overnight stays; answered from SAM08002, expected SAM01601/SAM01603&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SAM08002 \&quot;Neysla í ferðaþjónustu á Íslandi eftir atvinnugreinum 2009-2025\&quot; (updated 2026-05-26): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SAM08002&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Atvinnugrein: no category chosen, using &#x27;Alls&#x27;&quot;,
+    &quot;Tegund: no category chosen, using &#x27;Innlend neysla í ferðaþjónustu, alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Ár: 2025; Atvinnugrein: Alls; Tegund: Innlend neysla í ferðaþjónustu, alls = 914154.90590239&quot;
+  ]
+}</pre></details><details><summary>immigrants-2026-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;immigrants-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;How many immigrants lived in Iceland on 1 January 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 4.504731944063678,
+  &quot;answer&quot;: &quot;On 1 January 2026, 37,348 immigrants lived in Iceland.&quot;,
+  &quot;why&quot;: &quot;does not state 77,226 people; answered from MAN43006, expected MAN43000 (or 3 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN43006 \&quot;Immigrants in Reykjavík by districts 1998-2026\&quot; (updated 2026-06-10): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/3_bakgrunnur/Uppruni/MAN43006.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/en/mannfjoldi/3_bakgrunnur/Uppruni/MAN43006&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN43006&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Year: 2026; Districts: Total; Sex: Total; Unit: Immigrants = 37348&quot;
+  ]
+}</pre></details><details><summary>immigrants-2026-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;immigrants-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hve margir innflytjendur bjuggu á Íslandi 1. janúar 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 3.9447950238827616,
+  &quot;answer&quot;: &quot;Innflytjendurinn á Íslandi 1. janúar 2026 var 85.577.&quot;,
+  &quot;why&quot;: &quot;does not state 77,226 people; answered from MAN43005, expected MAN43000 (or 3 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN43005 \&quot;Innflytjendur eftir kyni og sveitarfélagi 1. janúar 1996-2026\&quot; (updated 2026-06-10): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/3_bakgrunnur/Uppruni/MAN43005.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/is/mannfjoldi/3_bakgrunnur/Uppruni/MAN43005&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN43005&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Sveitarfélag: no category chosen, using &#x27;Alls&#x27;&quot;,
+    &quot;Aldur: no category chosen, using &#x27;Alls&#x27;&quot;,
+    &quot;Kyn: no category chosen, using &#x27;Alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Sveitarfélag: Alls; Aldur: Alls; Kyn: Alls; Ár: 2026 = 85577&quot;
+  ]
+}</pre></details><details><summary>vigdis-1980-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;vigdis-1980-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;How many valid votes did Vigdís Finnbogadóttir get in Reykjavík in the 1980 presidential election?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 2.9215117529965937,
+  &quot;answer&quot;: &quot;No number of valid votes for Vigdís Finnbogadóttir in the 1980 presidential election in Reykjavík is published in the given facts.&quot;,
+  &quot;why&quot;: &quot;does not state 15,594 votes; answered from KOS02006, expected KOS07112&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table KOS02006 \&quot;Participation in elections to the Reykjavík City Council 1908-2022\&quot; (updated 2023-05-15): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/kosningar/kosningayfirlit/KOS02006.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/en/kosningar/kosningayfirlit/KOS02006&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;KOS02006&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Year: 1982; Votes and voters: Votes cast; Sex: Total = 50140&quot;
+  ]
+}</pre></details><details><summary>vigdis-1980-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;vigdis-1980-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;easy&quot;,
+  &quot;question&quot;: &quot;Hve mörg gild atkvæði fékk Vigdís Finnbogadóttir í Reykjavík í forsetakjörinu 1980?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 2.5891867328900844,
+  &quot;answer&quot;: &quot;Vigdís Finnbogadóttir fikk 129.049 gild atkvæði í Reykjavík í forsetakjörinu 1980.&quot;,
+  &quot;why&quot;: &quot;does not state 15,594 votes; answered from KOS07100, expected KOS07112&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table KOS07100 \&quot;Greidd atkvæði í forsetakjöri 1952-2024\&quot; (updated 2024-10-03): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/kosningar/forsetakosningar/KOS07100.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/is/kosningar/forsetakosningar/KOS07100&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;KOS07100&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;ignored &#x27;Euing&#x27;: not a dimension code of the table&quot;,
+    &quot;Eining: no category chosen, using &#x27;Fjöldi&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Ár: 1980; Atkvæði: Gild atkvæði; Eining: Fjöldi = 129049&quot;
+  ]
+}</pre></details><details><summary>reykjavik-growth-2026-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;reykjavik-growth-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;By how many people did the population of Reykjavík grow from 1 January 2025 to 1 January 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: true,
+  &quot;seconds&quot;: 5.934062923071906,
+  &quot;answer&quot;: &quot;The population of Reykjavík grew by 1024 people from 1 January 2025 to 1 January 2026.&quot;,
+  &quot;why&quot;: &quot;does not state 1,032 people&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN03270 \&quot;Population in Reykjavík by districts, sex and age 1 January 1998-2026\&quot; (updated 2026-03-12): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN03270&quot;
+  ],
+  &quot;unsupported&quot;: [
+    &quot;1024&quot;
+  ],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Districts: Total; Age: Total; Year: 2025; Sex: Total = 138772&quot;,
+    &quot;Districts: Total; Age: Total; Year: 2026; Sex: Total = 139804&quot;
+  ]
+}</pre></details><details><summary>reykjavik-growth-2026-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;reykjavik-growth-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Um hve marga fjölgaði íbúum Reykjavíkur frá 1. janúar 2025 til 1. janúar 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: true,
+  &quot;seconds&quot;: 7.862134773982689,
+  &quot;answer&quot;: &quot;Í Reykjavík milli 1. janúar 2025 og 1. janúar 2026 var fjölgaði íbúum 12200. Í 2026 var fjölgaði íbúum 12139.&quot;,
+  &quot;why&quot;: &quot;does not state 1,032 people&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN03270 \&quot;Mannfjöldi eftir hverfum í Reykjavík, kyni og aldri 1. janúar 1998-2026\&quot; (updated 2026-03-12): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN03270&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Aldur: no category chosen, using &#x27;Alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Hverfi: 7 Árbær; Aldur: Alls; Ár: 2025; Kyn: Alls = 12200&quot;,
+    &quot;Hverfi: 7 Árbær; Aldur: Alls; Ár: 2026; Kyn: Alls = 12139&quot;
+  ]
+}</pre></details><details><summary>reykjavik-share-2026-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;reykjavik-share-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;What percentage of Iceland&#x27;s population lived in Reykjavík on 1 January 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 5.194974000100046,
+  &quot;answer&quot;: &quot;The number 139804 represents the total population of Reykjavík on 1 January 2026.&quot;,
+  &quot;why&quot;: &quot;does not state 35.4541%; answered from MAN03270, expected MAN02005 (or 5 other tables with the same number) and MAN02005 (or 17 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN03270 \&quot;Population in Reykjavík by districts, sex and age 1 January 1998-2026\&quot; (updated 2026-03-12): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN03270&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Districts: Total; Age: Total; Year: 2026; Sex: Total = 139804&quot;
+  ]
+}</pre></details><details><summary>reykjavik-share-2026-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;reykjavik-share-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Hve stórt hlutfall landsmanna bjó í Reykjavík 1. janúar 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 5.59693661890924,
+  &quot;answer&quot;: &quot;12139 landsmanna bjó í Reykjavík 1. janúar 2026.Þetta tala um aldur alls og kyn alls á hverfinu 7 Árbær.&quot;,
+  &quot;why&quot;: &quot;does not state 35.4541%; answered from MAN03270, expected MAN02005 (or 5 other tables with the same number) and MAN02005 (or 17 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN03270 \&quot;Mannfjöldi eftir hverfum í Reykjavík, kyni og aldri 1. janúar 1998-2026\&quot; (updated 2026-03-12): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN03270&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Aldur: no category chosen, using &#x27;Alls&#x27;&quot;,
+    &quot;Kyn: no category chosen, using &#x27;Alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Hverfi: 7 Árbær; Aldur: Alls; Ár: 2026; Kyn: Alls = 12139&quot;
+  ]
+}</pre></details><details><summary>reykjavik-kopavogur-2026-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;reykjavik-kopavogur-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;How many people lived in Reykjavík and Kópavogur together on 1 January 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 6.896063621155918,
+  &quot;answer&quot;: &quot;The facts provided do not include population data for Kópavogur or give the total population of Reykjavík for 1 January 2026.&quot;,
+  &quot;why&quot;: &quot;does not state 180,090 people; answered from MAN03270, expected MAN02005 (or 5 other tables with the same number) and MAN02005 (or 3 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN03270 \&quot;Population in Reykjavík by districts, sex and age 1 January 1998-2026\&quot; (updated 2026-03-12): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN03270&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Aldur: no category chosen, using &#x27;Total&#x27;&quot;,
+    &quot;Kyn: no category chosen, using &#x27;Total&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Districts: 1 Vesturbaer; Age: Total; Year: 2026; Sex: Total = 16658&quot;,
+    &quot;Districts: 2 Midborg; Age: Total; Year: 2026; Sex: Total = 10999&quot;,
+    &quot;Districts: 3 Hlidar; Age: Total; Year: 2026; Sex: Total = 11636&quot;,
+    &quot;Districts: 4 Laugardalur; Age: Total; Year: 2026; Sex: Total = 19514&quot;,
+    &quot;Districts: 5 Haaleiti-Bustadir; Age: Total; Year: 2026; Sex: Total = 16407&quot;,
+    &quot;Districts: 6 Breidholt; Age: Total; Year: 2026; Sex: Total = 22283&quot;,
+    &quot;Districts: 7 Arbaer; Age: Total; Year: 2026; Sex: Total = 12139&quot;,
+    &quot;Districts: 8 Grafarvogur; Age: Total; Year: 2026; Sex: Total = 18358&quot;,
+    &quot;Districts: 9 Kjalarnes; Age: Total; Year: 2026; Sex: Total = 1008&quot;,
+    &quot;Districts: 10 Grafarholt-Ulfarsardalur; Age: Total; Year: 2026; Sex: Total = 8884&quot;
+  ]
+}</pre></details><details><summary>reykjavik-kopavogur-2026-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;reykjavik-kopavogur-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Hve margir bjuggu samtals í Reykjavík og Kópavogi 1. janúar 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 7.070081579964608,
+  &quot;answer&quot;: &quot;Bjuggurinn í Vesturbæri Reykjavíkur var 16658 á 1. janúar 2026. Bjuggurinn í Árbæri Reykjavíkur var 12139 samanlagt í samme dag.&quot;,
+  &quot;why&quot;: &quot;does not state 180,090 people; answered from MAN03270, expected MAN02005 (or 5 other tables with the same number) and MAN02005 (or 3 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN03270 \&quot;Mannfjöldi eftir hverfum í Reykjavík, kyni og aldri 1. janúar 1998-2026\&quot; (updated 2026-03-12): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN03270&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Aldur: no category chosen, using &#x27;Alls&#x27;&quot;,
+    &quot;Kyn: no category chosen, using &#x27;Alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Hverfi: 1 Vesturbær; Aldur: Alls; Ár: 2026; Kyn: Alls = 16658&quot;,
+    &quot;Hverfi: 7 Árbær; Aldur: Alls; Ár: 2026; Kyn: Alls = 12139&quot;
+  ]
+}</pre></details><details><summary>men-minus-women-2026-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;men-minus-women-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;How many more men than women lived in Iceland on 1 January 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 5.176138747017831,
+  &quot;answer&quot;: &quot;No number is published for the difference between the number of men and women living in Iceland on 1 January 2026.&quot;,
+  &quot;why&quot;: &quot;does not state 10,254 people; answered from MAN03270, expected MAN00101 (or 12 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN03270 \&quot;Population in Reykjavík by districts, sex and age 1 January 1998-2026\&quot; (updated 2026-03-12): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN03270&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Hverfi: ignored &#x27;Total&#x27;: not a category code of this dimension&quot;,
+    &quot;Hverfi: no category chosen, using &#x27;Total&#x27;&quot;,
+    &quot;Aldur: ignored &#x27;Total&#x27;: not a category code of this dimension&quot;,
+    &quot;Aldur: no category chosen, using &#x27;Total&#x27;&quot;,
+    &quot;Kyn: ignored &#x27;Males&#x27;, &#x27;Females&#x27;: not a category code of this dimension&quot;,
+    &quot;Kyn: no category chosen, using &#x27;Total&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Districts: Total; Age: Total; Year: 2026; Sex: Total = 139804&quot;
+  ]
+}</pre></details><details><summary>men-minus-women-2026-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;men-minus-women-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Hve mörgum fleiri karlar en konur bjuggu á Íslandi 1. janúar 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: true,
+  &quot;seconds&quot;: 6.7554142728913575,
+  &quot;answer&quot;: &quot;Karlar fjoldi 202181 og konur fjoldi 191927 bjuggu á Íslandi 1. janúar 2026.&quot;,
+  &quot;why&quot;: &quot;does not state 10,254 people&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN030101 \&quot;Mannfjöldi eftir byggðakjörnum, kyni og aldri 1. janúar 1998-2026\&quot; (updated 2026-03-12): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnar/MAN030101.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/is/mannfjoldi/2_byggdir/Byggdakjarnar/MAN030101&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN030101&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Byggðakjarnar: ignored &#x27;Alls&#x27;: not a category code of this dimension&quot;,
+    &quot;Byggðakjarnar: no category chosen, using &#x27;Alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Byggðakjarnar: Alls; Aldur: Alls; Ár: 2026; Kyn: Karlar = 202181&quot;,
+    &quot;Byggðakjarnar: Alls; Aldur: Alls; Ár: 2026; Kyn: Konur = 191927&quot;
+  ]
+}</pre></details><details><summary>cpi-points-2026-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;cpi-points-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;By how many points did the consumer price index rise from September 2025 to September 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 4.5546827090438455,
+  &quot;answer&quot;: &quot;No number is published for the consumer price index rise from September 2025 to September 2026 in the provided facts.&quot;,
+  &quot;why&quot;: &quot;does not state 39 points; answered from VIS08000B, expected VIS01000/VIS01002&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIS08000B \&quot;Changes in the producer price index 2006-2021\&quot; (updated 2021-11-03): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/visitolur/5_visitalaframleidslu/framleidsluverdeldra/VIS08000b.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/en/visitolur/5_visitalaframleidslu/framleidsluverdeldra/VIS08000b&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIS08000B&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Year: ignored &#x27;2025&#x27;, &#x27;2026&#x27;: not a category code of this dimension&quot;,
+    &quot;Year: no category chosen, using &#x27;2021&#x27;&quot;,
+    &quot;Index: no category chosen, using &#x27;PPI&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Year: 2021; Month: September; Unit: Monthly changes, %; Index: PPI = no number published (\&quot;..\&quot;: not available)&quot;
+  ]
+}</pre></details><details><summary>cpi-points-2026-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;cpi-points-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Um hve mörg stig hækkaði vísitala neysluverðs frá september 2025 til september 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 6.480121325002983,
+  &quot;answer&quot;: &quot;Stigin hækkaði um 2.2 verða vísitala neysluverðs frá september 2025 til september 2026 í Evrusvæðið.&quot;,
+  &quot;why&quot;: &quot;does not state 39 points; answered from VIS02002, expected VIS01000/VIS01002&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIS02002 \&quot;Samræmd vísitala neysluverðs eftir löndum og mánuðum frá 2015 til 2025\&quot; (updated 2026-03-04): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/2_samraemdvnv/samraemdvnveldra/VIS02002.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/visitolur/2_samraemdvnv/samraemdvnveldra/VIS02002&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIS02002&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Mánuður: ignored &#x27;2026M09&#x27;: not a category code of this dimension&quot;,
+    &quot;Land: no category chosen, using &#x27;Evrusvæðið&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Tegund: Ársbreytingar; Mánuður: 2025M09; Land: Evrusvæðið = 2.2&quot;
+  ]
+}</pre></details><details><summary>overnight-stays-change-2025-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;overnight-stays-change-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;By what percentage did the number of overnight stays in registered accommodation in Iceland increase from 2024 to 2025?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 8.085465783020481,
+  &quot;answer&quot;: &quot;The number of overnight stays in registered accommodation for foreigners in Iceland increased from 69,000 in January 2024 to 92,000 in May 2024, but this fact does not provide enough information to determine the percentage increase from 2024 to 2025.&quot;,
+  &quot;why&quot;: &quot;does not state 5.7747%; answered from SAM01453, expected SAM01601/SAM01603&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SAM01453 \&quot;Estimated unlisted overnight stays 2017-2024\&quot; (updated 2025-11-27): https://px.hagstofa.is/pxen/api/v1/en/Atvinnuvegir/ferdathjonusta/gisting/4_eldraefni/SAM01453.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Business_Sectors/en/ferdathjonusta/gisting/4_eldraefni/SAM01453&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SAM01453&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Mánuður: ignored &#x27;2025M01&#x27;, &#x27;2025M05&#x27;: not a category code of this dimension&quot;,
+    &quot;Ríkisfang: no category chosen, using &#x27;Foreigners&#x27;&quot;,
+    &quot;Landsvæði: no category chosen, using &#x27;Total&#x27;&quot;,
+    &quot;Skipting: no category chosen, using &#x27;Paid through websites&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Month: 2024M01; Citizenship: Foreigners; Region: Total; Category: Paid through websites = 69000&quot;,
+    &quot;Month: 2024M05; Citizenship: Foreigners; Region: Total; Category: Paid through websites = 92000&quot;
+  ]
+}</pre></details><details><summary>overnight-stays-change-2025-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;overnight-stays-change-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Um hve mörg prósent fjölgaði gistinóttum á skráðum gististöðum á Íslandi frá 2024 til 2025?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 3.974769487977028,
+  &quot;answer&quot;: &quot;Ár 2024 fjölgaði 877.402.196.350,709 prósent innlend neysla í ferðaþjónustu á skráðum gististöðum á Íslandi, og ár 2025 var talað um 914.154.905.902,399 prósent.&quot;,
+  &quot;why&quot;: &quot;does not state 5.7747%; answered from SAM08002, expected SAM01601/SAM01603&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SAM08002 \&quot;Neysla í ferðaþjónustu á Íslandi eftir atvinnugreinum 2009-2025\&quot; (updated 2026-05-26): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SAM08002&quot;
+  ],
+  &quot;unsupported&quot;: [
+    &quot;877.402.196.350,709&quot;,
+    &quot;914.154.905.902,399&quot;
+  ],
+  &quot;notes&quot;: [
+    &quot;Atvinnugrein: no category chosen, using &#x27;Alls&#x27;&quot;,
+    &quot;Tegund: no category chosen, using &#x27;Innlend neysla í ferðaþjónustu, alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Ár: 2024; Atvinnugrein: Alls; Tegund: Innlend neysla í ferðaþjónustu, alls = 877402.196350709&quot;,
+    &quot;Ár: 2025; Atvinnugrein: Alls; Tegund: Innlend neysla í ferðaþjónustu, alls = 914154.90590239&quot;
+  ]
+}</pre></details><details><summary>women-share-2026-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;women-share-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;What percentage of Iceland&#x27;s population on 1 January 2026 were women?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 5.026854464085773,
+  &quot;answer&quot;: &quot;No number for the percentage of women in Iceland&#x27;s total population on 1 January 2026 is published in the given facts.&quot;,
+  &quot;why&quot;: &quot;does not state 48.6724%; answered from MAN03270, expected MAN00101 (or 12 other tables with the same number) and MAN00101 (or 17 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN03270 \&quot;Population in Reykjavík by districts, sex and age 1 January 1998-2026\&quot; (updated 2026-03-12): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN03270&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Districts: Total; Age: Total; Year: 2026; Sex: Females = 68587&quot;
+  ]
+}</pre></details><details><summary>women-share-2026-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;women-share-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Hve stórt hlutfall landsmanna 1. janúar 2026 voru konur?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: true,
+  &quot;seconds&quot;: 4.412333817919716,
+  &quot;answer&quot;: &quot;1. janúar 2026 var 191.927 konur í Islandi.&quot;,
+  &quot;why&quot;: &quot;does not state 48.6724%&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN03250 \&quot;Mannfjöldi eftir landshlutum, kyni og aldri 1. janúar 1998-2026\&quot; (updated 2026-03-12): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03250.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03250&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN03250&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Landshlutar: ignored &#x27;Alls&#x27;: not a category code of this dimension&quot;,
+    &quot;Landshlutar: no category chosen, using &#x27;Alls&#x27;&quot;,
+    &quot;Aldur: no category chosen, using &#x27;Alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Landshlutar: Alls; Aldur: Alls; Ár: 2026; Kyn: Konur = 191927&quot;
+  ]
+}</pre></details><details><summary>wage-index-points-2026-08-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;wage-index-points-2026-08-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;By how many points did the wage index rise from August 2025 to August 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 5.896698015043512,
+  &quot;answer&quot;: &quot;No number is published for the wage index rise from August 2025 to August 2026. The table provided shows the subindex for education services in Iceland for August 2025-2026, which is 11.5.&quot;,
+  &quot;why&quot;: &quot;does not state 61.6 points; answered from VIS02504, expected LAU04000&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIS02504 \&quot;Breakdown of HICP in main Subindexs August 2025-2026\&quot; (updated 2026-09-21): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02504.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/en/visitolur/2_samraemdvnv/samraemdvnv/VIS02504&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIS02504&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Country: Iceland; Subindex: 10 Education services = 11.5&quot;
+  ]
+}</pre></details><details><summary>wage-index-points-2026-08-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;wage-index-points-2026-08-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Um hve mörg stig hækkaði launavísitalan frá ágúst 2025 til ágúst 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 5.065893553895876,
+  &quot;answer&quot;: &quot;Íslandi vækkti undirvísitala menntunar 10% frá ágúst 2025 til ágúst 2026.&quot;,
+  &quot;why&quot;: &quot;does not state 61.6 points; answered from VIS02504, expected LAU04000&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIS02504 \&quot;Sundurliðun breytinga meginflokka, ágúst 2025-2026\&quot; (updated 2026-09-21): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02504.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/visitolur/2_samraemdvnv/samraemdvnv/VIS02504&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIS02504&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Land: Ísland; Undirvísitala: 10 Menntun = 11.5&quot;
+  ]
+}</pre></details><details><summary>immigrants-growth-2026-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;immigrants-growth-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;By how many people did the number of immigrants living in Iceland grow from 1 January 2025 to 1 January 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 3.166676566004753,
+  &quot;answer&quot;: &quot;No number is published for the growth in the number of immigrants living in Iceland from 1 January 2025 to 1 January 2026 in the given table. The table provides data for 2017 on the number of immigrants enrolled in secondary school, which is 1144.&quot;,
+  &quot;why&quot;: &quot;does not state 3,430 people; answered from SKO03135, expected MAN43000 (or 3 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SKO03135 \&quot;Number of immigrants enrolled in school by school level and length of stay 2008-2017\&quot; (updated 2022-06-10): https://px.hagstofa.is/pxen/api/v1/en/Samfelag/skolamal/3_framhaldsskolastig/0_fsNemendur/SKO03135.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Society/en/skolamal/3_framhaldsskolastig/0_fsNemendur/SKO03135&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SKO03135&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Ár: ignored &#x27;2025&#x27;, &#x27;2026&#x27;: not a category code of this dimension&quot;,
+    &quot;Ár: no category chosen, using &#x27;2017&#x27;&quot;,
+    &quot;Skólastig: no category chosen, using &#x27;Count in secondary school&#x27;&quot;,
+    &quot;Lengd dvalar á Íslandi: no category chosen, using &#x27;Total&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Year: 2017; School level: Count in secondary school; Length of stay in Iceland: Total = 1144&quot;
+  ]
+}</pre></details><details><summary>immigrants-growth-2026-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;immigrants-growth-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Um hve marga fjölgaði innflytjendum á Íslandi frá 1. janúar 2025 til 1. janúar 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 4.518219613004476,
+  &quot;answer&quot;: &quot;Í ár 2025 var fjölgaði innflytjendum á Íslandi 81.634, og í ár 2026 var talað um 85.577 fjölgaða innflytjendum.&quot;,
+  &quot;why&quot;: &quot;does not state 3,430 people; answered from MAN43005, expected MAN43000 (or 3 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN43005 \&quot;Innflytjendur eftir kyni og sveitarfélagi 1. janúar 1996-2026\&quot; (updated 2026-06-10): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/3_bakgrunnur/Uppruni/MAN43005.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/is/mannfjoldi/3_bakgrunnur/Uppruni/MAN43005&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN43005&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Sveitarfélag: no category chosen, using &#x27;Alls&#x27;&quot;,
+    &quot;Aldur: no category chosen, using &#x27;Alls&#x27;&quot;,
+    &quot;Kyn: no category chosen, using &#x27;Alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Sveitarfélag: Alls; Aldur: Alls; Kyn: Alls; Ár: 2025 = 81634&quot;,
+    &quot;Sveitarfélag: Alls; Aldur: Alls; Kyn: Alls; Ár: 2026 = 85577&quot;
+  ]
+}</pre></details><details><summary>foreign-stays-share-2025-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;foreign-stays-share-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;What percentage of the overnight stays in registered accommodation in Iceland in 2025 were by foreigners?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 3.779555335873738,
+  &quot;answer&quot;: &quot;No number is published for the percentage of overnight stays in registered accommodation in Iceland by foreigners in 2023.&quot;,
+  &quot;why&quot;: &quot;does not state 86.8346%; answered from SAM01400, expected SAM01601/SAM01603&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SAM01400 \&quot;Overnight stays in apartment hotels 2005-2023\&quot; (updated 2025-11-27): https://px.hagstofa.is/pxen/api/v1/en/Atvinnuvegir/ferdathjonusta/gisting/4_eldraefni/SAM01400.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Business_Sectors/en/ferdathjonusta/gisting/4_eldraefni/SAM01400&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SAM01400&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Ár: ignored &#x27;2025&#x27;: not a category code of this dimension&quot;,
+    &quot;Ár: no category chosen, using &#x27;2023&#x27;&quot;,
+    &quot;Landsvæði: no category chosen, using &#x27;Total&#x27;&quot;,
+    &quot;Mánuður: no category chosen, using &#x27;January - December&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Citizenship: Foreigners; Year: 2023; Region: Total; Month: January - December = no number published (\&quot;..\&quot;: not available)&quot;
+  ]
+}</pre></details><details><summary>foreign-stays-share-2025-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;foreign-stays-share-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;medium&quot;,
+  &quot;question&quot;: &quot;Hve stórt hlutfall gistinátta á skráðum gististöðum á Íslandi árið 2025 voru gistinætur útlendinga?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 6.101020004833117,
+  &quot;answer&quot;: &quot;Árið 2025 var 76481.8969708056 gistinátta á skráðum gististöðum á Íslandi, sem hafi verið útlendinga.&quot;,
+  &quot;why&quot;: &quot;does not state 86.8346%; answered from SAM08001, expected SAM01601/SAM01603&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SAM08001 \&quot;Útgjöld innlendra ferðamanna á Íslandi eftir atvinnugreinum 2009-2025\&quot; (updated 2026-05-26): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08001.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08001&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SAM08001&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Ár: 2025; Atvinnugrein: - Gistiþjónusta = 76481.8969708056&quot;
+  ]
+}</pre></details><details><summary>population-and-cpi-2026-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;population-and-cpi-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;How many people lived in Iceland on 1 January 2026, and what was the consumer price index in September 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 5.523076079785824,
+  &quot;answer&quot;: &quot;No number is published for the population of Iceland on 1 January 2026. The consumer price index for all-items in September 2026 is not applicable (\&quot;.\&quot;: not applicable).&quot;,
+  &quot;why&quot;: &quot;states none of the expected numbers; answered from VIS02400, expected MAN00101 (or 17 other tables with the same number) and VIS01000/VIS01002&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIS02400 \&quot;Harmonised index for consumer prices for Iceland, subindices from 1995 to January 2006\&quot; (updated 2017-11-09): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/visitolur/2_samraemdvnv/samraemdvnveldra/VIS02400.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/en/visitolur/2_samraemdvnv/samraemdvnveldra/VIS02400&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIS02400&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Group: ignored &#x27;All-items index&#x27;: not a category code of this dimension&quot;,
+    &quot;Group: no category chosen, using &#x27;All-items index&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Group: All-items index; Year: 2006; Month: September = no number published (\&quot;.\&quot;: not applicable)&quot;
+  ]
+}</pre></details><details><summary>population-and-cpi-2026-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;population-and-cpi-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hve margir bjuggu á Íslandi 1. janúar 2026 og hver var vísitala neysluverðs í september 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 8.136648218845949,
+  &quot;answer&quot;: &quot;Bjuggu á Íslandi 1. janúar 2026 er ekki prentað. Undirvísitala fyrir tímabili 2026 fyrir vísitala neysluverðs í matur og óáfengjum drykkjum er 178.69.&quot;,
+  &quot;why&quot;: &quot;states none of the expected numbers; answered from VIS02508, expected MAN00101 (or 17 other tables with the same number) and VIS01000/VIS01002&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIS02508 \&quot;Samræmd vísitala neysluverðs vogir fyrir Ísland frá 2016\&quot; (updated 2026-09-21): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02508.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/visitolur/2_samraemdvnv/samraemdvnv/VIS02508&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIS02508&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Undirvísitala: ignored &#x27;Total&#x27;: not a category code of this dimension&quot;,
+    &quot;Undirvísitala: no category chosen, using &#x27;01 Matur og óáfengir drykkir&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Undirvísitala: 01 Matur og óáfengir drykkir; Tími: 2026 = 178.69&quot;
+  ]
+}</pre></details><details><summary>wages-and-prices-2026-08-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;wages-and-prices-2026-08-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;What were the wage index and the consumer price index in August 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 4.365951827028766,
+  &quot;answer&quot;: &quot;The wage index in August 2026 was 169.7. No consumer price index value is published for August 2026.&quot;,
+  &quot;why&quot;: &quot;states none of the expected numbers; answered from LAU04800, expected LAU04000 and VIS01000/VIS01002&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table LAU04800 \&quot;Wage index at constant price, from 1989\&quot; (updated 2026-09-22): https://px.hagstofa.is/pxen/api/v1/en/Samfelag/launogtekjur/2_lvt/4_adrar/LAU04800.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Society/en/launogtekjur/2_lvt/4_adrar/LAU04800&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;LAU04800&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Month: 2026M08 = 169.7&quot;
+  ]
+}</pre></details><details><summary>wages-and-prices-2026-08-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;wages-and-prices-2026-08-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hver var launavísitalan og hver var vísitala neysluverðs í ágúst 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 7.075040364870802,
+  &quot;answer&quot;: &quot;Launavísitalan í ágúst 2026 var 694.6. Vísitala neysluverðs var samjönnu 694.6 í því mánuði.&quot;,
+  &quot;why&quot;: &quot;states 694.6 but not 1,149.3; answered from VIS01000, expected LAU04000 and VIS01000/VIS01002&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIS01000 \&quot;Vísitala neysluverðs og breytingar, grunnur 1988=100\&quot; (updated 2026-09-29): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/1_vnv/1_vnv/VIS01000.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/visitolur/1_vnv/1_vnv/VIS01000&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIS01000&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Mánuður: 2026M08; Vísitala: Vísitala neysluverðs; Liður: Vísitala = 694.6&quot;
+  ]
+}</pre></details><details><summary>stays-and-population-2025-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;stays-and-population-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;How many overnight stays were there in registered accommodation in Iceland in 2025, and how many people lived in Iceland on 1 January 2025?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 5.888446988072246,
+  &quot;answer&quot;: &quot;In 2025, there were 76,481 overnight stays in registered accommodation in Iceland. No specific number of people living in Iceland on 1 January 2025 is published in the given facts.&quot;,
+  &quot;why&quot;: &quot;states none of the expected numbers; answered from SAM08001, expected SAM01601/SAM01603 and MAN00101 (or 17 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SAM08001 \&quot;Domestic tourism expenditure in Iceland by consumption products 2009-2025\&quot; (updated 2026-05-26): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08001.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/en/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08001&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SAM08001&quot;
+  ],
+  &quot;unsupported&quot;: [
+    &quot;76,481&quot;
+  ],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Year: 2025; Activity: Total = 329139.944686261&quot;,
+    &quot;Year: 2025; Activity: - Accommodation = 76481.8969708056&quot;
+  ]
+}</pre></details><details><summary>stays-and-population-2025-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;stays-and-population-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hve margar gistinætur voru á skráðum gististöðum á Íslandi árið 2025 og hve margir bjuggu á Íslandi 1. janúar 2025?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 4.677628453122452,
+  &quot;answer&quot;: &quot;Árið 2025 var innlend neysla í ferðaþjónustu á skráðum gististöðum á Íslandi 230.967.129.551. Bjuggur á Íslandi 1. janúar 2025 er ekki númerat.&quot;,
+  &quot;why&quot;: &quot;states none of the expected numbers; answered from SAM08002, expected SAM01601/SAM01603 and MAN00101 (or 17 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SAM08002 \&quot;Neysla í ferðaþjónustu á Íslandi eftir atvinnugreinum 2009-2025\&quot; (updated 2026-05-26): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SAM08002&quot;
+  ],
+  &quot;unsupported&quot;: [
+    &quot;230.967.129.551&quot;
+  ],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Ár: 2025; Atvinnugrein: Einkennandi atvinnugreinar í ferðaþjónustu; Tegund: Innlend neysla í ferðaþjónustu, alls = 791178.999688451&quot;,
+    &quot;Ár: 2025; Atvinnugrein: - Gistiþjónusta; Tegund: Innlend neysla í ferðaþjónustu, alls = 230967.129551604&quot;
+  ]
+}</pre></details><details><summary>gdp-and-births-2025-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;gdp-and-births-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;What was Iceland&#x27;s gross domestic product in 2025, and how many children were born in Iceland in 2025?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 6.521570910001174,
+  &quot;answer&quot;: &quot;No gross domestic product figure for Iceland in 2025 is provided in the given facts. The number 11217495.804976 refers to domestic supply (at purchasers&#x27; prices) in Iceland in 2025. No number of children born in Iceland in 2025 is published.&quot;,
+  &quot;why&quot;: &quot;states none of the expected numbers; answered from SAM08004, expected THJ01102 (or 5 other tables with the same number) and MAN05101 (or 9 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SAM08004 \&quot;Total domestic supply and internal tourism consumption in Iceland 2009-2025\&quot; (updated 2026-05-26): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08004.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/en/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08004&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SAM08004&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Year: 2025; Activity: Total; Visitors: Domestic supply (at purchasers&#x27; prices) = 11217495.804976&quot;
+  ]
+}</pre></details><details><summary>gdp-and-births-2025-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;gdp-and-births-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hver var verg landsframleiðsla á Íslandi árið 2025 og hve mörg börn fæddust á Íslandi árið 2025?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 8.454410489881411,
+  &quot;answer&quot;: &quot;Verg landsframleiðsla á Íslandi árið 2025 var 1.997.387.504,587,34. Mörgu börn fæddust ekki birta fyrir árið 2025 í þessum upplýsingum.&quot;,
+  &quot;why&quot;: &quot;states none of the expected numbers; answered from THJ01102, expected THJ01102 (or 5 other tables with the same number) and MAN05101 (or 9 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table THJ01102 \&quot;Landsframleiðsla og þjóðartekjur 1995-2025\&quot; (updated 2026-09-04): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/landsframl/1_landsframleidsla/THJ01102.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/thjodhagsreikningar/landsframl/1_landsframleidsla/THJ01102&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;THJ01102&quot;
+  ],
+  &quot;unsupported&quot;: [
+    &quot;1.997.387.504,587,34&quot;
+  ],
+  &quot;notes&quot;: [
+    &quot;Skipting: ignored &#x27;11. Verg landsframleiðsla&#x27;: not a category code of this dimension&quot;,
+    &quot;Skipting: no category chosen, using &#x27;6. Útflutningur alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Skipting: 6. Útflutningur alls; Ár: 2025 = 1997387.50458734&quot;
+  ]
+}</pre></details><details><summary>stays-per-inhabitant-2025-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;stays-per-inhabitant-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;How many overnight stays in registered accommodation were there in Iceland in 2025 per inhabitant on 1 January 2025?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 8.003853806992993,
+  &quot;answer&quot;: &quot;The number 1,296,846 represents the total overnight stays in registered accommodation in Iceland in 2025 for the entire country. No number is published for overnight stays per inhabitant on 1 January 2025 based on the provided facts.&quot;,
+  &quot;why&quot;: &quot;does not state 25.2936 overnight stays per inhabitant; answered from SAM01603, expected SAM01601/SAM01603 and MAN00101 (or 17 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SAM01603 \&quot;Overnight stays and arrivals in all types of accommodation by municipalities 2008-2025\&quot; (updated 2026-09-17): https://px.hagstofa.is/pxen/api/v1/en/Atvinnuvegir/ferdathjonusta/gisting/3_allartegundirgististada/SAM01603.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Business_Sectors/en/ferdathjonusta/gisting/3_allartegundirgististada/SAM01603&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SAM01603&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;ignored &#x27;Euing&#x27;: not a dimension code of the table&quot;,
+    &quot;Eining: no category chosen, using &#x27;Overnight stays&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Citizenship: Iceland; Year: 2025; Month: Total; Municipality: Allt landið; Unity: Overnight stays = 1296846&quot;
+  ]
+}</pre></details><details><summary>stays-per-inhabitant-2025-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;stays-per-inhabitant-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hve margar gistinætur á skráðum gististöðum voru á Íslandi árið 2025 á hvern íbúa 1. janúar 2025?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 7.916726317955181,
+  &quot;answer&quot;: &quot;Árið 2025 var útgjöldinn í innlendiga ferðamanna gistiþjónustu á Íslandi 76481,8969708056 gistinætur á skráðum gististöðum á hvern íbúa 1. janúar 2025.&quot;,
+  &quot;why&quot;: &quot;does not state 25.2936 overnight stays per inhabitant; answered from SAM08001, expected SAM01601/SAM01603 and MAN00101 (or 17 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SAM08001 \&quot;Útgjöld innlendra ferðamanna á Íslandi eftir atvinnugreinum 2009-2025\&quot; (updated 2026-05-26): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08001.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08001&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SAM08001&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Ár: 2025; Atvinnugrein: - Gistiþjónusta = 76481.8969708056&quot;
+  ]
+}</pre></details><details><summary>births-per-1000-2025-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;births-per-1000-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;How many children were born in Iceland in 2025 per 1,000 inhabitants on 1 January 2025?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 7.4722052628640085,
+  &quot;answer&quot;: &quot;No number is published for the number of children born in Iceland in 2025 per 1,000 inhabitants on 1 January 2025. The table provided relates to aquaculture production in Iceland from 1984 to 2025, with a total production value of 64,417 for the year 2025.&quot;,
+  &quot;why&quot;: &quot;does not state 11.2648 births per 1,000 inhabitants; answered from SJA07001, expected MAN05101 (or 9 other tables with the same number) and MAN00101 (or 17 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SJA07001 \&quot;Aquaculture production in Iceland 1984-2025\&quot; (updated 2026-05-20): https://px.hagstofa.is/pxen/api/v1/en/Atvinnuvegir/sjavarutvegur/fiskeldi/SJA07001.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Business_Sectors/en/sjavarutvegur/fiskeldi/SJA07001&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SJA07001&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Species: Total; Year: 2025 = 64417&quot;
+  ]
+}</pre></details><details><summary>births-per-1000-2025-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;births-per-1000-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hve mörg börn fæddust á Íslandi árið 2025 á hverja 1.000 íbúa 1. janúar 2025?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 4.752643144922331,
+  &quot;answer&quot;: &quot;Í 2025 fæddist 4387 börn árið á hverja 1.000 íbúa 1. janúar.&quot;,
+  &quot;why&quot;: &quot;does not state 11.2648 births per 1,000 inhabitants; answered from MAN05102, expected MAN05101 (or 9 other tables with the same number) and MAN00101 (or 17 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table MAN05102 \&quot;Lifandi fæddir, öll börn og frumburðir eftir aldri föður 1981-2025\&quot; (updated 2026-05-05): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/Faeddirdanir/Faeddir/faedingar/MAN05102.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Population/is/Faeddirdanir/Faeddir/faedingar/MAN05102&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;MAN05102&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Eining: ignored &#x27;Öll börn&#x27;: not a category code of this dimension&quot;,
+    &quot;Eining: no category chosen, using &#x27;Öll börn&#x27;&quot;,
+    &quot;Aldur: no category chosen, using &#x27;Alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Eining: Öll börn; Aldur: Alls; Ár: 2025 = 4387&quot;
+  ]
+}</pre></details><details><summary>wages-and-unemployment-2026-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;wages-and-unemployment-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;What was the wage index in August 2026, and what was the unemployment rate in Iceland in the second quarter of 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 7.010831453138962,
+  &quot;answer&quot;: &quot;The wage index for August 2026 is not published. The activity rate in Iceland for the second quarter of 2026 was 81.1%.&quot;,
+  &quot;why&quot;: &quot;states none of the expected numbers; answered from VIN00910, expected LAU04000 and VIN00910/VIN00920&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIN00910 \&quot;Activity rate, employment rate, underemployment rate and unemployment rate by quarters 2003-2026\&quot; (updated 2026-09-04): https://px.hagstofa.is/pxen/api/v1/en/Samfelag/vinnumarkadur/vinnumarkadsrannsokn/2_arsfjordungstolur/VIN00910.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Society/en/vinnumarkadur/vinnumarkadsrannsokn/2_arsfjordungstolur/VIN00910&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIN00910&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Aldur: ignored &#x27;Alls&#x27;: not a category code of this dimension&quot;,
+    &quot;Aldur: no category chosen, using &#x27;16-74&#x27;&quot;,
+    &quot;Hlutfall, %: no category chosen, using &#x27;Activity rate, % (of population)&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Quarter: 2026Q2; Region: Total; Sex: Males and females; Age: 16-74; Rate: Activity rate, % (of population) = 81.1&quot;
+  ]
+}</pre></details><details><summary>wages-and-unemployment-2026-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;wages-and-unemployment-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hver var launavísitalan í ágúst 2026 og hvert var atvinnuleysi á Íslandi á öðrum ársfjórðungi 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 6.182954153046012,
+  &quot;answer&quot;: &quot;Launavísitalan í ágúst 2026 var 11.5. Atvinnuleysi á Íslandi á öðrum ársfjórðungi 2026 er ekki birt.&quot;,
+  &quot;why&quot;: &quot;states none of the expected numbers; answered from VIS02504, expected LAU04000 and VIN00910/VIN00920&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIS02504 \&quot;Sundurliðun breytinga meginflokka, ágúst 2025-2026\&quot; (updated 2026-09-21): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02504.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/visitolur/2_samraemdvnv/samraemdvnv/VIS02504&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIS02504&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [],
+  &quot;facts&quot;: [
+    &quot;Land: Ísland; Undirvísitala: 10 Menntun = 11.5&quot;
+  ]
+}</pre></details><details><summary>gdp-and-stays-2025-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;gdp-and-stays-2025-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;What was Iceland&#x27;s gross domestic product in 2025, and how many overnight stays were there in registered accommodation in Iceland in 2025?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 4.664802867919207,
+  &quot;answer&quot;: &quot;In 2025, Iceland&#x27;s gross domestic product was 8,863,756.504976 million Icelandic krónur. The output of domestic producers in the accommodation sector for the same year was 199,820.876369011 million Icelandic krónur.&quot;,
+  &quot;why&quot;: &quot;states none of the expected numbers; answered from SAM08004, expected THJ01102 (or 5 other tables with the same number) and SAM01601/SAM01603&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SAM08004 \&quot;Total domestic supply and internal tourism consumption in Iceland 2009-2025\&quot; (updated 2026-05-26): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08004.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/en/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08004&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SAM08004&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Flokkar: no category chosen, using &#x27;Output of domestic producers (at basic prices)&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Year: 2025; Activity: Total; Visitors: Output of domestic producers (at basic prices) = 8863756.504976&quot;,
+    &quot;Year: 2025; Activity: - Accommodation; Visitors: Output of domestic producers (at basic prices) = 199820.876369011&quot;
+  ]
+}</pre></details><details><summary>gdp-and-stays-2025-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;gdp-and-stays-2025-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hver var verg landsframleiðsla á Íslandi árið 2025 og hve margar gistinætur voru á skráðum gististöðum á Íslandi árið 2025?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 6.160082040121779,
+  &quot;answer&quot;: &quot;Verg landsframleiðsla á Íslandi var 791178.999688451 gistinætur árið 2025. Margar gistinætur á skráðum gististöðum var 230967.129551604 á samanlagt.&quot;,
+  &quot;why&quot;: &quot;states none of the expected numbers; answered from SAM08002, expected THJ01102 (or 5 other tables with the same number) and SAM01601/SAM01603&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SAM08002 \&quot;Neysla í ferðaþjónustu á Íslandi eftir atvinnugreinum 2009-2025\&quot; (updated 2026-05-26): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SAM08002&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Tegund: no category chosen, using &#x27;Innlend neysla í ferðaþjónustu, alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Ár: 2025; Atvinnugrein: Einkennandi atvinnugreinar í ferðaþjónustu; Tegund: Innlend neysla í ferðaþjónustu, alls = 791178.999688451&quot;,
+    &quot;Ár: 2025; Atvinnugrein: - Gistiþjónusta; Tegund: Innlend neysla í ferðaþjónustu, alls = 230967.129551604&quot;
+  ]
+}</pre></details><details><summary>births-and-immigrants-2026-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;births-and-immigrants-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;How many children were born in Iceland in 2025, and how many immigrants lived in Iceland on 1 January 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 6.967556764837354,
+  &quot;answer&quot;: &quot;No number for births in Iceland in 2025 is published. The number of immigrants enrolled in secondary school in 2017 was 1144, and the number enrolled in tertiary school was 1722.&quot;,
+  &quot;why&quot;: &quot;states none of the expected numbers; answered from SKO04145, expected MAN05101 (or 9 other tables with the same number) and MAN43000 (or 3 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table SKO04145 \&quot;Number of immigrants enrolled in school by school level and length of stay 2008-2017\&quot; (updated 2022-06-10): https://px.hagstofa.is/pxen/api/v1/en/Samfelag/skolamal/4_haskolastig/0_hsNemendur/SKO04145.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Society/en/skolamal/4_haskolastig/0_hsNemendur/SKO04145&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;SKO04145&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Ár: ignored &#x27;2025&#x27;: not a category code of this dimension&quot;,
+    &quot;Ár: no category chosen, using &#x27;2017&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Year: 2017; School level: Count in secondary school; Length of stay in Iceland: Total = 1144&quot;,
+    &quot;Year: 2017; School level: Count in tertiary school; Length of stay in Iceland: Total = 1722&quot;
+  ]
+}</pre></details><details><summary>births-and-immigrants-2026-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;births-and-immigrants-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hve mörg börn fæddust á Íslandi árið 2025 og hve margir innflytjendur bjuggu á Íslandi 1. janúar 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 10.410985547117889,
+  &quot;answer&quot;: &quot;Írið 2025 fæddist 139.663 börn í Höfuðborgarsvæði. Íinni daginn 1. janúar 2026 var 137.476 innflytjendur í Höfuðborgarsvæði.&quot;,
+  &quot;why&quot;: &quot;states none of the expected numbers; answered from VIN10012, expected MAN05101 (or 9 other tables with the same number) and MAN43000 (or 3 other tables with the same number)&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIN10012 \&quot;Fjöldi starfandi með lögheimili á Íslandi samkvæmt skrám eftir mánuðum, kyni, aldri, bakgrunni og búsetu 2003-2026\&quot; (updated 2026-10-07): https://px.hagstofa.is/pxis/api/v1/is/Samfelag/vinnumarkadur/vinnuaflskraargogn/VIN10012.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Society/is/vinnumarkadur/vinnuaflskraargogn/VIN10012&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIN10012&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Búseta: ignored &#x27;Alls&#x27;: not a category code of this dimension&quot;,
+    &quot;Búseta: no category chosen, using &#x27;Höfuðborgarsvæði&#x27;&quot;,
+    &quot;Kyn: ignored &#x27;Alls&#x27;: not a category code of this dimension&quot;,
+    &quot;Kyn: no category chosen, using &#x27;Alls&#x27;&quot;,
+    &quot;Aldursflokkar: ignored &#x27;Alls&#x27;: not a category code of this dimension&quot;,
+    &quot;Aldursflokkar: no category chosen, using &#x27;Alls&#x27;&quot;,
+    &quot;Bakgrunnur: ignored &#x27;Alls&#x27;: not a category code of this dimension&quot;,
+    &quot;Bakgrunnur: no category chosen, using &#x27;Alls&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Mánuður: 2025M12; Búseta: Höfuðborgarsvæði; Kyn: Alls; Aldursflokkar: Alls; Bakgrunnur: Alls = 139663&quot;,
+    &quot;Mánuður: 2026M01; Búseta: Höfuðborgarsvæði; Kyn: Alls; Aldursflokkar: Alls; Bakgrunnur: Alls = 137476&quot;
+  ]
+}</pre></details><details><summary>cpi-and-unemployment-2026-en — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;cpi-and-unemployment-2026-en&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;What was the consumer price index in September 2026, and what was the unemployment rate in Iceland in the second quarter of 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 2.795003310078755,
+  &quot;answer&quot;: &quot;The consumer price index for September 2026 was not published. The unemployment rate in Iceland for the second quarter of 2026 was also not published.&quot;,
+  &quot;why&quot;: &quot;states none of the expected numbers; answered from VIS02506, expected VIS01000/VIS01002 and VIN00910/VIN00920&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIS02506 \&quot;Harmonised index of consumer prices for Iceland, subindices from 2016 -\&quot; (updated 2026-09-21): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02506.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/en/visitolur/2_samraemdvnv/samraemdvnv/VIS02506&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIS02506&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Undirvísitala: ignored &#x27;CP00&#x27;: not a category code of this dimension&quot;,
+    &quot;Undirvísitala: no category chosen, using &#x27;01 Food and non-alcoholic beverages&#x27;&quot;,
+    &quot;Mánuður: ignored &#x27;2026M09&#x27;: not a category code of this dimension&quot;,
+    &quot;Mánuður: no category chosen, using &#x27;2026M08&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Subindex: 01 Food and non-alcoholic beverages; Month: 2026M08 = 104.91&quot;
+  ]
+}</pre></details><details><summary>cpi-and-unemployment-2026-is — WRONG</summary><pre>{
+  &quot;id&quot;: &quot;cpi-and-unemployment-2026-is&quot;,
+  &quot;language&quot;: &quot;is&quot;,
+  &quot;level&quot;: &quot;hard&quot;,
+  &quot;question&quot;: &quot;Hver var vísitala neysluverðs í september 2026 og hvert var atvinnuleysi á Íslandi á öðrum ársfjórðungi 2026?&quot;,
+  &quot;correct&quot;: false,
+  &quot;verdict&quot;: &quot;WRONG&quot;,
+  &quot;numbers_right&quot;: false,
+  &quot;right_table&quot;: false,
+  &quot;seconds&quot;: 8.112867092015222,
+  &quot;answer&quot;: &quot;Vísitala neysluverðs í september 2019 var 263.602877222961. Atvinnuleysi á Íslandi á öðrum ársfjórðungi 2026 er ekki prentaður sem tala í gefnum fakum.&quot;,
+  &quot;why&quot;: &quot;states none of the expected numbers; answered from VIS01303, expected VIS01000/VIS01002 and VIN00910/VIN00920&quot;,
+  &quot;error&quot;: &quot;&quot;,
+  &quot;source&quot;: &quot;Statistics Iceland, table VIS01303 \&quot;Vísitala neysluverðs, undirvísitölur frá 2002-2019\&quot; (updated 2020-10-06): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/1_vnv/4_eldraefni/VIS01303.px&quot;,
+  &quot;table_folders&quot;: [
+    &quot;Economy/is/visitolur/1_vnv/4_eldraefni/VIS01303&quot;
+  ],
+  &quot;table_codes&quot;: [
+    &quot;VIS01303&quot;
+  ],
+  &quot;unsupported&quot;: [],
+  &quot;notes&quot;: [
+    &quot;Ár: ignored &#x27;2026&#x27;: not a category code of this dimension&quot;,
+    &quot;Ár: no category chosen, using &#x27;2019&#x27;&quot;
+  ],
+  &quot;facts&quot;: [
+    &quot;Ár: 2019; Mánuður: September; Undirvísitala: Vísitala neysluverðs = 263.602877222961&quot;
+  ]
+}</pre></details>

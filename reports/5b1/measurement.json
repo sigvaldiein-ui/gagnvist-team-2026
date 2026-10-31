@@ -1,0 +1,4619 @@
+{
+  "status": "YELLOW — regression gate failed; NO MERGE",
+  "tested_commit": "41c2079ff108d21894fdc50d4c359830475a0ba2",
+  "baseline_commit": "a09746847e884190aa51ea9f91fab8c4c90c2088",
+  "baseline_right": 4,
+  "answers": {
+    "tested_commit": "41c2079ff108d21894fdc50d4c359830475a0ba2",
+    "source_sha256": {
+      "src/gagnvist/search/hybrid.py": "470d0b9038d713518001d41006d6824b5d9e4a568cbd4b2deafb42578f8ee8af",
+      "src/gagnvist/search/vector_search.py": "8597626541e26a9e67a4a50f4defd66ab9a3ead4b180a217155b3f90b4a5e171",
+      "src/gagnvist/config.py": "707d25b5dc7e0a0f976483a321001ed36c7c18e6579973c6018b90d0cf0fe29e",
+      "src/gagnvist/answering/pipeline.py": "6b3069af32c811a41bf539121108f2ae7f483ab3787341790849dfc2bd2f0905",
+      "gagnvist.toml": "761307ec0ae2ede45c8937ad8025d44a633a05c3576908039e7ea441960503e6"
+    },
+    "question_sha256": "32d3180b6b58b7d6b327426ac48fa28e3f5166ca15a67bf8e3052145a4d4b37f",
+    "evaluator_sha256": "81bb19811aa6ae2d450462c52e055ea745e40ff9e81efb752939b2c2b44bfa88",
+    "config": {
+      "mode": "hybrid",
+      "candidate_limit": 100,
+      "dense_weight": 1.0,
+      "lexical_weight": 1.0,
+      "rrf_k": 60.0,
+      "bm25_k1": 1.2,
+      "bm25_b": 0.75,
+      "decompose": true,
+      "max_subqueries": 3,
+      "subquery_weight": 0.5
+    },
+    "overall": {
+      "total": 60,
+      "right": 2,
+      "WRONG": 58,
+      "other_table": 0,
+      "error": 0,
+      "unsupported_rows": 5,
+      "unsupported_count": 6,
+      "p50_seconds": 5.1855563735589385,
+      "p95_seconds": 8.114056148356758
+    },
+    "by_language_and_level": {
+      "is": {
+        "easy": {
+          "total": 10,
+          "right": 0,
+          "WRONG": 10,
+          "other_table": 0,
+          "error": 0,
+          "unsupported_rows": 0,
+          "unsupported_count": 0,
+          "p50_seconds": 4.201602501911111,
+          "p95_seconds": 6.650135910836978
+        },
+        "medium": {
+          "total": 10,
+          "right": 0,
+          "WRONG": 10,
+          "other_table": 0,
+          "error": 0,
+          "unsupported_rows": 1,
+          "unsupported_count": 2,
+          "p50_seconds": 5.8489783118711784,
+          "p95_seconds": 7.5057108366745515
+        },
+        "hard": {
+          "total": 10,
+          "right": 0,
+          "WRONG": 10,
+          "other_table": 0,
+          "error": 0,
+          "unsupported_rows": 2,
+          "unsupported_count": 2,
+          "p50_seconds": 7.495883341412991,
+          "p95_seconds": 9.530526771361473
+        }
+      },
+      "en": {
+        "easy": {
+          "total": 10,
+          "right": 2,
+          "WRONG": 8,
+          "other_table": 0,
+          "error": 0,
+          "unsupported_rows": 0,
+          "unsupported_count": 0,
+          "p50_seconds": 3.9399280345533043,
+          "p95_seconds": 5.510060322191566
+        },
+        "medium": {
+          "total": 10,
+          "right": 0,
+          "WRONG": 10,
+          "other_table": 0,
+          "error": 0,
+          "unsupported_rows": 1,
+          "unsupported_count": 1,
+          "p50_seconds": 5.1855563735589385,
+          "p95_seconds": 7.5502348101814265
+        },
+        "hard": {
+          "total": 10,
+          "right": 0,
+          "WRONG": 10,
+          "other_table": 0,
+          "error": 0,
+          "unsupported_rows": 1,
+          "unsupported_count": 1,
+          "p50_seconds": 6.20500894903671,
+          "p95_seconds": 7.764611962134949
+        }
+      }
+    },
+    "regressions": [
+      {
+        "language": "is",
+        "level": "easy",
+        "baseline_right": 3,
+        "after_right": 0,
+        "delta": -3,
+        "regression_exceeds_one": true
+      },
+      {
+        "language": "is",
+        "level": "medium",
+        "baseline_right": 0,
+        "after_right": 0,
+        "delta": 0,
+        "regression_exceeds_one": false
+      },
+      {
+        "language": "is",
+        "level": "hard",
+        "baseline_right": 0,
+        "after_right": 0,
+        "delta": 0,
+        "regression_exceeds_one": false
+      },
+      {
+        "language": "en",
+        "level": "easy",
+        "baseline_right": 1,
+        "after_right": 2,
+        "delta": 1,
+        "regression_exceeds_one": false
+      },
+      {
+        "language": "en",
+        "level": "medium",
+        "baseline_right": 0,
+        "after_right": 0,
+        "delta": 0,
+        "regression_exceeds_one": false
+      },
+      {
+        "language": "en",
+        "level": "hard",
+        "baseline_right": 0,
+        "after_right": 0,
+        "delta": 0,
+        "regression_exceeds_one": false
+      }
+    ],
+    "regression_gate_pass": false,
+    "hard_scope": "No extra_tables implementation; retrieval decomposition is not multi-table answering."
+  },
+  "retrieval": {
+    "tested_commit": "41c2079ff108d21894fdc50d4c359830475a0ba2",
+    "working_tree_status": "?? data\n?? local",
+    "source_sha256": {
+      "src/gagnvist/search/hybrid.py": "470d0b9038d713518001d41006d6824b5d9e4a568cbd4b2deafb42578f8ee8af",
+      "src/gagnvist/search/vector_search.py": "8597626541e26a9e67a4a50f4defd66ab9a3ead4b180a217155b3f90b4a5e171",
+      "src/gagnvist/config.py": "707d25b5dc7e0a0f976483a321001ed36c7c18e6579973c6018b90d0cf0fe29e",
+      "src/gagnvist/answering/pipeline.py": "6b3069af32c811a41bf539121108f2ae7f483ab3787341790849dfc2bd2f0905",
+      "gagnvist.toml": "761307ec0ae2ede45c8937ad8025d44a633a05c3576908039e7ea441960503e6"
+    },
+    "question_sha256": "32d3180b6b58b7d6b327426ac48fa28e3f5166ca15a67bf8e3052145a4d4b37f",
+    "evaluator_sha256": "81bb19811aa6ae2d450462c52e055ea745e40ff9e81efb752939b2c2b44bfa88",
+    "index_sha256": "fea55aa4c34e9639a655c4edb9cb4f73af0c6223ad7fa946c5adfdc7a46c7738",
+    "data_archive_sha256": "de4ae9e50e990804a170e2a1a722b29acade4059120faeaffc001859bc38883a",
+    "scoring_identity": "official accepted table codes; full folders retained, ambiguous codes not certified as exact semantic matches",
+    "ablations": {
+      "dense_top5": {
+        "config": {
+          "mode": "dense",
+          "candidate_limit": 5,
+          "dense_weight": 1.0,
+          "lexical_weight": 1.0,
+          "rrf_k": 60.0,
+          "bm25_k1": 1.2,
+          "bm25_b": 0.75,
+          "decompose": false,
+          "max_subqueries": 3,
+          "subquery_weight": 0.5
+        },
+        "index_build_seconds": 0.11000321293249726,
+        "metrics": {
+          "overall": {
+            "questions": 60,
+            "recall@1": {
+              "macro_part_recall": 0.23333333333333334,
+              "micro_part_recall": 0.22,
+              "any_part": 19,
+              "all_parts": 9
+            },
+            "recall@5": {
+              "macro_part_recall": 0.3416666666666667,
+              "micro_part_recall": 0.32,
+              "any_part": 26,
+              "all_parts": 15
+            },
+            "recall@10": {
+              "macro_part_recall": 0.3416666666666667,
+              "micro_part_recall": 0.32,
+              "any_part": 26,
+              "all_parts": 15
+            },
+            "recall@100": {
+              "macro_part_recall": 0.3416666666666667,
+              "micro_part_recall": 0.32,
+              "any_part": 26,
+              "all_parts": 15
+            },
+            "seconds": {
+              "p50": 0.00017562205903232098,
+              "p95": 0.00030673336004838304
+            },
+            "cpu_seconds": {
+              "p50": 0.00017562205903232098,
+              "p95": 0.00030673336004838304
+            }
+          },
+          "by_language": {
+            "is": {
+              "questions": 30,
+              "recall@1": {
+                "macro_part_recall": 0.36666666666666664,
+                "micro_part_recall": 0.34,
+                "any_part": 15,
+                "all_parts": 7
+              },
+              "recall@5": {
+                "macro_part_recall": 0.5833333333333334,
+                "micro_part_recall": 0.54,
+                "any_part": 22,
+                "all_parts": 13
+              },
+              "recall@10": {
+                "macro_part_recall": 0.5833333333333334,
+                "micro_part_recall": 0.54,
+                "any_part": 22,
+                "all_parts": 13
+              },
+              "recall@100": {
+                "macro_part_recall": 0.5833333333333334,
+                "micro_part_recall": 0.54,
+                "any_part": 22,
+                "all_parts": 13
+              },
+              "seconds": {
+                "p50": 0.00017814990133047104,
+                "p95": 0.0002590262447483835
+              },
+              "cpu_seconds": {
+                "p50": 0.00017814990133047104,
+                "p95": 0.0002590262447483835
+              }
+            },
+            "en": {
+              "questions": 30,
+              "recall@1": {
+                "macro_part_recall": 0.1,
+                "micro_part_recall": 0.1,
+                "any_part": 4,
+                "all_parts": 2
+              },
+              "recall@5": {
+                "macro_part_recall": 0.1,
+                "micro_part_recall": 0.1,
+                "any_part": 4,
+                "all_parts": 2
+              },
+              "recall@10": {
+                "macro_part_recall": 0.1,
+                "micro_part_recall": 0.1,
+                "any_part": 4,
+                "all_parts": 2
+              },
+              "recall@100": {
+                "macro_part_recall": 0.1,
+                "micro_part_recall": 0.1,
+                "any_part": 4,
+                "all_parts": 2
+              },
+              "seconds": {
+                "p50": 0.0001739939907565713,
+                "p95": 0.00035697201965376673
+              },
+              "cpu_seconds": {
+                "p50": 0.0001739939907565713,
+                "p95": 0.00035697201965376673
+              }
+            }
+          },
+          "by_level": {
+            "easy": {
+              "questions": 20,
+              "recall@1": {
+                "macro_part_recall": 0.3,
+                "micro_part_recall": 0.3,
+                "any_part": 6,
+                "all_parts": 6
+              },
+              "recall@5": {
+                "macro_part_recall": 0.45,
+                "micro_part_recall": 0.45,
+                "any_part": 9,
+                "all_parts": 9
+              },
+              "recall@10": {
+                "macro_part_recall": 0.45,
+                "micro_part_recall": 0.45,
+                "any_part": 9,
+                "all_parts": 9
+              },
+              "recall@100": {
+                "macro_part_recall": 0.45,
+                "micro_part_recall": 0.45,
+                "any_part": 9,
+                "all_parts": 9
+              },
+              "seconds": {
+                "p50": 0.00017853453755378723,
+                "p95": 0.0003275325172580783
+              },
+              "cpu_seconds": {
+                "p50": 0.00017853453755378723,
+                "p95": 0.0003275325172580783
+              }
+            },
+            "medium": {
+              "questions": 20,
+              "recall@1": {
+                "macro_part_recall": 0.25,
+                "micro_part_recall": 0.25,
+                "any_part": 7,
+                "all_parts": 3
+              },
+              "recall@5": {
+                "macro_part_recall": 0.35,
+                "micro_part_recall": 0.35,
+                "any_part": 9,
+                "all_parts": 5
+              },
+              "recall@10": {
+                "macro_part_recall": 0.35,
+                "micro_part_recall": 0.35,
+                "any_part": 9,
+                "all_parts": 5
+              },
+              "recall@100": {
+                "macro_part_recall": 0.35,
+                "micro_part_recall": 0.35,
+                "any_part": 9,
+                "all_parts": 5
+              },
+              "seconds": {
+                "p50": 0.00017184403259307146,
+                "p95": 0.0001786906155757606
+              },
+              "cpu_seconds": {
+                "p50": 0.00017184403259307146,
+                "p95": 0.0001786906155757606
+              }
+            },
+            "hard": {
+              "questions": 20,
+              "recall@1": {
+                "macro_part_recall": 0.15,
+                "micro_part_recall": 0.15,
+                "any_part": 6,
+                "all_parts": 0
+              },
+              "recall@5": {
+                "macro_part_recall": 0.225,
+                "micro_part_recall": 0.225,
+                "any_part": 8,
+                "all_parts": 1
+              },
+              "recall@10": {
+                "macro_part_recall": 0.225,
+                "micro_part_recall": 0.225,
+                "any_part": 8,
+                "all_parts": 1
+              },
+              "recall@100": {
+                "macro_part_recall": 0.225,
+                "micro_part_recall": 0.225,
+                "any_part": 8,
+                "all_parts": 1
+              },
+              "seconds": {
+                "p50": 0.00018153688870370388,
+                "p95": 0.0030044988612644738
+              },
+              "cpu_seconds": {
+                "p50": 0.00018153688870370388,
+                "p95": 0.0030044988612644738
+              }
+            }
+          },
+          "by_language_and_level": {
+            "is": {
+              "easy": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.5,
+                  "micro_part_recall": 0.5,
+                  "any_part": 5,
+                  "all_parts": 5
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.8,
+                  "micro_part_recall": 0.8,
+                  "any_part": 8,
+                  "all_parts": 8
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.8,
+                  "micro_part_recall": 0.8,
+                  "any_part": 8,
+                  "all_parts": 8
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.8,
+                  "micro_part_recall": 0.8,
+                  "any_part": 8,
+                  "all_parts": 8
+                },
+                "seconds": {
+                  "p50": 0.00018140755128115416,
+                  "p95": 0.00025902624474838365
+                },
+                "cpu_seconds": {
+                  "p50": 0.00018140755128115416,
+                  "p95": 0.00025902624474838365
+                }
+              },
+              "medium": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.3,
+                  "micro_part_recall": 0.3,
+                  "any_part": 4,
+                  "all_parts": 2
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.5,
+                  "micro_part_recall": 0.5,
+                  "any_part": 6,
+                  "all_parts": 4
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.5,
+                  "micro_part_recall": 0.5,
+                  "any_part": 6,
+                  "all_parts": 4
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.5,
+                  "micro_part_recall": 0.5,
+                  "any_part": 6,
+                  "all_parts": 4
+                },
+                "seconds": {
+                  "p50": 0.00017117802053689957,
+                  "p95": 0.00018104026094079018
+                },
+                "cpu_seconds": {
+                  "p50": 0.00017117802053689957,
+                  "p95": 0.00018104026094079018
+                }
+              },
+              "hard": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.3,
+                  "micro_part_recall": 0.3,
+                  "any_part": 6,
+                  "all_parts": 0
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.45,
+                  "micro_part_recall": 0.45,
+                  "any_part": 8,
+                  "all_parts": 1
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.45,
+                  "micro_part_recall": 0.45,
+                  "any_part": 8,
+                  "all_parts": 1
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.45,
+                  "micro_part_recall": 0.45,
+                  "any_part": 8,
+                  "all_parts": 1
+                },
+                "seconds": {
+                  "p50": 0.0001835920847952366,
+                  "p95": 0.02840067037614057
+                },
+                "cpu_seconds": {
+                  "p50": 0.0001835920847952366,
+                  "p95": 0.02840067037614057
+                }
+              }
+            },
+            "en": {
+              "easy": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.1,
+                  "micro_part_recall": 0.1,
+                  "any_part": 1,
+                  "all_parts": 1
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.1,
+                  "micro_part_recall": 0.1,
+                  "any_part": 1,
+                  "all_parts": 1
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.1,
+                  "micro_part_recall": 0.1,
+                  "any_part": 1,
+                  "all_parts": 1
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.1,
+                  "micro_part_recall": 0.1,
+                  "any_part": 1,
+                  "all_parts": 1
+                },
+                "seconds": {
+                  "p50": 0.00017413089517503977,
+                  "p95": 0.0005857627489604049
+                },
+                "cpu_seconds": {
+                  "p50": 0.00017413089517503977,
+                  "p95": 0.0005857627489604049
+                }
+              },
+              "medium": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.2,
+                  "micro_part_recall": 0.2,
+                  "any_part": 3,
+                  "all_parts": 1
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.2,
+                  "micro_part_recall": 0.2,
+                  "any_part": 3,
+                  "all_parts": 1
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.2,
+                  "micro_part_recall": 0.2,
+                  "any_part": 3,
+                  "all_parts": 1
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.2,
+                  "micro_part_recall": 0.2,
+                  "any_part": 3,
+                  "all_parts": 1
+                },
+                "seconds": {
+                  "p50": 0.00017238804139196873,
+                  "p95": 0.00017801116919144989
+                },
+                "cpu_seconds": {
+                  "p50": 0.00017238804139196873,
+                  "p95": 0.00017801116919144989
+                }
+              },
+              "hard": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.0,
+                  "micro_part_recall": 0.0,
+                  "any_part": 0,
+                  "all_parts": 0
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.0,
+                  "micro_part_recall": 0.0,
+                  "any_part": 0,
+                  "all_parts": 0
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.0,
+                  "micro_part_recall": 0.0,
+                  "any_part": 0,
+                  "all_parts": 0
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.0,
+                  "micro_part_recall": 0.0,
+                  "any_part": 0,
+                  "all_parts": 0
+                },
+                "seconds": {
+                  "p50": 0.00017816899344325066,
+                  "p95": 0.0003406654461286959
+                },
+                "cpu_seconds": {
+                  "p50": 0.00017816899344325066,
+                  "p95": 0.0003406654461286959
+                }
+              }
+            }
+          }
+        },
+        "rows_without_candidates": 0
+      },
+      "dense_top100": {
+        "config": {
+          "mode": "dense",
+          "candidate_limit": 100,
+          "dense_weight": 1.0,
+          "lexical_weight": 1.0,
+          "rrf_k": 60.0,
+          "bm25_k1": 1.2,
+          "bm25_b": 0.75,
+          "decompose": false,
+          "max_subqueries": 3,
+          "subquery_weight": 0.5
+        },
+        "index_build_seconds": 0.05648960010148585,
+        "metrics": {
+          "overall": {
+            "questions": 60,
+            "recall@1": {
+              "macro_part_recall": 0.23333333333333334,
+              "micro_part_recall": 0.22,
+              "any_part": 19,
+              "all_parts": 9
+            },
+            "recall@5": {
+              "macro_part_recall": 0.3416666666666667,
+              "micro_part_recall": 0.32,
+              "any_part": 26,
+              "all_parts": 15
+            },
+            "recall@10": {
+              "macro_part_recall": 0.43333333333333335,
+              "micro_part_recall": 0.41,
+              "any_part": 32,
+              "all_parts": 20
+            },
+            "recall@100": {
+              "macro_part_recall": 0.8916666666666667,
+              "micro_part_recall": 0.88,
+              "any_part": 58,
+              "all_parts": 49
+            },
+            "seconds": {
+              "p50": 0.006581645458936691,
+              "p95": 0.09611939465394244
+            },
+            "cpu_seconds": {
+              "p50": 0.006581645458936691,
+              "p95": 0.09611939465394244
+            }
+          },
+          "by_language": {
+            "is": {
+              "questions": 30,
+              "recall@1": {
+                "macro_part_recall": 0.36666666666666664,
+                "micro_part_recall": 0.34,
+                "any_part": 15,
+                "all_parts": 7
+              },
+              "recall@5": {
+                "macro_part_recall": 0.5833333333333334,
+                "micro_part_recall": 0.54,
+                "any_part": 22,
+                "all_parts": 13
+              },
+              "recall@10": {
+                "macro_part_recall": 0.6833333333333333,
+                "micro_part_recall": 0.66,
+                "any_part": 25,
+                "all_parts": 16
+              },
+              "recall@100": {
+                "macro_part_recall": 0.9,
+                "micro_part_recall": 0.88,
+                "any_part": 29,
+                "all_parts": 25
+              },
+              "seconds": {
+                "p50": 0.003626767545938492,
+                "p95": 0.09738322341581805
+              },
+              "cpu_seconds": {
+                "p50": 0.003626767545938492,
+                "p95": 0.09738322341581805
+              }
+            },
+            "en": {
+              "questions": 30,
+              "recall@1": {
+                "macro_part_recall": 0.1,
+                "micro_part_recall": 0.1,
+                "any_part": 4,
+                "all_parts": 2
+              },
+              "recall@5": {
+                "macro_part_recall": 0.1,
+                "micro_part_recall": 0.1,
+                "any_part": 4,
+                "all_parts": 2
+              },
+              "recall@10": {
+                "macro_part_recall": 0.18333333333333332,
+                "micro_part_recall": 0.16,
+                "any_part": 7,
+                "all_parts": 4
+              },
+              "recall@100": {
+                "macro_part_recall": 0.8833333333333333,
+                "micro_part_recall": 0.88,
+                "any_part": 29,
+                "all_parts": 24
+              },
+              "seconds": {
+                "p50": 0.008583711460232735,
+                "p95": 0.09606806276133284
+              },
+              "cpu_seconds": {
+                "p50": 0.008583711460232735,
+                "p95": 0.09606806276133284
+              }
+            }
+          },
+          "by_level": {
+            "easy": {
+              "questions": 20,
+              "recall@1": {
+                "macro_part_recall": 0.3,
+                "micro_part_recall": 0.3,
+                "any_part": 6,
+                "all_parts": 6
+              },
+              "recall@5": {
+                "macro_part_recall": 0.45,
+                "micro_part_recall": 0.45,
+                "any_part": 9,
+                "all_parts": 9
+              },
+              "recall@10": {
+                "macro_part_recall": 0.55,
+                "micro_part_recall": 0.55,
+                "any_part": 11,
+                "all_parts": 11
+              },
+              "recall@100": {
+                "macro_part_recall": 0.95,
+                "micro_part_recall": 0.95,
+                "any_part": 19,
+                "all_parts": 19
+              },
+              "seconds": {
+                "p50": 0.000538499909453094,
+                "p95": 0.09380983867449685
+              },
+              "cpu_seconds": {
+                "p50": 0.000538499909453094,
+                "p95": 0.09380983867449685
+              }
+            },
+            "medium": {
+              "questions": 20,
+              "recall@1": {
+                "macro_part_recall": 0.25,
+                "micro_part_recall": 0.25,
+                "any_part": 7,
+                "all_parts": 3
+              },
+              "recall@5": {
+                "macro_part_recall": 0.35,
+                "micro_part_recall": 0.35,
+                "any_part": 9,
+                "all_parts": 5
+              },
+              "recall@10": {
+                "macro_part_recall": 0.45,
+                "micro_part_recall": 0.45,
+                "any_part": 10,
+                "all_parts": 8
+              },
+              "recall@100": {
+                "macro_part_recall": 0.95,
+                "micro_part_recall": 0.95,
+                "any_part": 19,
+                "all_parts": 19
+              },
+              "seconds": {
+                "p50": 0.008553808555006981,
+                "p95": 0.09888201652793213
+              },
+              "cpu_seconds": {
+                "p50": 0.008553808555006981,
+                "p95": 0.09888201652793213
+              }
+            },
+            "hard": {
+              "questions": 20,
+              "recall@1": {
+                "macro_part_recall": 0.15,
+                "micro_part_recall": 0.15,
+                "any_part": 6,
+                "all_parts": 0
+              },
+              "recall@5": {
+                "macro_part_recall": 0.225,
+                "micro_part_recall": 0.225,
+                "any_part": 8,
+                "all_parts": 1
+              },
+              "recall@10": {
+                "macro_part_recall": 0.3,
+                "micro_part_recall": 0.3,
+                "any_part": 11,
+                "all_parts": 1
+              },
+              "recall@100": {
+                "macro_part_recall": 0.775,
+                "micro_part_recall": 0.775,
+                "any_part": 20,
+                "all_parts": 11
+              },
+              "seconds": {
+                "p50": 0.05023502791300416,
+                "p95": 0.09611939465394244
+              },
+              "cpu_seconds": {
+                "p50": 0.05023502791300416,
+                "p95": 0.09611939465394244
+              }
+            }
+          },
+          "by_language_and_level": {
+            "is": {
+              "easy": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.5,
+                  "micro_part_recall": 0.5,
+                  "any_part": 5,
+                  "all_parts": 5
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.8,
+                  "micro_part_recall": 0.8,
+                  "any_part": 8,
+                  "all_parts": 8
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.8,
+                  "micro_part_recall": 0.8,
+                  "any_part": 8,
+                  "all_parts": 8
+                },
+                "recall@100": {
+                  "macro_part_recall": 1.0,
+                  "micro_part_recall": 1.0,
+                  "any_part": 10,
+                  "all_parts": 10
+                },
+                "seconds": {
+                  "p50": 0.0005746744573116302,
+                  "p95": 0.06097322102868922
+                },
+                "cpu_seconds": {
+                  "p50": 0.0005746744573116302,
+                  "p95": 0.06097322102868922
+                }
+              },
+              "medium": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.3,
+                  "micro_part_recall": 0.3,
+                  "any_part": 4,
+                  "all_parts": 2
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.5,
+                  "micro_part_recall": 0.5,
+                  "any_part": 6,
+                  "all_parts": 4
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.7,
+                  "micro_part_recall": 0.7,
+                  "any_part": 7,
+                  "all_parts": 7
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.9,
+                  "micro_part_recall": 0.9,
+                  "any_part": 9,
+                  "all_parts": 9
+                },
+                "seconds": {
+                  "p50": 0.004535000072792172,
+                  "p95": 0.09904537318507209
+                },
+                "cpu_seconds": {
+                  "p50": 0.004535000072792172,
+                  "p95": 0.09904537318507209
+                }
+              },
+              "hard": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.3,
+                  "micro_part_recall": 0.3,
+                  "any_part": 6,
+                  "all_parts": 0
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.45,
+                  "micro_part_recall": 0.45,
+                  "any_part": 8,
+                  "all_parts": 1
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.55,
+                  "micro_part_recall": 0.55,
+                  "any_part": 10,
+                  "all_parts": 1
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.8,
+                  "micro_part_recall": 0.8,
+                  "any_part": 10,
+                  "all_parts": 6
+                },
+                "seconds": {
+                  "p50": 0.008497977862134576,
+                  "p95": 0.09524765048408881
+                },
+                "cpu_seconds": {
+                  "p50": 0.008497977862134576,
+                  "p95": 0.09524765048408881
+                }
+              }
+            },
+            "en": {
+              "easy": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.1,
+                  "micro_part_recall": 0.1,
+                  "any_part": 1,
+                  "all_parts": 1
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.1,
+                  "micro_part_recall": 0.1,
+                  "any_part": 1,
+                  "all_parts": 1
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.3,
+                  "micro_part_recall": 0.3,
+                  "any_part": 3,
+                  "all_parts": 3
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.9,
+                  "micro_part_recall": 0.9,
+                  "any_part": 9,
+                  "all_parts": 9
+                },
+                "seconds": {
+                  "p50": 0.0004677420947700739,
+                  "p95": 0.09291511676274239
+                },
+                "cpu_seconds": {
+                  "p50": 0.0004677420947700739,
+                  "p95": 0.09291511676274239
+                }
+              },
+              "medium": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.2,
+                  "micro_part_recall": 0.2,
+                  "any_part": 3,
+                  "all_parts": 1
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.2,
+                  "micro_part_recall": 0.2,
+                  "any_part": 3,
+                  "all_parts": 1
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.2,
+                  "micro_part_recall": 0.2,
+                  "any_part": 3,
+                  "all_parts": 1
+                },
+                "recall@100": {
+                  "macro_part_recall": 1.0,
+                  "micro_part_recall": 1.0,
+                  "any_part": 10,
+                  "all_parts": 10
+                },
+                "seconds": {
+                  "p50": 0.0389455440454185,
+                  "p95": 0.09553605520632118
+                },
+                "cpu_seconds": {
+                  "p50": 0.0389455440454185,
+                  "p95": 0.09553605520632118
+                }
+              },
+              "hard": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.0,
+                  "micro_part_recall": 0.0,
+                  "any_part": 0,
+                  "all_parts": 0
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.0,
+                  "micro_part_recall": 0.0,
+                  "any_part": 0,
+                  "all_parts": 0
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.05,
+                  "micro_part_recall": 0.05,
+                  "any_part": 1,
+                  "all_parts": 0
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.75,
+                  "micro_part_recall": 0.75,
+                  "any_part": 10,
+                  "all_parts": 5
+                },
+                "seconds": {
+                  "p50": 0.09128736052662134,
+                  "p95": 0.09628052172483877
+                },
+                "cpu_seconds": {
+                  "p50": 0.09128736052662134,
+                  "p95": 0.09628052172483877
+                }
+              }
+            }
+          }
+        },
+        "rows_without_candidates": 0
+      },
+      "lexical": {
+        "config": {
+          "mode": "lexical",
+          "candidate_limit": 100,
+          "dense_weight": 1.0,
+          "lexical_weight": 1.0,
+          "rrf_k": 60.0,
+          "bm25_k1": 1.2,
+          "bm25_b": 0.75,
+          "decompose": false,
+          "max_subqueries": 3,
+          "subquery_weight": 0.5
+        },
+        "index_build_seconds": 0.056364709977060556,
+        "metrics": {
+          "overall": {
+            "questions": 60,
+            "recall@1": {
+              "macro_part_recall": 0.4166666666666667,
+              "micro_part_recall": 0.4,
+              "any_part": 32,
+              "all_parts": 18
+            },
+            "recall@5": {
+              "macro_part_recall": 0.6833333333333333,
+              "micro_part_recall": 0.66,
+              "any_part": 48,
+              "all_parts": 34
+            },
+            "recall@10": {
+              "macro_part_recall": 0.7333333333333333,
+              "micro_part_recall": 0.71,
+              "any_part": 51,
+              "all_parts": 37
+            },
+            "recall@100": {
+              "macro_part_recall": 0.9333333333333333,
+              "micro_part_recall": 0.93,
+              "any_part": 57,
+              "all_parts": 55
+            },
+            "seconds": {
+              "p50": 0.0008044556016102433,
+              "p95": 0.0011831072159111497
+            },
+            "cpu_seconds": {
+              "p50": 0.0008044556016102433,
+              "p95": 0.0011831072159111497
+            }
+          },
+          "by_language": {
+            "is": {
+              "questions": 30,
+              "recall@1": {
+                "macro_part_recall": 0.26666666666666666,
+                "micro_part_recall": 0.24,
+                "any_part": 10,
+                "all_parts": 6
+              },
+              "recall@5": {
+                "macro_part_recall": 0.55,
+                "micro_part_recall": 0.52,
+                "any_part": 20,
+                "all_parts": 13
+              },
+              "recall@10": {
+                "macro_part_recall": 0.65,
+                "micro_part_recall": 0.62,
+                "any_part": 23,
+                "all_parts": 16
+              },
+              "recall@100": {
+                "macro_part_recall": 0.8666666666666667,
+                "micro_part_recall": 0.86,
+                "any_part": 27,
+                "all_parts": 25
+              },
+              "seconds": {
+                "p50": 0.0007679385598748922,
+                "p95": 0.0009972729836590587
+              },
+              "cpu_seconds": {
+                "p50": 0.0007679385598748922,
+                "p95": 0.0009972729836590587
+              }
+            },
+            "en": {
+              "questions": 30,
+              "recall@1": {
+                "macro_part_recall": 0.5666666666666667,
+                "micro_part_recall": 0.56,
+                "any_part": 22,
+                "all_parts": 12
+              },
+              "recall@5": {
+                "macro_part_recall": 0.8166666666666667,
+                "micro_part_recall": 0.8,
+                "any_part": 28,
+                "all_parts": 21
+              },
+              "recall@10": {
+                "macro_part_recall": 0.8166666666666667,
+                "micro_part_recall": 0.8,
+                "any_part": 28,
+                "all_parts": 21
+              },
+              "recall@100": {
+                "macro_part_recall": 1.0,
+                "micro_part_recall": 1.0,
+                "any_part": 30,
+                "all_parts": 30
+              },
+              "seconds": {
+                "p50": 0.0008807594422250986,
+                "p95": 0.0012844195473007858
+              },
+              "cpu_seconds": {
+                "p50": 0.0008807594422250986,
+                "p95": 0.0012844195473007858
+              }
+            }
+          },
+          "by_level": {
+            "easy": {
+              "questions": 20,
+              "recall@1": {
+                "macro_part_recall": 0.5,
+                "micro_part_recall": 0.5,
+                "any_part": 10,
+                "all_parts": 10
+              },
+              "recall@5": {
+                "macro_part_recall": 0.8,
+                "micro_part_recall": 0.8,
+                "any_part": 16,
+                "all_parts": 16
+              },
+              "recall@10": {
+                "macro_part_recall": 0.85,
+                "micro_part_recall": 0.85,
+                "any_part": 17,
+                "all_parts": 17
+              },
+              "recall@100": {
+                "macro_part_recall": 0.95,
+                "micro_part_recall": 0.95,
+                "any_part": 19,
+                "all_parts": 19
+              },
+              "seconds": {
+                "p50": 0.0005878615193068981,
+                "p95": 0.0008993456605821848
+              },
+              "cpu_seconds": {
+                "p50": 0.0005878615193068981,
+                "p95": 0.0008993456605821848
+              }
+            },
+            "medium": {
+              "questions": 20,
+              "recall@1": {
+                "macro_part_recall": 0.5,
+                "micro_part_recall": 0.5,
+                "any_part": 12,
+                "all_parts": 8
+              },
+              "recall@5": {
+                "macro_part_recall": 0.8,
+                "micro_part_recall": 0.8,
+                "any_part": 16,
+                "all_parts": 16
+              },
+              "recall@10": {
+                "macro_part_recall": 0.85,
+                "micro_part_recall": 0.85,
+                "any_part": 17,
+                "all_parts": 17
+              },
+              "recall@100": {
+                "macro_part_recall": 0.9,
+                "micro_part_recall": 0.9,
+                "any_part": 18,
+                "all_parts": 18
+              },
+              "seconds": {
+                "p50": 0.0008565069874748588,
+                "p95": 0.0012953504570759834
+              },
+              "cpu_seconds": {
+                "p50": 0.0008565069874748588,
+                "p95": 0.0012953504570759834
+              }
+            },
+            "hard": {
+              "questions": 20,
+              "recall@1": {
+                "macro_part_recall": 0.25,
+                "micro_part_recall": 0.25,
+                "any_part": 10,
+                "all_parts": 0
+              },
+              "recall@5": {
+                "macro_part_recall": 0.45,
+                "micro_part_recall": 0.45,
+                "any_part": 16,
+                "all_parts": 2
+              },
+              "recall@10": {
+                "macro_part_recall": 0.5,
+                "micro_part_recall": 0.5,
+                "any_part": 17,
+                "all_parts": 3
+              },
+              "recall@100": {
+                "macro_part_recall": 0.95,
+                "micro_part_recall": 0.95,
+                "any_part": 20,
+                "all_parts": 18
+              },
+              "seconds": {
+                "p50": 0.0009018648415803909,
+                "p95": 0.0010831966530531645
+              },
+              "cpu_seconds": {
+                "p50": 0.0009018648415803909,
+                "p95": 0.0010831966530531645
+              }
+            }
+          },
+          "by_language_and_level": {
+            "is": {
+              "easy": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.4,
+                  "micro_part_recall": 0.4,
+                  "any_part": 4,
+                  "all_parts": 4
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.7,
+                  "micro_part_recall": 0.7,
+                  "any_part": 7,
+                  "all_parts": 7
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.8,
+                  "micro_part_recall": 0.8,
+                  "any_part": 8,
+                  "all_parts": 8
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.9,
+                  "micro_part_recall": 0.9,
+                  "any_part": 9,
+                  "all_parts": 9
+                },
+                "seconds": {
+                  "p50": 0.0005505799781531096,
+                  "p95": 0.0008756990544497966
+                },
+                "cpu_seconds": {
+                  "p50": 0.0005505799781531096,
+                  "p95": 0.0008756990544497966
+                }
+              },
+              "medium": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.3,
+                  "micro_part_recall": 0.3,
+                  "any_part": 4,
+                  "all_parts": 2
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.6,
+                  "micro_part_recall": 0.6,
+                  "any_part": 6,
+                  "all_parts": 6
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.7,
+                  "micro_part_recall": 0.7,
+                  "any_part": 7,
+                  "all_parts": 7
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.8,
+                  "micro_part_recall": 0.8,
+                  "any_part": 8,
+                  "all_parts": 8
+                },
+                "seconds": {
+                  "p50": 0.0008030314929783344,
+                  "p95": 0.0009972729836590587
+                },
+                "cpu_seconds": {
+                  "p50": 0.0008030314929783344,
+                  "p95": 0.0009972729836590587
+                }
+              },
+              "hard": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.1,
+                  "micro_part_recall": 0.1,
+                  "any_part": 2,
+                  "all_parts": 0
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.35,
+                  "micro_part_recall": 0.35,
+                  "any_part": 7,
+                  "all_parts": 0
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.45,
+                  "micro_part_recall": 0.45,
+                  "any_part": 8,
+                  "all_parts": 1
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.9,
+                  "micro_part_recall": 0.9,
+                  "any_part": 10,
+                  "all_parts": 8
+                },
+                "seconds": {
+                  "p50": 0.0007245568558573723,
+                  "p95": 0.0009943198645487427
+                },
+                "cpu_seconds": {
+                  "p50": 0.0007245568558573723,
+                  "p95": 0.0009943198645487427
+                }
+              }
+            },
+            "en": {
+              "easy": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.6,
+                  "micro_part_recall": 0.6,
+                  "any_part": 6,
+                  "all_parts": 6
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.9,
+                  "micro_part_recall": 0.9,
+                  "any_part": 9,
+                  "all_parts": 9
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.9,
+                  "micro_part_recall": 0.9,
+                  "any_part": 9,
+                  "all_parts": 9
+                },
+                "recall@100": {
+                  "macro_part_recall": 1.0,
+                  "micro_part_recall": 1.0,
+                  "any_part": 10,
+                  "all_parts": 10
+                },
+                "seconds": {
+                  "p50": 0.0006076090503484011,
+                  "p95": 0.000900512607768178
+                },
+                "cpu_seconds": {
+                  "p50": 0.0006076090503484011,
+                  "p95": 0.000900512607768178
+                }
+              },
+              "medium": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.7,
+                  "micro_part_recall": 0.7,
+                  "any_part": 8,
+                  "all_parts": 6
+                },
+                "recall@5": {
+                  "macro_part_recall": 1.0,
+                  "micro_part_recall": 1.0,
+                  "any_part": 10,
+                  "all_parts": 10
+                },
+                "recall@10": {
+                  "macro_part_recall": 1.0,
+                  "micro_part_recall": 1.0,
+                  "any_part": 10,
+                  "all_parts": 10
+                },
+                "recall@100": {
+                  "macro_part_recall": 1.0,
+                  "micro_part_recall": 1.0,
+                  "any_part": 10,
+                  "all_parts": 10
+                },
+                "seconds": {
+                  "p50": 0.0010341295273974538,
+                  "p95": 0.0013808455201797186
+                },
+                "cpu_seconds": {
+                  "p50": 0.0010341295273974538,
+                  "p95": 0.0013808455201797186
+                }
+              },
+              "hard": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.4,
+                  "micro_part_recall": 0.4,
+                  "any_part": 8,
+                  "all_parts": 0
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.55,
+                  "micro_part_recall": 0.55,
+                  "any_part": 9,
+                  "all_parts": 2
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.55,
+                  "micro_part_recall": 0.55,
+                  "any_part": 9,
+                  "all_parts": 2
+                },
+                "recall@100": {
+                  "macro_part_recall": 1.0,
+                  "micro_part_recall": 1.0,
+                  "any_part": 10,
+                  "all_parts": 10
+                },
+                "seconds": {
+                  "p50": 0.0010071720462292433,
+                  "p95": 0.0010958421509712935
+                },
+                "cpu_seconds": {
+                  "p50": 0.0010071720462292433,
+                  "p95": 0.0010958421509712935
+                }
+              }
+            }
+          }
+        },
+        "rows_without_candidates": 0
+      },
+      "hybrid": {
+        "config": {
+          "mode": "hybrid",
+          "candidate_limit": 100,
+          "dense_weight": 1.0,
+          "lexical_weight": 1.0,
+          "rrf_k": 60.0,
+          "bm25_k1": 1.2,
+          "bm25_b": 0.75,
+          "decompose": false,
+          "max_subqueries": 3,
+          "subquery_weight": 0.5
+        },
+        "index_build_seconds": 0.05554984090849757,
+        "metrics": {
+          "overall": {
+            "questions": 60,
+            "recall@1": {
+              "macro_part_recall": 0.25833333333333336,
+              "micro_part_recall": 0.25,
+              "any_part": 21,
+              "all_parts": 10
+            },
+            "recall@5": {
+              "macro_part_recall": 0.49166666666666664,
+              "micro_part_recall": 0.48,
+              "any_part": 37,
+              "all_parts": 22
+            },
+            "recall@10": {
+              "macro_part_recall": 0.6916666666666667,
+              "micro_part_recall": 0.69,
+              "any_part": 48,
+              "all_parts": 35
+            },
+            "recall@100": {
+              "macro_part_recall": 0.925,
+              "micro_part_recall": 0.92,
+              "any_part": 58,
+              "all_parts": 53
+            },
+            "seconds": {
+              "p50": 0.002467297948896885,
+              "p95": 0.09508671304211021
+            },
+            "cpu_seconds": {
+              "p50": 0.002467297948896885,
+              "p95": 0.09508671304211021
+            }
+          },
+          "by_language": {
+            "is": {
+              "questions": 30,
+              "recall@1": {
+                "macro_part_recall": 0.3,
+                "micro_part_recall": 0.3,
+                "any_part": 12,
+                "all_parts": 6
+              },
+              "recall@5": {
+                "macro_part_recall": 0.6,
+                "micro_part_recall": 0.58,
+                "any_part": 22,
+                "all_parts": 14
+              },
+              "recall@10": {
+                "macro_part_recall": 0.7166666666666667,
+                "micro_part_recall": 0.7,
+                "any_part": 24,
+                "all_parts": 19
+              },
+              "recall@100": {
+                "macro_part_recall": 0.9,
+                "micro_part_recall": 0.9,
+                "any_part": 28,
+                "all_parts": 26
+              },
+              "seconds": {
+                "p50": 0.0025290814228355885,
+                "p95": 0.09448773089097813
+              },
+              "cpu_seconds": {
+                "p50": 0.0025290814228355885,
+                "p95": 0.09448773089097813
+              }
+            },
+            "en": {
+              "questions": 30,
+              "recall@1": {
+                "macro_part_recall": 0.21666666666666667,
+                "micro_part_recall": 0.2,
+                "any_part": 9,
+                "all_parts": 4
+              },
+              "recall@5": {
+                "macro_part_recall": 0.38333333333333336,
+                "micro_part_recall": 0.38,
+                "any_part": 15,
+                "all_parts": 8
+              },
+              "recall@10": {
+                "macro_part_recall": 0.6666666666666666,
+                "micro_part_recall": 0.68,
+                "any_part": 24,
+                "all_parts": 16
+              },
+              "recall@100": {
+                "macro_part_recall": 0.95,
+                "micro_part_recall": 0.94,
+                "any_part": 30,
+                "all_parts": 27
+              },
+              "seconds": {
+                "p50": 0.0022492744028568268,
+                "p95": 0.09532489366829396
+              },
+              "cpu_seconds": {
+                "p50": 0.0022492744028568268,
+                "p95": 0.09532489366829396
+              }
+            }
+          },
+          "by_level": {
+            "easy": {
+              "questions": 20,
+              "recall@1": {
+                "macro_part_recall": 0.3,
+                "micro_part_recall": 0.3,
+                "any_part": 6,
+                "all_parts": 6
+              },
+              "recall@5": {
+                "macro_part_recall": 0.55,
+                "micro_part_recall": 0.55,
+                "any_part": 11,
+                "all_parts": 11
+              },
+              "recall@10": {
+                "macro_part_recall": 0.7,
+                "micro_part_recall": 0.7,
+                "any_part": 14,
+                "all_parts": 14
+              },
+              "recall@100": {
+                "macro_part_recall": 0.95,
+                "micro_part_recall": 0.95,
+                "any_part": 19,
+                "all_parts": 19
+              },
+              "seconds": {
+                "p50": 0.002481425879523158,
+                "p95": 0.0946639655274339
+              },
+              "cpu_seconds": {
+                "p50": 0.002481425879523158,
+                "p95": 0.0946639655274339
+              }
+            },
+            "medium": {
+              "questions": 20,
+              "recall@1": {
+                "macro_part_recall": 0.3,
+                "micro_part_recall": 0.3,
+                "any_part": 8,
+                "all_parts": 4
+              },
+              "recall@5": {
+                "macro_part_recall": 0.55,
+                "micro_part_recall": 0.55,
+                "any_part": 12,
+                "all_parts": 10
+              },
+              "recall@10": {
+                "macro_part_recall": 0.85,
+                "micro_part_recall": 0.85,
+                "any_part": 17,
+                "all_parts": 17
+              },
+              "recall@100": {
+                "macro_part_recall": 0.95,
+                "micro_part_recall": 0.95,
+                "any_part": 19,
+                "all_parts": 19
+              },
+              "seconds": {
+                "p50": 0.0017673885449767113,
+                "p95": 0.0941992963780649
+              },
+              "cpu_seconds": {
+                "p50": 0.0017673885449767113,
+                "p95": 0.0941992963780649
+              }
+            },
+            "hard": {
+              "questions": 20,
+              "recall@1": {
+                "macro_part_recall": 0.175,
+                "micro_part_recall": 0.175,
+                "any_part": 7,
+                "all_parts": 0
+              },
+              "recall@5": {
+                "macro_part_recall": 0.375,
+                "micro_part_recall": 0.375,
+                "any_part": 14,
+                "all_parts": 1
+              },
+              "recall@10": {
+                "macro_part_recall": 0.525,
+                "micro_part_recall": 0.525,
+                "any_part": 17,
+                "all_parts": 4
+              },
+              "recall@100": {
+                "macro_part_recall": 0.875,
+                "micro_part_recall": 0.875,
+                "any_part": 20,
+                "all_parts": 15
+              },
+              "seconds": {
+                "p50": 0.002773764543235302,
+                "p95": 0.09556777937104925
+              },
+              "cpu_seconds": {
+                "p50": 0.002773764543235302,
+                "p95": 0.09556777937104925
+              }
+            }
+          },
+          "by_language_and_level": {
+            "is": {
+              "easy": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.3,
+                  "micro_part_recall": 0.3,
+                  "any_part": 3,
+                  "all_parts": 3
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.7,
+                  "micro_part_recall": 0.7,
+                  "any_part": 7,
+                  "all_parts": 7
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.8,
+                  "micro_part_recall": 0.8,
+                  "any_part": 8,
+                  "all_parts": 8
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.9,
+                  "micro_part_recall": 0.9,
+                  "any_part": 9,
+                  "all_parts": 9
+                },
+                "seconds": {
+                  "p50": 0.0025997150223702192,
+                  "p95": 0.09357859265292064
+                },
+                "cpu_seconds": {
+                  "p50": 0.0025997150223702192,
+                  "p95": 0.09357859265292064
+                }
+              },
+              "medium": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.4,
+                  "micro_part_recall": 0.4,
+                  "any_part": 5,
+                  "all_parts": 3
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.6,
+                  "micro_part_recall": 0.6,
+                  "any_part": 6,
+                  "all_parts": 6
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.7,
+                  "micro_part_recall": 0.7,
+                  "any_part": 7,
+                  "all_parts": 7
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.9,
+                  "micro_part_recall": 0.9,
+                  "any_part": 9,
+                  "all_parts": 9
+                },
+                "seconds": {
+                  "p50": 0.04589677753392607,
+                  "p95": 0.09270710306009278
+                },
+                "cpu_seconds": {
+                  "p50": 0.04589677753392607,
+                  "p95": 0.09270710306009278
+                }
+              },
+              "hard": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.2,
+                  "micro_part_recall": 0.2,
+                  "any_part": 4,
+                  "all_parts": 0
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.5,
+                  "micro_part_recall": 0.5,
+                  "any_part": 9,
+                  "all_parts": 1
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.65,
+                  "micro_part_recall": 0.65,
+                  "any_part": 9,
+                  "all_parts": 4
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.9,
+                  "micro_part_recall": 0.9,
+                  "any_part": 10,
+                  "all_parts": 8
+                },
+                "seconds": {
+                  "p50": 0.002327875467017293,
+                  "p95": 0.095533630810678
+                },
+                "cpu_seconds": {
+                  "p50": 0.002327875467017293,
+                  "p95": 0.095533630810678
+                }
+              }
+            },
+            "en": {
+              "easy": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.3,
+                  "micro_part_recall": 0.3,
+                  "any_part": 3,
+                  "all_parts": 3
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.4,
+                  "micro_part_recall": 0.4,
+                  "any_part": 4,
+                  "all_parts": 4
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.6,
+                  "micro_part_recall": 0.6,
+                  "any_part": 6,
+                  "all_parts": 6
+                },
+                "recall@100": {
+                  "macro_part_recall": 1.0,
+                  "micro_part_recall": 1.0,
+                  "any_part": 10,
+                  "all_parts": 10
+                },
+                "seconds": {
+                  "p50": 0.0019148924620822072,
+                  "p95": 0.10016099765198304
+                },
+                "cpu_seconds": {
+                  "p50": 0.0019148924620822072,
+                  "p95": 0.10016099765198304
+                }
+              },
+              "medium": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.2,
+                  "micro_part_recall": 0.2,
+                  "any_part": 3,
+                  "all_parts": 1
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.5,
+                  "micro_part_recall": 0.5,
+                  "any_part": 6,
+                  "all_parts": 4
+                },
+                "recall@10": {
+                  "macro_part_recall": 1.0,
+                  "micro_part_recall": 1.0,
+                  "any_part": 10,
+                  "all_parts": 10
+                },
+                "recall@100": {
+                  "macro_part_recall": 1.0,
+                  "micro_part_recall": 1.0,
+                  "any_part": 10,
+                  "all_parts": 10
+                },
+                "seconds": {
+                  "p50": 0.0015552820404991508,
+                  "p95": 0.09465382195776328
+                },
+                "cpu_seconds": {
+                  "p50": 0.0015552820404991508,
+                  "p95": 0.09465382195776328
+                }
+              },
+              "hard": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.15,
+                  "micro_part_recall": 0.15,
+                  "any_part": 3,
+                  "all_parts": 0
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.25,
+                  "micro_part_recall": 0.25,
+                  "any_part": 5,
+                  "all_parts": 0
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.4,
+                  "micro_part_recall": 0.4,
+                  "any_part": 8,
+                  "all_parts": 0
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.85,
+                  "micro_part_recall": 0.85,
+                  "any_part": 10,
+                  "all_parts": 7
+                },
+                "seconds": {
+                  "p50": 0.049462097929790616,
+                  "p95": 0.09513194540049881
+                },
+                "cpu_seconds": {
+                  "p50": 0.049462097929790616,
+                  "p95": 0.09513194540049881
+                }
+              }
+            }
+          }
+        },
+        "rows_without_candidates": 0
+      },
+      "hybrid_subqueries": {
+        "config": {
+          "mode": "hybrid",
+          "candidate_limit": 100,
+          "dense_weight": 1.0,
+          "lexical_weight": 1.0,
+          "rrf_k": 60.0,
+          "bm25_k1": 1.2,
+          "bm25_b": 0.75,
+          "decompose": true,
+          "max_subqueries": 3,
+          "subquery_weight": 0.5
+        },
+        "index_build_seconds": 0.0674670550506562,
+        "metrics": {
+          "overall": {
+            "questions": 60,
+            "recall@1": {
+              "macro_part_recall": 0.24166666666666667,
+              "micro_part_recall": 0.23,
+              "any_part": 19,
+              "all_parts": 10
+            },
+            "recall@5": {
+              "macro_part_recall": 0.4666666666666667,
+              "micro_part_recall": 0.45,
+              "any_part": 34,
+              "all_parts": 22
+            },
+            "recall@10": {
+              "macro_part_recall": 0.6916666666666667,
+              "micro_part_recall": 0.69,
+              "any_part": 47,
+              "all_parts": 36
+            },
+            "recall@100": {
+              "macro_part_recall": 0.925,
+              "micro_part_recall": 0.92,
+              "any_part": 58,
+              "all_parts": 53
+            },
+            "seconds": {
+              "p50": 0.09132295253220946,
+              "p95": 0.3919629229116254
+            },
+            "cpu_seconds": {
+              "p50": 0.010901728877797723,
+              "p95": 0.09945708671584724
+            }
+          },
+          "by_language": {
+            "is": {
+              "questions": 30,
+              "recall@1": {
+                "macro_part_recall": 0.2833333333333333,
+                "micro_part_recall": 0.28,
+                "any_part": 11,
+                "all_parts": 6
+              },
+              "recall@5": {
+                "macro_part_recall": 0.5833333333333334,
+                "micro_part_recall": 0.56,
+                "any_part": 21,
+                "all_parts": 14
+              },
+              "recall@10": {
+                "macro_part_recall": 0.7166666666666667,
+                "micro_part_recall": 0.7,
+                "any_part": 24,
+                "all_parts": 19
+              },
+              "recall@100": {
+                "macro_part_recall": 0.9,
+                "micro_part_recall": 0.9,
+                "any_part": 28,
+                "all_parts": 26
+              },
+              "seconds": {
+                "p50": 0.08047360356431454,
+                "p95": 0.39349834639579057
+              },
+              "cpu_seconds": {
+                "p50": 0.007043918478302658,
+                "p95": 0.09533540389966219
+              }
+            },
+            "en": {
+              "questions": 30,
+              "recall@1": {
+                "macro_part_recall": 0.2,
+                "micro_part_recall": 0.18,
+                "any_part": 8,
+                "all_parts": 4
+              },
+              "recall@5": {
+                "macro_part_recall": 0.35,
+                "micro_part_recall": 0.34,
+                "any_part": 13,
+                "all_parts": 8
+              },
+              "recall@10": {
+                "macro_part_recall": 0.6666666666666666,
+                "micro_part_recall": 0.68,
+                "any_part": 23,
+                "all_parts": 17
+              },
+              "recall@100": {
+                "macro_part_recall": 0.95,
+                "micro_part_recall": 0.94,
+                "any_part": 30,
+                "all_parts": 27
+              },
+              "seconds": {
+                "p50": 0.09258064592722803,
+                "p95": 0.3511943700141272
+              },
+              "cpu_seconds": {
+                "p50": 0.05708133557345718,
+                "p95": 0.10093968426808714
+              }
+            }
+          },
+          "by_level": {
+            "easy": {
+              "questions": 20,
+              "recall@1": {
+                "macro_part_recall": 0.3,
+                "micro_part_recall": 0.3,
+                "any_part": 6,
+                "all_parts": 6
+              },
+              "recall@5": {
+                "macro_part_recall": 0.55,
+                "micro_part_recall": 0.55,
+                "any_part": 11,
+                "all_parts": 11
+              },
+              "recall@10": {
+                "macro_part_recall": 0.7,
+                "micro_part_recall": 0.7,
+                "any_part": 14,
+                "all_parts": 14
+              },
+              "recall@100": {
+                "macro_part_recall": 0.95,
+                "micro_part_recall": 0.95,
+                "any_part": 19,
+                "all_parts": 19
+              },
+              "seconds": {
+                "p50": 0.0024649816332384944,
+                "p95": 0.09397438919404522
+              },
+              "cpu_seconds": {
+                "p50": 0.0024649816332384944,
+                "p95": 0.09397438919404522
+              }
+            },
+            "medium": {
+              "questions": 20,
+              "recall@1": {
+                "macro_part_recall": 0.3,
+                "micro_part_recall": 0.3,
+                "any_part": 8,
+                "all_parts": 4
+              },
+              "recall@5": {
+                "macro_part_recall": 0.55,
+                "micro_part_recall": 0.55,
+                "any_part": 12,
+                "all_parts": 10
+              },
+              "recall@10": {
+                "macro_part_recall": 0.85,
+                "micro_part_recall": 0.85,
+                "any_part": 17,
+                "all_parts": 17
+              },
+              "recall@100": {
+                "macro_part_recall": 0.95,
+                "micro_part_recall": 0.95,
+                "any_part": 19,
+                "all_parts": 19
+              },
+              "seconds": {
+                "p50": 0.08047360356431454,
+                "p95": 0.3181561163975858
+              },
+              "cpu_seconds": {
+                "p50": 0.04409315995872021,
+                "p95": 0.0960622561047785
+              }
+            },
+            "hard": {
+              "questions": 20,
+              "recall@1": {
+                "macro_part_recall": 0.125,
+                "micro_part_recall": 0.125,
+                "any_part": 5,
+                "all_parts": 0
+              },
+              "recall@5": {
+                "macro_part_recall": 0.3,
+                "micro_part_recall": 0.3,
+                "any_part": 11,
+                "all_parts": 1
+              },
+              "recall@10": {
+                "macro_part_recall": 0.525,
+                "micro_part_recall": 0.525,
+                "any_part": 16,
+                "all_parts": 5
+              },
+              "recall@100": {
+                "macro_part_recall": 0.875,
+                "micro_part_recall": 0.875,
+                "any_part": 20,
+                "all_parts": 15
+              },
+              "seconds": {
+                "p50": 0.3081406259443611,
+                "p95": 0.39924478247994566
+              },
+              "cpu_seconds": {
+                "p50": 0.04529101261869073,
+                "p95": 0.17271899114130065
+              }
+            }
+          },
+          "by_language_and_level": {
+            "is": {
+              "easy": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.3,
+                  "micro_part_recall": 0.3,
+                  "any_part": 3,
+                  "all_parts": 3
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.7,
+                  "micro_part_recall": 0.7,
+                  "any_part": 7,
+                  "all_parts": 7
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.8,
+                  "micro_part_recall": 0.8,
+                  "any_part": 8,
+                  "all_parts": 8
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.9,
+                  "micro_part_recall": 0.9,
+                  "any_part": 9,
+                  "all_parts": 9
+                },
+                "seconds": {
+                  "p50": 0.0022319708950817585,
+                  "p95": 0.09243330053286626
+                },
+                "cpu_seconds": {
+                  "p50": 0.0022319708950817585,
+                  "p95": 0.09243330053286626
+                }
+              },
+              "medium": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.4,
+                  "micro_part_recall": 0.4,
+                  "any_part": 5,
+                  "all_parts": 3
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.6,
+                  "micro_part_recall": 0.6,
+                  "any_part": 6,
+                  "all_parts": 6
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.7,
+                  "micro_part_recall": 0.7,
+                  "any_part": 7,
+                  "all_parts": 7
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.9,
+                  "micro_part_recall": 0.9,
+                  "any_part": 9,
+                  "all_parts": 9
+                },
+                "seconds": {
+                  "p50": 0.08047360356431454,
+                  "p95": 0.25860607724171103
+                },
+                "cpu_seconds": {
+                  "p50": 0.04409315995872021,
+                  "p95": 0.0939965687924996
+                }
+              },
+              "hard": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.15,
+                  "micro_part_recall": 0.15,
+                  "any_part": 3,
+                  "all_parts": 0
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.45,
+                  "micro_part_recall": 0.45,
+                  "any_part": 8,
+                  "all_parts": 1
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.65,
+                  "micro_part_recall": 0.65,
+                  "any_part": 9,
+                  "all_parts": 4
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.9,
+                  "micro_part_recall": 0.9,
+                  "any_part": 10,
+                  "all_parts": 8
+                },
+                "seconds": {
+                  "p50": 0.3422825165325776,
+                  "p95": 0.44467897907597936
+                },
+                "cpu_seconds": {
+                  "p50": 0.04320147051475942,
+                  "p95": 0.14508363767527033
+                }
+              }
+            },
+            "en": {
+              "easy": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.3,
+                  "micro_part_recall": 0.3,
+                  "any_part": 3,
+                  "all_parts": 3
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.4,
+                  "micro_part_recall": 0.4,
+                  "any_part": 4,
+                  "all_parts": 4
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.6,
+                  "micro_part_recall": 0.6,
+                  "any_part": 6,
+                  "all_parts": 6
+                },
+                "recall@100": {
+                  "macro_part_recall": 1.0,
+                  "micro_part_recall": 1.0,
+                  "any_part": 10,
+                  "all_parts": 10
+                },
+                "seconds": {
+                  "p50": 0.05781671206932515,
+                  "p95": 0.09361659802962094
+                },
+                "cpu_seconds": {
+                  "p50": 0.05781671206932515,
+                  "p95": 0.09361659802962094
+                }
+              },
+              "medium": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.2,
+                  "micro_part_recall": 0.2,
+                  "any_part": 3,
+                  "all_parts": 1
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.5,
+                  "micro_part_recall": 0.5,
+                  "any_part": 6,
+                  "all_parts": 4
+                },
+                "recall@10": {
+                  "macro_part_recall": 1.0,
+                  "micro_part_recall": 1.0,
+                  "any_part": 10,
+                  "all_parts": 10
+                },
+                "recall@100": {
+                  "macro_part_recall": 1.0,
+                  "micro_part_recall": 1.0,
+                  "any_part": 10,
+                  "all_parts": 10
+                },
+                "seconds": {
+                  "p50": 0.04848706256598234,
+                  "p95": 0.2159283620654603
+                },
+                "cpu_seconds": {
+                  "p50": 0.04848706256598234,
+                  "p95": 0.09933160661021247
+                }
+              },
+              "hard": {
+                "questions": 10,
+                "recall@1": {
+                  "macro_part_recall": 0.1,
+                  "micro_part_recall": 0.1,
+                  "any_part": 2,
+                  "all_parts": 0
+                },
+                "recall@5": {
+                  "macro_part_recall": 0.15,
+                  "micro_part_recall": 0.15,
+                  "any_part": 3,
+                  "all_parts": 0
+                },
+                "recall@10": {
+                  "macro_part_recall": 0.4,
+                  "micro_part_recall": 0.4,
+                  "any_part": 7,
+                  "all_parts": 1
+                },
+                "recall@100": {
+                  "macro_part_recall": 0.85,
+                  "micro_part_recall": 0.85,
+                  "any_part": 10,
+                  "all_parts": 7
+                },
+                "seconds": {
+                  "p50": 0.3063230849802494,
+                  "p95": 0.38721076330402865
+                },
+                "cpu_seconds": {
+                  "p50": 0.05109767708927393,
+                  "p95": 0.13930036702658974
+                }
+              }
+            }
+          }
+        },
+        "rows_without_candidates": 0
+      }
+    },
+    "new_embedding_calls": 32,
+    "new_embedding_seconds": 4.7230806783773005,
+    "latency_note": "retrieval timing excludes index construction; cpu_seconds subtracts uncached model API time. Full-question vectors replay verified Gate-0 embeddings; subqueries use live BGE then cache. Not cold end-to-end timings."
+  },
+  "oracle_before": {
+    "stage": "pre-implementation oracle@100",
+    "baseline_commit": "a09746847e884190aa51ea9f91fab8c4c90c2088",
+    "basis": "Saved, verified Gate-0 singleton question vectors and untouched shipped index; CPU only; no new inference or retrieval code changes",
+    "metric_identity_limit": "Official accepted table codes mapped to all full folders in the same language; duplicate-code folder matches are reported as ambiguous, not certified semantic/cell matches. Questions do not provide exact accepted-folder ground truth.",
+    "metrics": {
+      "overall": {
+        "questions": 60,
+        "parts": 100,
+        "recall@1": {
+          "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+          "macro_part_recall": 0.23333333333333334,
+          "micro_part_recall": 0.22,
+          "any_part_questions": 19,
+          "all_parts_questions": 9
+        },
+        "recall@5": {
+          "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+          "macro_part_recall": 0.3416666666666667,
+          "micro_part_recall": 0.32,
+          "any_part_questions": 26,
+          "all_parts_questions": 15
+        },
+        "recall@10": {
+          "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+          "macro_part_recall": 0.43333333333333335,
+          "micro_part_recall": 0.41,
+          "any_part_questions": 32,
+          "all_parts_questions": 20
+        },
+        "recall@100": {
+          "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+          "macro_part_recall": 0.8916666666666667,
+          "micro_part_recall": 0.88,
+          "any_part_questions": 58,
+          "all_parts_questions": 49
+        }
+      },
+      "by_language": {
+        "is": {
+          "questions": 30,
+          "parts": 50,
+          "recall@1": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.36666666666666664,
+            "micro_part_recall": 0.34,
+            "any_part_questions": 15,
+            "all_parts_questions": 7
+          },
+          "recall@5": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.5833333333333334,
+            "micro_part_recall": 0.54,
+            "any_part_questions": 22,
+            "all_parts_questions": 13
+          },
+          "recall@10": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.6833333333333333,
+            "micro_part_recall": 0.66,
+            "any_part_questions": 25,
+            "all_parts_questions": 16
+          },
+          "recall@100": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.9,
+            "micro_part_recall": 0.88,
+            "any_part_questions": 29,
+            "all_parts_questions": 25
+          }
+        },
+        "en": {
+          "questions": 30,
+          "parts": 50,
+          "recall@1": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.1,
+            "micro_part_recall": 0.1,
+            "any_part_questions": 4,
+            "all_parts_questions": 2
+          },
+          "recall@5": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.1,
+            "micro_part_recall": 0.1,
+            "any_part_questions": 4,
+            "all_parts_questions": 2
+          },
+          "recall@10": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.18333333333333332,
+            "micro_part_recall": 0.16,
+            "any_part_questions": 7,
+            "all_parts_questions": 4
+          },
+          "recall@100": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.8833333333333333,
+            "micro_part_recall": 0.88,
+            "any_part_questions": 29,
+            "all_parts_questions": 24
+          }
+        }
+      },
+      "by_level": {
+        "easy": {
+          "questions": 20,
+          "parts": 20,
+          "recall@1": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.3,
+            "micro_part_recall": 0.3,
+            "any_part_questions": 6,
+            "all_parts_questions": 6
+          },
+          "recall@5": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.45,
+            "micro_part_recall": 0.45,
+            "any_part_questions": 9,
+            "all_parts_questions": 9
+          },
+          "recall@10": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.55,
+            "micro_part_recall": 0.55,
+            "any_part_questions": 11,
+            "all_parts_questions": 11
+          },
+          "recall@100": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.95,
+            "micro_part_recall": 0.95,
+            "any_part_questions": 19,
+            "all_parts_questions": 19
+          }
+        },
+        "medium": {
+          "questions": 20,
+          "parts": 40,
+          "recall@1": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.25,
+            "micro_part_recall": 0.25,
+            "any_part_questions": 7,
+            "all_parts_questions": 3
+          },
+          "recall@5": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.35,
+            "micro_part_recall": 0.35,
+            "any_part_questions": 9,
+            "all_parts_questions": 5
+          },
+          "recall@10": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.45,
+            "micro_part_recall": 0.45,
+            "any_part_questions": 10,
+            "all_parts_questions": 8
+          },
+          "recall@100": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.95,
+            "micro_part_recall": 0.95,
+            "any_part_questions": 19,
+            "all_parts_questions": 19
+          }
+        },
+        "hard": {
+          "questions": 20,
+          "parts": 40,
+          "recall@1": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.15,
+            "micro_part_recall": 0.15,
+            "any_part_questions": 6,
+            "all_parts_questions": 0
+          },
+          "recall@5": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.225,
+            "micro_part_recall": 0.225,
+            "any_part_questions": 8,
+            "all_parts_questions": 1
+          },
+          "recall@10": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.3,
+            "micro_part_recall": 0.3,
+            "any_part_questions": 11,
+            "all_parts_questions": 1
+          },
+          "recall@100": {
+            "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+            "macro_part_recall": 0.775,
+            "micro_part_recall": 0.775,
+            "any_part_questions": 20,
+            "all_parts_questions": 11
+          }
+        }
+      },
+      "by_language_and_level": {
+        "is": {
+          "easy": {
+            "questions": 10,
+            "parts": 10,
+            "recall@1": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.5,
+              "micro_part_recall": 0.5,
+              "any_part_questions": 5,
+              "all_parts_questions": 5
+            },
+            "recall@5": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.8,
+              "micro_part_recall": 0.8,
+              "any_part_questions": 8,
+              "all_parts_questions": 8
+            },
+            "recall@10": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.8,
+              "micro_part_recall": 0.8,
+              "any_part_questions": 8,
+              "all_parts_questions": 8
+            },
+            "recall@100": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 1.0,
+              "micro_part_recall": 1.0,
+              "any_part_questions": 10,
+              "all_parts_questions": 10
+            }
+          },
+          "medium": {
+            "questions": 10,
+            "parts": 20,
+            "recall@1": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.3,
+              "micro_part_recall": 0.3,
+              "any_part_questions": 4,
+              "all_parts_questions": 2
+            },
+            "recall@5": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.5,
+              "micro_part_recall": 0.5,
+              "any_part_questions": 6,
+              "all_parts_questions": 4
+            },
+            "recall@10": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.7,
+              "micro_part_recall": 0.7,
+              "any_part_questions": 7,
+              "all_parts_questions": 7
+            },
+            "recall@100": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.9,
+              "micro_part_recall": 0.9,
+              "any_part_questions": 9,
+              "all_parts_questions": 9
+            }
+          },
+          "hard": {
+            "questions": 10,
+            "parts": 20,
+            "recall@1": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.3,
+              "micro_part_recall": 0.3,
+              "any_part_questions": 6,
+              "all_parts_questions": 0
+            },
+            "recall@5": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.45,
+              "micro_part_recall": 0.45,
+              "any_part_questions": 8,
+              "all_parts_questions": 1
+            },
+            "recall@10": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.55,
+              "micro_part_recall": 0.55,
+              "any_part_questions": 10,
+              "all_parts_questions": 1
+            },
+            "recall@100": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.8,
+              "micro_part_recall": 0.8,
+              "any_part_questions": 10,
+              "all_parts_questions": 6
+            }
+          }
+        },
+        "en": {
+          "easy": {
+            "questions": 10,
+            "parts": 10,
+            "recall@1": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.1,
+              "micro_part_recall": 0.1,
+              "any_part_questions": 1,
+              "all_parts_questions": 1
+            },
+            "recall@5": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.1,
+              "micro_part_recall": 0.1,
+              "any_part_questions": 1,
+              "all_parts_questions": 1
+            },
+            "recall@10": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.3,
+              "micro_part_recall": 0.3,
+              "any_part_questions": 3,
+              "all_parts_questions": 3
+            },
+            "recall@100": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.9,
+              "micro_part_recall": 0.9,
+              "any_part_questions": 9,
+              "all_parts_questions": 9
+            }
+          },
+          "medium": {
+            "questions": 10,
+            "parts": 20,
+            "recall@1": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.2,
+              "micro_part_recall": 0.2,
+              "any_part_questions": 3,
+              "all_parts_questions": 1
+            },
+            "recall@5": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.2,
+              "micro_part_recall": 0.2,
+              "any_part_questions": 3,
+              "all_parts_questions": 1
+            },
+            "recall@10": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.2,
+              "micro_part_recall": 0.2,
+              "any_part_questions": 3,
+              "all_parts_questions": 1
+            },
+            "recall@100": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 1.0,
+              "micro_part_recall": 1.0,
+              "any_part_questions": 10,
+              "all_parts_questions": 10
+            }
+          },
+          "hard": {
+            "questions": 10,
+            "parts": 20,
+            "recall@1": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.0,
+              "micro_part_recall": 0.0,
+              "any_part_questions": 0,
+              "all_parts_questions": 0
+            },
+            "recall@5": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.0,
+              "micro_part_recall": 0.0,
+              "any_part_questions": 0,
+              "all_parts_questions": 0
+            },
+            "recall@10": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.05,
+              "micro_part_recall": 0.05,
+              "any_part_questions": 1,
+              "all_parts_questions": 0
+            },
+            "recall@100": {
+              "definition": "macro mean of fraction of required question-parts with an accepted table in top-k; accepted table codes follow unchanged official scorer",
+              "macro_part_recall": 0.75,
+              "micro_part_recall": 0.75,
+              "any_part_questions": 10,
+              "all_parts_questions": 5
+            }
+          }
+        }
+      }
+    },
+    "distribution": {
+      "parts": 100,
+      "rank_1_10": 41,
+      "rank_11_100": 47,
+      "outside_100": 12
+    },
+    "cpu_ranking_latency": {
+      "p50_ms": 5.801000166684389,
+      "p95_ms": 7.750864955596624,
+      "includes": "dot product, full argsort and language filtering; excludes model embedding and JSON/provenance serialization",
+      "machine": "Windows workstation bundled numpy 2.3.5"
+    },
+    "question_sha256": "32d3180b6b58b7d6b327426ac48fa28e3f5166ca15a67bf8e3052145a4d4b37f"
+  },
+  "anchor_audit": {
+    "scope": "Exact canonical anchor folders validated by original category codes and snapshot cell values. Accepted alternative-table folders are not asserted; this is stricter/different from official accepted-code recall. Audit does not alter retrieval.",
+    "all_100_anchor_parts_resolved": true
+  },
+  "tests": {
+    "passed": 388,
+    "failed": 0,
+    "original": 365,
+    "new": 23,
+    "ruff": "pass",
+    "format": "pass",
+    "mypy": "pass"
+  },
+  "models": {
+    "BGE-M3": "5617a9f61b028005a4858fdac845db406aefb181",
+    "Qwen2.5-7B-Instruct": "a09a35458c702b33eeacc393d103063234e8bc28"
+  },
+  "limits": [
+    "Single measured run, no confidence intervals; no confirmed generalization gain.",
+    "Official table-code recall can overcount duplicate folders; anchor audit separately resolves canonical folders, not every accepted alternative.",
+    "Dense top5 recall beyond k=5 is capped by five returned candidates.",
+    "CPU retrieval times exclude embedding; full question vectors replay Gate0, fragments embedded live once and cached. End-to-end answer timings use live APIs.",
+    "No 5B-2 reranking or 5B-3 category/arithmetic/multi-table changes.",
+    "Closed 12-question set not accessed. No weights retuned after measurement."
+  ],
+  "cases": [
+    {
+      "id": "population-iceland-2026-en",
+      "language": "en",
+      "level": "easy",
+      "question": "How many people lived in Iceland on 1 January 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 4.377598864026368,
+      "answer": "On 1 January 2026, the total population living in the Capital Region of Iceland was 137,476.",
+      "why": "does not state 394,324 people; answered from VIN10012, expected MAN00101 (or 17 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table VIN10012 \"Register based employment of persons with legal residence in Iceland by month, sex, age, origin and region 2003-2026\" (updated 2026-10-07): https://px.hagstofa.is/pxen/api/v1/en/Samfelag/vinnumarkadur/vinnuaflskraargogn/VIN10012.px",
+      "table_folders": [
+        "Society/en/vinnumarkadur/vinnuaflskraargogn/VIN10012"
+      ],
+      "table_codes": [
+        "VIN10012"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Búseta: no category chosen, using 'Capital Region'",
+        "Kyn: no category chosen, using 'Alls'",
+        "Aldursflokkar: no category chosen, using 'Total'",
+        "Bakgrunnur: no category chosen, using 'Total'"
+      ],
+      "facts": [
+        "Month: 2026M01; Region: Capital Region; Sex: Alls; Age-groups: Total; Origin: Total = 137476"
+      ]
+    },
+    {
+      "id": "population-iceland-2026-is",
+      "language": "is",
+      "level": "easy",
+      "question": "Hve margir bjuggu á Íslandi 1. janúar 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 4.458409979939461,
+      "answer": "1. janúar 2026 bauð 137476 bjugga í Höfuðborgarsvæði.",
+      "why": "does not state 394,324 people; answered from VIN10012, expected MAN00101 (or 17 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table VIN10012 \"Fjöldi starfandi með lögheimili á Íslandi samkvæmt skrám eftir mánuðum, kyni, aldri, bakgrunni og búsetu 2003-2026\" (updated 2026-10-07): https://px.hagstofa.is/pxis/api/v1/is/Samfelag/vinnumarkadur/vinnuaflskraargogn/VIN10012.px",
+      "table_folders": [
+        "Society/is/vinnumarkadur/vinnuaflskraargogn/VIN10012"
+      ],
+      "table_codes": [
+        "VIN10012"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Búseta: no category chosen, using 'Höfuðborgarsvæði'",
+        "Kyn: no category chosen, using 'Alls'",
+        "Aldursflokkar: no category chosen, using 'Alls'",
+        "Bakgrunnur: no category chosen, using 'Alls'"
+      ],
+      "facts": [
+        "Mánuður: 2026M01; Búseta: Höfuðborgarsvæði; Kyn: Alls; Aldursflokkar: Alls; Bakgrunnur: Alls = 137476"
+      ]
+    },
+    {
+      "id": "population-reykjavik-en",
+      "language": "en",
+      "level": "easy",
+      "question": "How many people lived in Reykjavík on 1 January 2026?",
+      "correct": true,
+      "verdict": "right",
+      "numbers_right": true,
+      "right_table": true,
+      "seconds": 3.2685752040706575,
+      "answer": "On 1 January 2026, the total population of Reykjavík was 139,804.",
+      "why": "",
+      "error": "",
+      "source": "Statistics Iceland, table MAN03270 \"Population in Reykjavík by districts, sex and age 1 January 1998-2026\" (updated 2026-03-12): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px",
+      "table_folders": [
+        "Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270"
+      ],
+      "table_codes": [
+        "MAN03270"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Districts: Total; Age: Total; Year: 2026; Sex: Total = 139804"
+      ]
+    },
+    {
+      "id": "population-reykjavik-is",
+      "language": "is",
+      "level": "easy",
+      "question": "Hve margir bjuggu í Reykjavík 1. janúar 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": true,
+      "seconds": 3.4152178389485925,
+      "answer": "Bjugguð eru 12.139 í Reykjavík 1. janúar 2026.Þetta tala um aldur alls, kyn alls og hverfin 7 Árbær.",
+      "why": "does not state 139,804 people",
+      "error": "",
+      "source": "Statistics Iceland, table MAN03270 \"Mannfjöldi eftir hverfum í Reykjavík, kyni og aldri 1. janúar 1998-2026\" (updated 2026-03-12): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px",
+      "table_folders": [
+        "Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270"
+      ],
+      "table_codes": [
+        "MAN03270"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Aldur: no category chosen, using 'Alls'"
+      ],
+      "facts": [
+        "Hverfi: 7 Árbær; Aldur: Alls; Ár: 2026; Kyn: Alls = 12139"
+      ]
+    },
+    {
+      "id": "births-2024-en",
+      "language": "en",
+      "level": "easy",
+      "question": "How many children were born in Iceland in 2024?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 2.8946457328274846,
+      "answer": "No number for children born in Iceland in 2024 is published in the given facts.",
+      "why": "does not state 4,311 children; answered from UMH31220, expected MAN05101 (or 9 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table UMH31220 \"Release of air pollutants from Iceland, summary 1990-2024\" (updated 2026-09-01): https://px.hagstofa.is/pxen/api/v1/en/Umhverfi/2_losunlofttegunda/3_losunlofttegunda_lrtap/UMH31220.px",
+      "table_folders": [
+        "Environment/en/2_losunlofttegunda/3_losunlofttegunda_lrtap/UMH31220"
+      ],
+      "table_codes": [
+        "UMH31220"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Liður: no category chosen, using 'Metal production'",
+        "Efni: no category chosen, using 'Carbon monoxide (CO)'"
+      ],
+      "facts": [
+        "Item: Metal production; Year: 2024; Chemical: Carbon monoxide (CO) = 102478.20618389"
+      ]
+    },
+    {
+      "id": "births-2024-is",
+      "language": "is",
+      "level": "easy",
+      "question": "Hve mörg börn fæddust á Íslandi árið 2024?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 3.6756645659916103,
+      "answer": "Árið 2024 fæddist 4 béarn á Íslandi.Þetta tala um allt kyn.",
+      "why": "does not state 4,311 children; answered from SKO01108, expected MAN05101 (or 9 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table SKO01108 \"Börn í leikskólum á skólaskyldualdri 1998-2024\" (updated 2026-04-01): https://px.hagstofa.is/pxis/api/v1/is/Samfelag/skolamal/1_leikskolastig/0_lsNemendur/SKO01108.px",
+      "table_folders": [
+        "Society/is/skolamal/1_leikskolastig/0_lsNemendur/SKO01108"
+      ],
+      "table_codes": [
+        "SKO01108"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Kyn: no category chosen, using 'Alls'"
+      ],
+      "facts": [
+        "Ár: 2024; Kyn: Alls = 4"
+      ]
+    },
+    {
+      "id": "cpi-2026-09-en",
+      "language": "en",
+      "level": "easy",
+      "question": "What was the consumer price index in September 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 5.519890754017979,
+      "answer": "No consumer price index is published for September 2026 in the given facts. The table provided only shows that for September 2021, the Producer Price Index (PPI) does not have a published number (\"..\").",
+      "why": "does not state 697.3; answered from VIS08000B, expected VIS01000/VIS01002",
+      "error": "",
+      "source": "Statistics Iceland, table VIS08000B \"Changes in the producer price index 2006-2021\" (updated 2021-11-03): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/visitolur/5_visitalaframleidslu/framleidsluverdeldra/VIS08000b.px",
+      "table_folders": [
+        "Economy/en/visitolur/5_visitalaframleidslu/framleidsluverdeldra/VIS08000b"
+      ],
+      "table_codes": [
+        "VIS08000B"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Year: ignored '2026': not a category code of this dimension",
+        "Year: no category chosen, using '2021'",
+        "Index: no category chosen, using 'PPI'"
+      ],
+      "facts": [
+        "Year: 2021; Month: September; Unit: Index; Index: PPI = no number published (\"..\": not available)"
+      ]
+    },
+    {
+      "id": "cpi-2026-09-is",
+      "language": "is",
+      "level": "easy",
+      "question": "Hver var vísitala neysluverðs í september 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 5.985334059922025,
+      "answer": "Vísitala neysluverðs í september 2026 var 104.724.698. Óvirklegt að númerinn er tómt með tölustafi á sléttu millunu.",
+      "why": "does not state 697.3; answered from VIS01101, expected VIS01000/VIS01002",
+      "error": "",
+      "source": "Statistics Iceland, table VIS01101 \"Vísitala neysluverðs eftir eðli og uppruna\" (updated 2026-09-29): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/1_vnv/3_greiningarvisitolur/VIS01101.px",
+      "table_folders": [
+        "Economy/is/visitolur/1_vnv/3_greiningarvisitolur/VIS01101"
+      ],
+      "table_codes": [
+        "VIS01101"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Liður: no category chosen, using 'Vísitala'",
+        "Útgjaldaflokkur: no category chosen, using 'Vísitala neysluverðs'"
+      ],
+      "facts": [
+        "Mánuður: 2026M09; Liður: Vísitala; Útgjaldaflokkur: Vísitala neysluverðs = 104.724698"
+      ]
+    },
+    {
+      "id": "wage-index-2026-08-en",
+      "language": "en",
+      "level": "easy",
+      "question": "What was the wage index in August 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 2.3804212289396673,
+      "answer": "No wage index is published for August 2026 in the given facts.",
+      "why": "does not state 1,149.3; answered from VIS02504, expected LAU04000",
+      "error": "",
+      "source": "Statistics Iceland, table VIS02504 \"Breakdown of HICP in main Subindexs August 2025-2026\" (updated 2026-09-21): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02504.px",
+      "table_folders": [
+        "Economy/en/visitolur/2_samraemdvnv/samraemdvnv/VIS02504"
+      ],
+      "table_codes": [
+        "VIS02504"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Country: Iceland; Subindex: 10 Education services = 11.5"
+      ]
+    },
+    {
+      "id": "wage-index-2026-08-is",
+      "language": "is",
+      "level": "easy",
+      "question": "Hver var launavísitalan í ágúst 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 2.2092862671706825,
+      "answer": "Launavísitalan í ágúst 2026 var 5,8 veitingahús og gistiþjónusta í Ísland.",
+      "why": "does not state 1,149.3; answered from VIS02504, expected LAU04000",
+      "error": "",
+      "source": "Statistics Iceland, table VIS02504 \"Sundurliðun breytinga meginflokka, ágúst 2025-2026\" (updated 2026-09-21): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02504.px",
+      "table_folders": [
+        "Economy/is/visitolur/2_samraemdvnv/samraemdvnv/VIS02504"
+      ],
+      "table_codes": [
+        "VIS02504"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Land: Ísland; Undirvísitala: 11 Veitingahús og gistiþjónusta = 5.8"
+      ]
+    },
+    {
+      "id": "unemployment-2026q2-en",
+      "language": "en",
+      "level": "easy",
+      "question": "What was the unemployment rate in Iceland in the second quarter of 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": true,
+      "seconds": 5.498045349959284,
+      "answer": "No unemployment rate is published for the second quarter of 2026 in the provided data.",
+      "why": "does not state 6.5%",
+      "error": "",
+      "source": "Statistics Iceland, table VIN00910 \"Activity rate, employment rate, underemployment rate and unemployment rate by quarters 2003-2026\" (updated 2026-09-04): https://px.hagstofa.is/pxen/api/v1/en/Samfelag/vinnumarkadur/vinnumarkadsrannsokn/2_arsfjordungstolur/VIN00910.px",
+      "table_folders": [
+        "Society/en/vinnumarkadur/vinnumarkadsrannsokn/2_arsfjordungstolur/VIN00910"
+      ],
+      "table_codes": [
+        "VIN00910"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Landsvæði: ignored 'Total': not a category code of this dimension",
+        "Landsvæði: no category chosen, using 'Total'",
+        "Kyn: ignored 'Males and females': not a category code of this dimension",
+        "Kyn: no category chosen, using 'Males and females'",
+        "Aldur: ignored '16-74': not a category code of this dimension",
+        "Aldur: no category chosen, using '16-74'",
+        "Hlutfall, %: ignored 'Unemployment rate, % (of labour force)': not a category code of this dimension",
+        "Hlutfall, %: no category chosen, using 'Activity rate, % (of population)'"
+      ],
+      "facts": [
+        "Quarter: 2026Q2; Region: Total; Sex: Males and females; Age: 16-74; Rate: Activity rate, % (of population) = 81.1"
+      ]
+    },
+    {
+      "id": "unemployment-2026q2-is",
+      "language": "is",
+      "level": "easy",
+      "question": "Hvert var atvinnuleysi á Íslandi á öðrum ársfjórðungi 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": true,
+      "seconds": 7.194064697949216,
+      "answer": "Atvinnuleysi á Íslandi á öðrum ársfjórðungi 2026 var 81.1%.Þetta tala um atvinnuleysinn fyrir all landsvæði, bæði karla og konur í aldur 16-74 ára.",
+      "why": "does not state 6.5%",
+      "error": "",
+      "source": "Statistics Iceland, table VIN00910 \"Atvinnuþátttaka, starfandi, vinnulitlir og atvinnuleysi, hlutfall eftir ársfjórðungum 2003-2026\" (updated 2026-09-04): https://px.hagstofa.is/pxis/api/v1/is/Samfelag/vinnumarkadur/vinnumarkadsrannsokn/2_arsfjordungstolur/VIN00910.px",
+      "table_folders": [
+        "Society/is/vinnumarkadur/vinnumarkadsrannsokn/2_arsfjordungstolur/VIN00910"
+      ],
+      "table_codes": [
+        "VIN00910"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Ársfjórðungur: ignored '2026Á2': not a category code of this dimension",
+        "Ársfjórðungur: no category chosen, using '2026Á2'",
+        "Landsvæði: no category chosen, using 'Alls'",
+        "Kyn: no category chosen, using 'Karlar og konur'",
+        "Aldur: no category chosen, using '16-74 ára'",
+        "Hlutfall, %: no category chosen, using 'Atvinnuþátttaka, % (af mannfjölda)'"
+      ],
+      "facts": [
+        "Ársfjórðungur: 2026Á2; Landsvæði: Alls; Kyn: Karlar og konur; Aldur: 16-74 ára; Hlutfall, %: Atvinnuþátttaka, % (af mannfjölda) = 81.1"
+      ]
+    },
+    {
+      "id": "gdp-2025-en",
+      "language": "en",
+      "level": "easy",
+      "question": "What was Iceland's gross domestic product in 2025?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 4.518614362925291,
+      "answer": "In 2025, Iceland's gross domestic product, represented by the output of domestic producers at basic prices, was 8863756.504976 million Icelandic krónur.",
+      "why": "does not state 4,941,210.9167 ISK million (or 4,941.2109 ISK billion or 4.9412 ISK trillion); answered from SAM08004, expected THJ01102 (or 5 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table SAM08004 \"Total domestic supply and internal tourism consumption in Iceland 2009-2025\" (updated 2026-05-26): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08004.px",
+      "table_folders": [
+        "Economy/en/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08004"
+      ],
+      "table_codes": [
+        "SAM08004"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Atvinnugrein: no category chosen, using 'Total'",
+        "Flokkar: no category chosen, using 'Output of domestic producers (at basic prices)'"
+      ],
+      "facts": [
+        "Year: 2025; Activity: Total; Visitors: Output of domestic producers (at basic prices) = 8863756.504976"
+      ]
+    },
+    {
+      "id": "gdp-2025-is",
+      "language": "is",
+      "level": "easy",
+      "question": "Hver var verg landsframleiðsla á Íslandi árið 2025?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": true,
+      "seconds": 4.891158354002982,
+      "answer": "Verg landsframleiðsla á Íslandi árið 2025 var 1.997.387,50458734 miljón vinstri vaka.",
+      "why": "does not state 4,941,210.9167 ISK million (or 4,941.2109 ISK billion or 4.9412 ISK trillion)",
+      "error": "",
+      "source": "Statistics Iceland, table THJ01102 \"Landsframleiðsla og þjóðartekjur 1995-2025\" (updated 2026-09-04): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/landsframl/1_landsframleidsla/THJ01102.px",
+      "table_folders": [
+        "Economy/is/thjodhagsreikningar/landsframl/1_landsframleidsla/THJ01102"
+      ],
+      "table_codes": [
+        "THJ01102"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Skipting: no category chosen, using '6. Útflutningur alls'"
+      ],
+      "facts": [
+        "Skipting: 6. Útflutningur alls; Ár: 2025 = 1997387.50458734"
+      ]
+    },
+    {
+      "id": "overnight-stays-2025-en",
+      "language": "en",
+      "level": "easy",
+      "question": "How many overnight stays were there in registered accommodation in Iceland in 2025?",
+      "correct": true,
+      "verdict": "right",
+      "numbers_right": true,
+      "right_table": true,
+      "seconds": 3.502257205080241,
+      "answer": "In 2025, there were 9,850,428 overnight stays in registered accommodation across all of Iceland.",
+      "why": "",
+      "error": "",
+      "source": "Statistics Iceland, table SAM01603 \"Overnight stays and arrivals in all types of accommodation by municipalities 2008-2025\" (updated 2026-09-17): https://px.hagstofa.is/pxen/api/v1/en/Atvinnuvegir/ferdathjonusta/gisting/3_allartegundirgististada/SAM01603.px",
+      "table_folders": [
+        "Business_Sectors/en/ferdathjonusta/gisting/3_allartegundirgististada/SAM01603"
+      ],
+      "table_codes": [
+        "SAM01603"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Þjóðerni: no category chosen, using 'Total'",
+        "Mánuður: no category chosen, using 'Total'",
+        "Sveitarfélag: no category chosen, using 'Allt landið'",
+        "Eining: no category chosen, using 'Overnight stays'"
+      ],
+      "facts": [
+        "Citizenship: Total; Year: 2025; Month: Total; Municipality: Allt landið; Unity: Overnight stays = 9850428"
+      ]
+    },
+    {
+      "id": "overnight-stays-2025-is",
+      "language": "is",
+      "level": "easy",
+      "question": "Hve margar gistinætur voru á skráðum gististöðum á Íslandi árið 2025?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 4.774825662840158,
+      "answer": "Árið 2025 var allra gistinætur á skráðum gististöðum á Íslandi 914154.90590239.",
+      "why": "does not state 9,850,428 overnight stays; answered from SAM08002, expected SAM01601/SAM01603",
+      "error": "",
+      "source": "Statistics Iceland, table SAM08002 \"Neysla í ferðaþjónustu á Íslandi eftir atvinnugreinum 2009-2025\" (updated 2026-05-26): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002.px",
+      "table_folders": [
+        "Economy/is/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002"
+      ],
+      "table_codes": [
+        "SAM08002"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Atvinnugrein: no category chosen, using 'Alls'",
+        "Tegund: no category chosen, using 'Innlend neysla í ferðaþjónustu, alls'"
+      ],
+      "facts": [
+        "Ár: 2025; Atvinnugrein: Alls; Tegund: Innlend neysla í ferðaþjónustu, alls = 914154.90590239"
+      ]
+    },
+    {
+      "id": "immigrants-2026-en",
+      "language": "en",
+      "level": "easy",
+      "question": "How many immigrants lived in Iceland on 1 January 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 4.504731944063678,
+      "answer": "On 1 January 2026, 37,348 immigrants lived in Iceland.",
+      "why": "does not state 77,226 people; answered from MAN43006, expected MAN43000 (or 3 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table MAN43006 \"Immigrants in Reykjavík by districts 1998-2026\" (updated 2026-06-10): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/3_bakgrunnur/Uppruni/MAN43006.px",
+      "table_folders": [
+        "Population/en/mannfjoldi/3_bakgrunnur/Uppruni/MAN43006"
+      ],
+      "table_codes": [
+        "MAN43006"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Year: 2026; Districts: Total; Sex: Total; Unit: Immigrants = 37348"
+      ]
+    },
+    {
+      "id": "immigrants-2026-is",
+      "language": "is",
+      "level": "easy",
+      "question": "Hve margir innflytjendur bjuggu á Íslandi 1. janúar 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 3.9447950238827616,
+      "answer": "Innflytjendurinn á Íslandi 1. janúar 2026 var 85.577.",
+      "why": "does not state 77,226 people; answered from MAN43005, expected MAN43000 (or 3 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table MAN43005 \"Innflytjendur eftir kyni og sveitarfélagi 1. janúar 1996-2026\" (updated 2026-06-10): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/3_bakgrunnur/Uppruni/MAN43005.px",
+      "table_folders": [
+        "Population/is/mannfjoldi/3_bakgrunnur/Uppruni/MAN43005"
+      ],
+      "table_codes": [
+        "MAN43005"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Sveitarfélag: no category chosen, using 'Alls'",
+        "Aldur: no category chosen, using 'Alls'",
+        "Kyn: no category chosen, using 'Alls'"
+      ],
+      "facts": [
+        "Sveitarfélag: Alls; Aldur: Alls; Kyn: Alls; Ár: 2026 = 85577"
+      ]
+    },
+    {
+      "id": "vigdis-1980-en",
+      "language": "en",
+      "level": "easy",
+      "question": "How many valid votes did Vigdís Finnbogadóttir get in Reykjavík in the 1980 presidential election?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 2.9215117529965937,
+      "answer": "No number of valid votes for Vigdís Finnbogadóttir in the 1980 presidential election in Reykjavík is published in the given facts.",
+      "why": "does not state 15,594 votes; answered from KOS02006, expected KOS07112",
+      "error": "",
+      "source": "Statistics Iceland, table KOS02006 \"Participation in elections to the Reykjavík City Council 1908-2022\" (updated 2023-05-15): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/kosningar/kosningayfirlit/KOS02006.px",
+      "table_folders": [
+        "Population/en/kosningar/kosningayfirlit/KOS02006"
+      ],
+      "table_codes": [
+        "KOS02006"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Year: 1982; Votes and voters: Votes cast; Sex: Total = 50140"
+      ]
+    },
+    {
+      "id": "vigdis-1980-is",
+      "language": "is",
+      "level": "easy",
+      "question": "Hve mörg gild atkvæði fékk Vigdís Finnbogadóttir í Reykjavík í forsetakjörinu 1980?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 2.5891867328900844,
+      "answer": "Vigdís Finnbogadóttir fikk 129.049 gild atkvæði í Reykjavík í forsetakjörinu 1980.",
+      "why": "does not state 15,594 votes; answered from KOS07100, expected KOS07112",
+      "error": "",
+      "source": "Statistics Iceland, table KOS07100 \"Greidd atkvæði í forsetakjöri 1952-2024\" (updated 2024-10-03): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/kosningar/forsetakosningar/KOS07100.px",
+      "table_folders": [
+        "Population/is/kosningar/forsetakosningar/KOS07100"
+      ],
+      "table_codes": [
+        "KOS07100"
+      ],
+      "unsupported": [],
+      "notes": [
+        "ignored 'Euing': not a dimension code of the table",
+        "Eining: no category chosen, using 'Fjöldi'"
+      ],
+      "facts": [
+        "Ár: 1980; Atkvæði: Gild atkvæði; Eining: Fjöldi = 129049"
+      ]
+    },
+    {
+      "id": "reykjavik-growth-2026-en",
+      "language": "en",
+      "level": "medium",
+      "question": "By how many people did the population of Reykjavík grow from 1 January 2025 to 1 January 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": true,
+      "seconds": 5.934062923071906,
+      "answer": "The population of Reykjavík grew by 1024 people from 1 January 2025 to 1 January 2026.",
+      "why": "does not state 1,032 people",
+      "error": "",
+      "source": "Statistics Iceland, table MAN03270 \"Population in Reykjavík by districts, sex and age 1 January 1998-2026\" (updated 2026-03-12): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px",
+      "table_folders": [
+        "Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270"
+      ],
+      "table_codes": [
+        "MAN03270"
+      ],
+      "unsupported": [
+        "1024"
+      ],
+      "notes": [],
+      "facts": [
+        "Districts: Total; Age: Total; Year: 2025; Sex: Total = 138772",
+        "Districts: Total; Age: Total; Year: 2026; Sex: Total = 139804"
+      ]
+    },
+    {
+      "id": "reykjavik-growth-2026-is",
+      "language": "is",
+      "level": "medium",
+      "question": "Um hve marga fjölgaði íbúum Reykjavíkur frá 1. janúar 2025 til 1. janúar 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": true,
+      "seconds": 7.862134773982689,
+      "answer": "Í Reykjavík milli 1. janúar 2025 og 1. janúar 2026 var fjölgaði íbúum 12200. Í 2026 var fjölgaði íbúum 12139.",
+      "why": "does not state 1,032 people",
+      "error": "",
+      "source": "Statistics Iceland, table MAN03270 \"Mannfjöldi eftir hverfum í Reykjavík, kyni og aldri 1. janúar 1998-2026\" (updated 2026-03-12): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px",
+      "table_folders": [
+        "Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270"
+      ],
+      "table_codes": [
+        "MAN03270"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Aldur: no category chosen, using 'Alls'"
+      ],
+      "facts": [
+        "Hverfi: 7 Árbær; Aldur: Alls; Ár: 2025; Kyn: Alls = 12200",
+        "Hverfi: 7 Árbær; Aldur: Alls; Ár: 2026; Kyn: Alls = 12139"
+      ]
+    },
+    {
+      "id": "reykjavik-share-2026-en",
+      "language": "en",
+      "level": "medium",
+      "question": "What percentage of Iceland's population lived in Reykjavík on 1 January 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 5.194974000100046,
+      "answer": "The number 139804 represents the total population of Reykjavík on 1 January 2026.",
+      "why": "does not state 35.4541%; answered from MAN03270, expected MAN02005 (or 5 other tables with the same number) and MAN02005 (or 17 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table MAN03270 \"Population in Reykjavík by districts, sex and age 1 January 1998-2026\" (updated 2026-03-12): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px",
+      "table_folders": [
+        "Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270"
+      ],
+      "table_codes": [
+        "MAN03270"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Districts: Total; Age: Total; Year: 2026; Sex: Total = 139804"
+      ]
+    },
+    {
+      "id": "reykjavik-share-2026-is",
+      "language": "is",
+      "level": "medium",
+      "question": "Hve stórt hlutfall landsmanna bjó í Reykjavík 1. janúar 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 5.59693661890924,
+      "answer": "12139 landsmanna bjó í Reykjavík 1. janúar 2026.Þetta tala um aldur alls og kyn alls á hverfinu 7 Árbær.",
+      "why": "does not state 35.4541%; answered from MAN03270, expected MAN02005 (or 5 other tables with the same number) and MAN02005 (or 17 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table MAN03270 \"Mannfjöldi eftir hverfum í Reykjavík, kyni og aldri 1. janúar 1998-2026\" (updated 2026-03-12): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px",
+      "table_folders": [
+        "Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270"
+      ],
+      "table_codes": [
+        "MAN03270"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Aldur: no category chosen, using 'Alls'",
+        "Kyn: no category chosen, using 'Alls'"
+      ],
+      "facts": [
+        "Hverfi: 7 Árbær; Aldur: Alls; Ár: 2026; Kyn: Alls = 12139"
+      ]
+    },
+    {
+      "id": "reykjavik-kopavogur-2026-en",
+      "language": "en",
+      "level": "medium",
+      "question": "How many people lived in Reykjavík and Kópavogur together on 1 January 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 6.896063621155918,
+      "answer": "The facts provided do not include population data for Kópavogur or give the total population of Reykjavík for 1 January 2026.",
+      "why": "does not state 180,090 people; answered from MAN03270, expected MAN02005 (or 5 other tables with the same number) and MAN02005 (or 3 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table MAN03270 \"Population in Reykjavík by districts, sex and age 1 January 1998-2026\" (updated 2026-03-12): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px",
+      "table_folders": [
+        "Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270"
+      ],
+      "table_codes": [
+        "MAN03270"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Aldur: no category chosen, using 'Total'",
+        "Kyn: no category chosen, using 'Total'"
+      ],
+      "facts": [
+        "Districts: 1 Vesturbaer; Age: Total; Year: 2026; Sex: Total = 16658",
+        "Districts: 2 Midborg; Age: Total; Year: 2026; Sex: Total = 10999",
+        "Districts: 3 Hlidar; Age: Total; Year: 2026; Sex: Total = 11636",
+        "Districts: 4 Laugardalur; Age: Total; Year: 2026; Sex: Total = 19514",
+        "Districts: 5 Haaleiti-Bustadir; Age: Total; Year: 2026; Sex: Total = 16407",
+        "Districts: 6 Breidholt; Age: Total; Year: 2026; Sex: Total = 22283",
+        "Districts: 7 Arbaer; Age: Total; Year: 2026; Sex: Total = 12139",
+        "Districts: 8 Grafarvogur; Age: Total; Year: 2026; Sex: Total = 18358",
+        "Districts: 9 Kjalarnes; Age: Total; Year: 2026; Sex: Total = 1008",
+        "Districts: 10 Grafarholt-Ulfarsardalur; Age: Total; Year: 2026; Sex: Total = 8884"
+      ]
+    },
+    {
+      "id": "reykjavik-kopavogur-2026-is",
+      "language": "is",
+      "level": "medium",
+      "question": "Hve margir bjuggu samtals í Reykjavík og Kópavogi 1. janúar 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 7.070081579964608,
+      "answer": "Bjuggurinn í Vesturbæri Reykjavíkur var 16658 á 1. janúar 2026. Bjuggurinn í Árbæri Reykjavíkur var 12139 samanlagt í samme dag.",
+      "why": "does not state 180,090 people; answered from MAN03270, expected MAN02005 (or 5 other tables with the same number) and MAN02005 (or 3 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table MAN03270 \"Mannfjöldi eftir hverfum í Reykjavík, kyni og aldri 1. janúar 1998-2026\" (updated 2026-03-12): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px",
+      "table_folders": [
+        "Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270"
+      ],
+      "table_codes": [
+        "MAN03270"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Aldur: no category chosen, using 'Alls'",
+        "Kyn: no category chosen, using 'Alls'"
+      ],
+      "facts": [
+        "Hverfi: 1 Vesturbær; Aldur: Alls; Ár: 2026; Kyn: Alls = 16658",
+        "Hverfi: 7 Árbær; Aldur: Alls; Ár: 2026; Kyn: Alls = 12139"
+      ]
+    },
+    {
+      "id": "men-minus-women-2026-en",
+      "language": "en",
+      "level": "medium",
+      "question": "How many more men than women lived in Iceland on 1 January 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 5.176138747017831,
+      "answer": "No number is published for the difference between the number of men and women living in Iceland on 1 January 2026.",
+      "why": "does not state 10,254 people; answered from MAN03270, expected MAN00101 (or 12 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table MAN03270 \"Population in Reykjavík by districts, sex and age 1 January 1998-2026\" (updated 2026-03-12): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px",
+      "table_folders": [
+        "Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270"
+      ],
+      "table_codes": [
+        "MAN03270"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Hverfi: ignored 'Total': not a category code of this dimension",
+        "Hverfi: no category chosen, using 'Total'",
+        "Aldur: ignored 'Total': not a category code of this dimension",
+        "Aldur: no category chosen, using 'Total'",
+        "Kyn: ignored 'Males', 'Females': not a category code of this dimension",
+        "Kyn: no category chosen, using 'Total'"
+      ],
+      "facts": [
+        "Districts: Total; Age: Total; Year: 2026; Sex: Total = 139804"
+      ]
+    },
+    {
+      "id": "men-minus-women-2026-is",
+      "language": "is",
+      "level": "medium",
+      "question": "Hve mörgum fleiri karlar en konur bjuggu á Íslandi 1. janúar 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": true,
+      "seconds": 6.7554142728913575,
+      "answer": "Karlar fjoldi 202181 og konur fjoldi 191927 bjuggu á Íslandi 1. janúar 2026.",
+      "why": "does not state 10,254 people",
+      "error": "",
+      "source": "Statistics Iceland, table MAN030101 \"Mannfjöldi eftir byggðakjörnum, kyni og aldri 1. janúar 1998-2026\" (updated 2026-03-12): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnar/MAN030101.px",
+      "table_folders": [
+        "Population/is/mannfjoldi/2_byggdir/Byggdakjarnar/MAN030101"
+      ],
+      "table_codes": [
+        "MAN030101"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Byggðakjarnar: ignored 'Alls': not a category code of this dimension",
+        "Byggðakjarnar: no category chosen, using 'Alls'"
+      ],
+      "facts": [
+        "Byggðakjarnar: Alls; Aldur: Alls; Ár: 2026; Kyn: Karlar = 202181",
+        "Byggðakjarnar: Alls; Aldur: Alls; Ár: 2026; Kyn: Konur = 191927"
+      ]
+    },
+    {
+      "id": "cpi-points-2026-en",
+      "language": "en",
+      "level": "medium",
+      "question": "By how many points did the consumer price index rise from September 2025 to September 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 4.5546827090438455,
+      "answer": "No number is published for the consumer price index rise from September 2025 to September 2026 in the provided facts.",
+      "why": "does not state 39 points; answered from VIS08000B, expected VIS01000/VIS01002",
+      "error": "",
+      "source": "Statistics Iceland, table VIS08000B \"Changes in the producer price index 2006-2021\" (updated 2021-11-03): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/visitolur/5_visitalaframleidslu/framleidsluverdeldra/VIS08000b.px",
+      "table_folders": [
+        "Economy/en/visitolur/5_visitalaframleidslu/framleidsluverdeldra/VIS08000b"
+      ],
+      "table_codes": [
+        "VIS08000B"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Year: ignored '2025', '2026': not a category code of this dimension",
+        "Year: no category chosen, using '2021'",
+        "Index: no category chosen, using 'PPI'"
+      ],
+      "facts": [
+        "Year: 2021; Month: September; Unit: Monthly changes, %; Index: PPI = no number published (\"..\": not available)"
+      ]
+    },
+    {
+      "id": "cpi-points-2026-is",
+      "language": "is",
+      "level": "medium",
+      "question": "Um hve mörg stig hækkaði vísitala neysluverðs frá september 2025 til september 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 6.480121325002983,
+      "answer": "Stigin hækkaði um 2.2 verða vísitala neysluverðs frá september 2025 til september 2026 í Evrusvæðið.",
+      "why": "does not state 39 points; answered from VIS02002, expected VIS01000/VIS01002",
+      "error": "",
+      "source": "Statistics Iceland, table VIS02002 \"Samræmd vísitala neysluverðs eftir löndum og mánuðum frá 2015 til 2025\" (updated 2026-03-04): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/2_samraemdvnv/samraemdvnveldra/VIS02002.px",
+      "table_folders": [
+        "Economy/is/visitolur/2_samraemdvnv/samraemdvnveldra/VIS02002"
+      ],
+      "table_codes": [
+        "VIS02002"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Mánuður: ignored '2026M09': not a category code of this dimension",
+        "Land: no category chosen, using 'Evrusvæðið'"
+      ],
+      "facts": [
+        "Tegund: Ársbreytingar; Mánuður: 2025M09; Land: Evrusvæðið = 2.2"
+      ]
+    },
+    {
+      "id": "overnight-stays-change-2025-en",
+      "language": "en",
+      "level": "medium",
+      "question": "By what percentage did the number of overnight stays in registered accommodation in Iceland increase from 2024 to 2025?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 8.085465783020481,
+      "answer": "The number of overnight stays in registered accommodation for foreigners in Iceland increased from 69,000 in January 2024 to 92,000 in May 2024, but this fact does not provide enough information to determine the percentage increase from 2024 to 2025.",
+      "why": "does not state 5.7747%; answered from SAM01453, expected SAM01601/SAM01603",
+      "error": "",
+      "source": "Statistics Iceland, table SAM01453 \"Estimated unlisted overnight stays 2017-2024\" (updated 2025-11-27): https://px.hagstofa.is/pxen/api/v1/en/Atvinnuvegir/ferdathjonusta/gisting/4_eldraefni/SAM01453.px",
+      "table_folders": [
+        "Business_Sectors/en/ferdathjonusta/gisting/4_eldraefni/SAM01453"
+      ],
+      "table_codes": [
+        "SAM01453"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Mánuður: ignored '2025M01', '2025M05': not a category code of this dimension",
+        "Ríkisfang: no category chosen, using 'Foreigners'",
+        "Landsvæði: no category chosen, using 'Total'",
+        "Skipting: no category chosen, using 'Paid through websites'"
+      ],
+      "facts": [
+        "Month: 2024M01; Citizenship: Foreigners; Region: Total; Category: Paid through websites = 69000",
+        "Month: 2024M05; Citizenship: Foreigners; Region: Total; Category: Paid through websites = 92000"
+      ]
+    },
+    {
+      "id": "overnight-stays-change-2025-is",
+      "language": "is",
+      "level": "medium",
+      "question": "Um hve mörg prósent fjölgaði gistinóttum á skráðum gististöðum á Íslandi frá 2024 til 2025?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 3.974769487977028,
+      "answer": "Ár 2024 fjölgaði 877.402.196.350,709 prósent innlend neysla í ferðaþjónustu á skráðum gististöðum á Íslandi, og ár 2025 var talað um 914.154.905.902,399 prósent.",
+      "why": "does not state 5.7747%; answered from SAM08002, expected SAM01601/SAM01603",
+      "error": "",
+      "source": "Statistics Iceland, table SAM08002 \"Neysla í ferðaþjónustu á Íslandi eftir atvinnugreinum 2009-2025\" (updated 2026-05-26): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002.px",
+      "table_folders": [
+        "Economy/is/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002"
+      ],
+      "table_codes": [
+        "SAM08002"
+      ],
+      "unsupported": [
+        "877.402.196.350,709",
+        "914.154.905.902,399"
+      ],
+      "notes": [
+        "Atvinnugrein: no category chosen, using 'Alls'",
+        "Tegund: no category chosen, using 'Innlend neysla í ferðaþjónustu, alls'"
+      ],
+      "facts": [
+        "Ár: 2024; Atvinnugrein: Alls; Tegund: Innlend neysla í ferðaþjónustu, alls = 877402.196350709",
+        "Ár: 2025; Atvinnugrein: Alls; Tegund: Innlend neysla í ferðaþjónustu, alls = 914154.90590239"
+      ]
+    },
+    {
+      "id": "women-share-2026-en",
+      "language": "en",
+      "level": "medium",
+      "question": "What percentage of Iceland's population on 1 January 2026 were women?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 5.026854464085773,
+      "answer": "No number for the percentage of women in Iceland's total population on 1 January 2026 is published in the given facts.",
+      "why": "does not state 48.6724%; answered from MAN03270, expected MAN00101 (or 12 other tables with the same number) and MAN00101 (or 17 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table MAN03270 \"Population in Reykjavík by districts, sex and age 1 January 1998-2026\" (updated 2026-03-12): https://px.hagstofa.is/pxen/api/v1/en/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270.px",
+      "table_folders": [
+        "Population/en/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03270"
+      ],
+      "table_codes": [
+        "MAN03270"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Districts: Total; Age: Total; Year: 2026; Sex: Females = 68587"
+      ]
+    },
+    {
+      "id": "women-share-2026-is",
+      "language": "is",
+      "level": "medium",
+      "question": "Hve stórt hlutfall landsmanna 1. janúar 2026 voru konur?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": true,
+      "seconds": 4.412333817919716,
+      "answer": "1. janúar 2026 var 191.927 konur í Islandi.",
+      "why": "does not state 48.6724%",
+      "error": "",
+      "source": "Statistics Iceland, table MAN03250 \"Mannfjöldi eftir landshlutum, kyni og aldri 1. janúar 1998-2026\" (updated 2026-03-12): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03250.px",
+      "table_folders": [
+        "Population/is/mannfjoldi/2_byggdir/Byggdakjarnarhverfi/MAN03250"
+      ],
+      "table_codes": [
+        "MAN03250"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Landshlutar: ignored 'Alls': not a category code of this dimension",
+        "Landshlutar: no category chosen, using 'Alls'",
+        "Aldur: no category chosen, using 'Alls'"
+      ],
+      "facts": [
+        "Landshlutar: Alls; Aldur: Alls; Ár: 2026; Kyn: Konur = 191927"
+      ]
+    },
+    {
+      "id": "wage-index-points-2026-08-en",
+      "language": "en",
+      "level": "medium",
+      "question": "By how many points did the wage index rise from August 2025 to August 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 5.896698015043512,
+      "answer": "No number is published for the wage index rise from August 2025 to August 2026. The table provided shows the subindex for education services in Iceland for August 2025-2026, which is 11.5.",
+      "why": "does not state 61.6 points; answered from VIS02504, expected LAU04000",
+      "error": "",
+      "source": "Statistics Iceland, table VIS02504 \"Breakdown of HICP in main Subindexs August 2025-2026\" (updated 2026-09-21): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02504.px",
+      "table_folders": [
+        "Economy/en/visitolur/2_samraemdvnv/samraemdvnv/VIS02504"
+      ],
+      "table_codes": [
+        "VIS02504"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Country: Iceland; Subindex: 10 Education services = 11.5"
+      ]
+    },
+    {
+      "id": "wage-index-points-2026-08-is",
+      "language": "is",
+      "level": "medium",
+      "question": "Um hve mörg stig hækkaði launavísitalan frá ágúst 2025 til ágúst 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 5.065893553895876,
+      "answer": "Íslandi vækkti undirvísitala menntunar 10% frá ágúst 2025 til ágúst 2026.",
+      "why": "does not state 61.6 points; answered from VIS02504, expected LAU04000",
+      "error": "",
+      "source": "Statistics Iceland, table VIS02504 \"Sundurliðun breytinga meginflokka, ágúst 2025-2026\" (updated 2026-09-21): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02504.px",
+      "table_folders": [
+        "Economy/is/visitolur/2_samraemdvnv/samraemdvnv/VIS02504"
+      ],
+      "table_codes": [
+        "VIS02504"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Land: Ísland; Undirvísitala: 10 Menntun = 11.5"
+      ]
+    },
+    {
+      "id": "immigrants-growth-2026-en",
+      "language": "en",
+      "level": "medium",
+      "question": "By how many people did the number of immigrants living in Iceland grow from 1 January 2025 to 1 January 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 3.166676566004753,
+      "answer": "No number is published for the growth in the number of immigrants living in Iceland from 1 January 2025 to 1 January 2026 in the given table. The table provides data for 2017 on the number of immigrants enrolled in secondary school, which is 1144.",
+      "why": "does not state 3,430 people; answered from SKO03135, expected MAN43000 (or 3 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table SKO03135 \"Number of immigrants enrolled in school by school level and length of stay 2008-2017\" (updated 2022-06-10): https://px.hagstofa.is/pxen/api/v1/en/Samfelag/skolamal/3_framhaldsskolastig/0_fsNemendur/SKO03135.px",
+      "table_folders": [
+        "Society/en/skolamal/3_framhaldsskolastig/0_fsNemendur/SKO03135"
+      ],
+      "table_codes": [
+        "SKO03135"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Ár: ignored '2025', '2026': not a category code of this dimension",
+        "Ár: no category chosen, using '2017'",
+        "Skólastig: no category chosen, using 'Count in secondary school'",
+        "Lengd dvalar á Íslandi: no category chosen, using 'Total'"
+      ],
+      "facts": [
+        "Year: 2017; School level: Count in secondary school; Length of stay in Iceland: Total = 1144"
+      ]
+    },
+    {
+      "id": "immigrants-growth-2026-is",
+      "language": "is",
+      "level": "medium",
+      "question": "Um hve marga fjölgaði innflytjendum á Íslandi frá 1. janúar 2025 til 1. janúar 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 4.518219613004476,
+      "answer": "Í ár 2025 var fjölgaði innflytjendum á Íslandi 81.634, og í ár 2026 var talað um 85.577 fjölgaða innflytjendum.",
+      "why": "does not state 3,430 people; answered from MAN43005, expected MAN43000 (or 3 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table MAN43005 \"Innflytjendur eftir kyni og sveitarfélagi 1. janúar 1996-2026\" (updated 2026-06-10): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/mannfjoldi/3_bakgrunnur/Uppruni/MAN43005.px",
+      "table_folders": [
+        "Population/is/mannfjoldi/3_bakgrunnur/Uppruni/MAN43005"
+      ],
+      "table_codes": [
+        "MAN43005"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Sveitarfélag: no category chosen, using 'Alls'",
+        "Aldur: no category chosen, using 'Alls'",
+        "Kyn: no category chosen, using 'Alls'"
+      ],
+      "facts": [
+        "Sveitarfélag: Alls; Aldur: Alls; Kyn: Alls; Ár: 2025 = 81634",
+        "Sveitarfélag: Alls; Aldur: Alls; Kyn: Alls; Ár: 2026 = 85577"
+      ]
+    },
+    {
+      "id": "foreign-stays-share-2025-en",
+      "language": "en",
+      "level": "medium",
+      "question": "What percentage of the overnight stays in registered accommodation in Iceland in 2025 were by foreigners?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 3.779555335873738,
+      "answer": "No number is published for the percentage of overnight stays in registered accommodation in Iceland by foreigners in 2023.",
+      "why": "does not state 86.8346%; answered from SAM01400, expected SAM01601/SAM01603",
+      "error": "",
+      "source": "Statistics Iceland, table SAM01400 \"Overnight stays in apartment hotels 2005-2023\" (updated 2025-11-27): https://px.hagstofa.is/pxen/api/v1/en/Atvinnuvegir/ferdathjonusta/gisting/4_eldraefni/SAM01400.px",
+      "table_folders": [
+        "Business_Sectors/en/ferdathjonusta/gisting/4_eldraefni/SAM01400"
+      ],
+      "table_codes": [
+        "SAM01400"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Ár: ignored '2025': not a category code of this dimension",
+        "Ár: no category chosen, using '2023'",
+        "Landsvæði: no category chosen, using 'Total'",
+        "Mánuður: no category chosen, using 'January - December'"
+      ],
+      "facts": [
+        "Citizenship: Foreigners; Year: 2023; Region: Total; Month: January - December = no number published (\"..\": not available)"
+      ]
+    },
+    {
+      "id": "foreign-stays-share-2025-is",
+      "language": "is",
+      "level": "medium",
+      "question": "Hve stórt hlutfall gistinátta á skráðum gististöðum á Íslandi árið 2025 voru gistinætur útlendinga?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 6.101020004833117,
+      "answer": "Árið 2025 var 76481.8969708056 gistinátta á skráðum gististöðum á Íslandi, sem hafi verið útlendinga.",
+      "why": "does not state 86.8346%; answered from SAM08001, expected SAM01601/SAM01603",
+      "error": "",
+      "source": "Statistics Iceland, table SAM08001 \"Útgjöld innlendra ferðamanna á Íslandi eftir atvinnugreinum 2009-2025\" (updated 2026-05-26): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08001.px",
+      "table_folders": [
+        "Economy/is/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08001"
+      ],
+      "table_codes": [
+        "SAM08001"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Ár: 2025; Atvinnugrein: - Gistiþjónusta = 76481.8969708056"
+      ]
+    },
+    {
+      "id": "population-and-cpi-2026-en",
+      "language": "en",
+      "level": "hard",
+      "question": "How many people lived in Iceland on 1 January 2026, and what was the consumer price index in September 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 5.523076079785824,
+      "answer": "No number is published for the population of Iceland on 1 January 2026. The consumer price index for all-items in September 2026 is not applicable (\".\": not applicable).",
+      "why": "states none of the expected numbers; answered from VIS02400, expected MAN00101 (or 17 other tables with the same number) and VIS01000/VIS01002",
+      "error": "",
+      "source": "Statistics Iceland, table VIS02400 \"Harmonised index for consumer prices for Iceland, subindices from 1995 to January 2006\" (updated 2017-11-09): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/visitolur/2_samraemdvnv/samraemdvnveldra/VIS02400.px",
+      "table_folders": [
+        "Economy/en/visitolur/2_samraemdvnv/samraemdvnveldra/VIS02400"
+      ],
+      "table_codes": [
+        "VIS02400"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Group: ignored 'All-items index': not a category code of this dimension",
+        "Group: no category chosen, using 'All-items index'"
+      ],
+      "facts": [
+        "Group: All-items index; Year: 2006; Month: September = no number published (\".\": not applicable)"
+      ]
+    },
+    {
+      "id": "population-and-cpi-2026-is",
+      "language": "is",
+      "level": "hard",
+      "question": "Hve margir bjuggu á Íslandi 1. janúar 2026 og hver var vísitala neysluverðs í september 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 8.136648218845949,
+      "answer": "Bjuggu á Íslandi 1. janúar 2026 er ekki prentað. Undirvísitala fyrir tímabili 2026 fyrir vísitala neysluverðs í matur og óáfengjum drykkjum er 178.69.",
+      "why": "states none of the expected numbers; answered from VIS02508, expected MAN00101 (or 17 other tables with the same number) and VIS01000/VIS01002",
+      "error": "",
+      "source": "Statistics Iceland, table VIS02508 \"Samræmd vísitala neysluverðs vogir fyrir Ísland frá 2016\" (updated 2026-09-21): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02508.px",
+      "table_folders": [
+        "Economy/is/visitolur/2_samraemdvnv/samraemdvnv/VIS02508"
+      ],
+      "table_codes": [
+        "VIS02508"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Undirvísitala: ignored 'Total': not a category code of this dimension",
+        "Undirvísitala: no category chosen, using '01 Matur og óáfengir drykkir'"
+      ],
+      "facts": [
+        "Undirvísitala: 01 Matur og óáfengir drykkir; Tími: 2026 = 178.69"
+      ]
+    },
+    {
+      "id": "wages-and-prices-2026-08-en",
+      "language": "en",
+      "level": "hard",
+      "question": "What were the wage index and the consumer price index in August 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 4.365951827028766,
+      "answer": "The wage index in August 2026 was 169.7. No consumer price index value is published for August 2026.",
+      "why": "states none of the expected numbers; answered from LAU04800, expected LAU04000 and VIS01000/VIS01002",
+      "error": "",
+      "source": "Statistics Iceland, table LAU04800 \"Wage index at constant price, from 1989\" (updated 2026-09-22): https://px.hagstofa.is/pxen/api/v1/en/Samfelag/launogtekjur/2_lvt/4_adrar/LAU04800.px",
+      "table_folders": [
+        "Society/en/launogtekjur/2_lvt/4_adrar/LAU04800"
+      ],
+      "table_codes": [
+        "LAU04800"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Month: 2026M08 = 169.7"
+      ]
+    },
+    {
+      "id": "wages-and-prices-2026-08-is",
+      "language": "is",
+      "level": "hard",
+      "question": "Hver var launavísitalan og hver var vísitala neysluverðs í ágúst 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 7.075040364870802,
+      "answer": "Launavísitalan í ágúst 2026 var 694.6. Vísitala neysluverðs var samjönnu 694.6 í því mánuði.",
+      "why": "states 694.6 but not 1,149.3; answered from VIS01000, expected LAU04000 and VIS01000/VIS01002",
+      "error": "",
+      "source": "Statistics Iceland, table VIS01000 \"Vísitala neysluverðs og breytingar, grunnur 1988=100\" (updated 2026-09-29): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/1_vnv/1_vnv/VIS01000.px",
+      "table_folders": [
+        "Economy/is/visitolur/1_vnv/1_vnv/VIS01000"
+      ],
+      "table_codes": [
+        "VIS01000"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Mánuður: 2026M08; Vísitala: Vísitala neysluverðs; Liður: Vísitala = 694.6"
+      ]
+    },
+    {
+      "id": "stays-and-population-2025-en",
+      "language": "en",
+      "level": "hard",
+      "question": "How many overnight stays were there in registered accommodation in Iceland in 2025, and how many people lived in Iceland on 1 January 2025?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 5.888446988072246,
+      "answer": "In 2025, there were 76,481 overnight stays in registered accommodation in Iceland. No specific number of people living in Iceland on 1 January 2025 is published in the given facts.",
+      "why": "states none of the expected numbers; answered from SAM08001, expected SAM01601/SAM01603 and MAN00101 (or 17 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table SAM08001 \"Domestic tourism expenditure in Iceland by consumption products 2009-2025\" (updated 2026-05-26): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08001.px",
+      "table_folders": [
+        "Economy/en/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08001"
+      ],
+      "table_codes": [
+        "SAM08001"
+      ],
+      "unsupported": [
+        "76,481"
+      ],
+      "notes": [],
+      "facts": [
+        "Year: 2025; Activity: Total = 329139.944686261",
+        "Year: 2025; Activity: - Accommodation = 76481.8969708056"
+      ]
+    },
+    {
+      "id": "stays-and-population-2025-is",
+      "language": "is",
+      "level": "hard",
+      "question": "Hve margar gistinætur voru á skráðum gististöðum á Íslandi árið 2025 og hve margir bjuggu á Íslandi 1. janúar 2025?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 4.677628453122452,
+      "answer": "Árið 2025 var innlend neysla í ferðaþjónustu á skráðum gististöðum á Íslandi 230.967.129.551. Bjuggur á Íslandi 1. janúar 2025 er ekki númerat.",
+      "why": "states none of the expected numbers; answered from SAM08002, expected SAM01601/SAM01603 and MAN00101 (or 17 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table SAM08002 \"Neysla í ferðaþjónustu á Íslandi eftir atvinnugreinum 2009-2025\" (updated 2026-05-26): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002.px",
+      "table_folders": [
+        "Economy/is/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002"
+      ],
+      "table_codes": [
+        "SAM08002"
+      ],
+      "unsupported": [
+        "230.967.129.551"
+      ],
+      "notes": [],
+      "facts": [
+        "Ár: 2025; Atvinnugrein: Einkennandi atvinnugreinar í ferðaþjónustu; Tegund: Innlend neysla í ferðaþjónustu, alls = 791178.999688451",
+        "Ár: 2025; Atvinnugrein: - Gistiþjónusta; Tegund: Innlend neysla í ferðaþjónustu, alls = 230967.129551604"
+      ]
+    },
+    {
+      "id": "gdp-and-births-2025-en",
+      "language": "en",
+      "level": "hard",
+      "question": "What was Iceland's gross domestic product in 2025, and how many children were born in Iceland in 2025?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 6.521570910001174,
+      "answer": "No gross domestic product figure for Iceland in 2025 is provided in the given facts. The number 11217495.804976 refers to domestic supply (at purchasers' prices) in Iceland in 2025. No number of children born in Iceland in 2025 is published.",
+      "why": "states none of the expected numbers; answered from SAM08004, expected THJ01102 (or 5 other tables with the same number) and MAN05101 (or 9 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table SAM08004 \"Total domestic supply and internal tourism consumption in Iceland 2009-2025\" (updated 2026-05-26): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08004.px",
+      "table_folders": [
+        "Economy/en/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08004"
+      ],
+      "table_codes": [
+        "SAM08004"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Year: 2025; Activity: Total; Visitors: Domestic supply (at purchasers' prices) = 11217495.804976"
+      ]
+    },
+    {
+      "id": "gdp-and-births-2025-is",
+      "language": "is",
+      "level": "hard",
+      "question": "Hver var verg landsframleiðsla á Íslandi árið 2025 og hve mörg börn fæddust á Íslandi árið 2025?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 8.454410489881411,
+      "answer": "Verg landsframleiðsla á Íslandi árið 2025 var 1.997.387.504,587,34. Mörgu börn fæddust ekki birta fyrir árið 2025 í þessum upplýsingum.",
+      "why": "states none of the expected numbers; answered from THJ01102, expected THJ01102 (or 5 other tables with the same number) and MAN05101 (or 9 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table THJ01102 \"Landsframleiðsla og þjóðartekjur 1995-2025\" (updated 2026-09-04): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/landsframl/1_landsframleidsla/THJ01102.px",
+      "table_folders": [
+        "Economy/is/thjodhagsreikningar/landsframl/1_landsframleidsla/THJ01102"
+      ],
+      "table_codes": [
+        "THJ01102"
+      ],
+      "unsupported": [
+        "1.997.387.504,587,34"
+      ],
+      "notes": [
+        "Skipting: ignored '11. Verg landsframleiðsla': not a category code of this dimension",
+        "Skipting: no category chosen, using '6. Útflutningur alls'"
+      ],
+      "facts": [
+        "Skipting: 6. Útflutningur alls; Ár: 2025 = 1997387.50458734"
+      ]
+    },
+    {
+      "id": "stays-per-inhabitant-2025-en",
+      "language": "en",
+      "level": "hard",
+      "question": "How many overnight stays in registered accommodation were there in Iceland in 2025 per inhabitant on 1 January 2025?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 8.003853806992993,
+      "answer": "The number 1,296,846 represents the total overnight stays in registered accommodation in Iceland in 2025 for the entire country. No number is published for overnight stays per inhabitant on 1 January 2025 based on the provided facts.",
+      "why": "does not state 25.2936 overnight stays per inhabitant; answered from SAM01603, expected SAM01601/SAM01603 and MAN00101 (or 17 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table SAM01603 \"Overnight stays and arrivals in all types of accommodation by municipalities 2008-2025\" (updated 2026-09-17): https://px.hagstofa.is/pxen/api/v1/en/Atvinnuvegir/ferdathjonusta/gisting/3_allartegundirgististada/SAM01603.px",
+      "table_folders": [
+        "Business_Sectors/en/ferdathjonusta/gisting/3_allartegundirgististada/SAM01603"
+      ],
+      "table_codes": [
+        "SAM01603"
+      ],
+      "unsupported": [],
+      "notes": [
+        "ignored 'Euing': not a dimension code of the table",
+        "Eining: no category chosen, using 'Overnight stays'"
+      ],
+      "facts": [
+        "Citizenship: Iceland; Year: 2025; Month: Total; Municipality: Allt landið; Unity: Overnight stays = 1296846"
+      ]
+    },
+    {
+      "id": "stays-per-inhabitant-2025-is",
+      "language": "is",
+      "level": "hard",
+      "question": "Hve margar gistinætur á skráðum gististöðum voru á Íslandi árið 2025 á hvern íbúa 1. janúar 2025?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 7.916726317955181,
+      "answer": "Árið 2025 var útgjöldinn í innlendiga ferðamanna gistiþjónustu á Íslandi 76481,8969708056 gistinætur á skráðum gististöðum á hvern íbúa 1. janúar 2025.",
+      "why": "does not state 25.2936 overnight stays per inhabitant; answered from SAM08001, expected SAM01601/SAM01603 and MAN00101 (or 17 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table SAM08001 \"Útgjöld innlendra ferðamanna á Íslandi eftir atvinnugreinum 2009-2025\" (updated 2026-05-26): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08001.px",
+      "table_folders": [
+        "Economy/is/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08001"
+      ],
+      "table_codes": [
+        "SAM08001"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Ár: 2025; Atvinnugrein: - Gistiþjónusta = 76481.8969708056"
+      ]
+    },
+    {
+      "id": "births-per-1000-2025-en",
+      "language": "en",
+      "level": "hard",
+      "question": "How many children were born in Iceland in 2025 per 1,000 inhabitants on 1 January 2025?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 7.4722052628640085,
+      "answer": "No number is published for the number of children born in Iceland in 2025 per 1,000 inhabitants on 1 January 2025. The table provided relates to aquaculture production in Iceland from 1984 to 2025, with a total production value of 64,417 for the year 2025.",
+      "why": "does not state 11.2648 births per 1,000 inhabitants; answered from SJA07001, expected MAN05101 (or 9 other tables with the same number) and MAN00101 (or 17 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table SJA07001 \"Aquaculture production in Iceland 1984-2025\" (updated 2026-05-20): https://px.hagstofa.is/pxen/api/v1/en/Atvinnuvegir/sjavarutvegur/fiskeldi/SJA07001.px",
+      "table_folders": [
+        "Business_Sectors/en/sjavarutvegur/fiskeldi/SJA07001"
+      ],
+      "table_codes": [
+        "SJA07001"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Species: Total; Year: 2025 = 64417"
+      ]
+    },
+    {
+      "id": "births-per-1000-2025-is",
+      "language": "is",
+      "level": "hard",
+      "question": "Hve mörg börn fæddust á Íslandi árið 2025 á hverja 1.000 íbúa 1. janúar 2025?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 4.752643144922331,
+      "answer": "Í 2025 fæddist 4387 börn árið á hverja 1.000 íbúa 1. janúar.",
+      "why": "does not state 11.2648 births per 1,000 inhabitants; answered from MAN05102, expected MAN05101 (or 9 other tables with the same number) and MAN00101 (or 17 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table MAN05102 \"Lifandi fæddir, öll börn og frumburðir eftir aldri föður 1981-2025\" (updated 2026-05-05): https://px.hagstofa.is/pxis/api/v1/is/Ibuar/Faeddirdanir/Faeddir/faedingar/MAN05102.px",
+      "table_folders": [
+        "Population/is/Faeddirdanir/Faeddir/faedingar/MAN05102"
+      ],
+      "table_codes": [
+        "MAN05102"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Eining: ignored 'Öll börn': not a category code of this dimension",
+        "Eining: no category chosen, using 'Öll börn'",
+        "Aldur: no category chosen, using 'Alls'"
+      ],
+      "facts": [
+        "Eining: Öll börn; Aldur: Alls; Ár: 2025 = 4387"
+      ]
+    },
+    {
+      "id": "wages-and-unemployment-2026-en",
+      "language": "en",
+      "level": "hard",
+      "question": "What was the wage index in August 2026, and what was the unemployment rate in Iceland in the second quarter of 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 7.010831453138962,
+      "answer": "The wage index for August 2026 is not published. The activity rate in Iceland for the second quarter of 2026 was 81.1%.",
+      "why": "states none of the expected numbers; answered from VIN00910, expected LAU04000 and VIN00910/VIN00920",
+      "error": "",
+      "source": "Statistics Iceland, table VIN00910 \"Activity rate, employment rate, underemployment rate and unemployment rate by quarters 2003-2026\" (updated 2026-09-04): https://px.hagstofa.is/pxen/api/v1/en/Samfelag/vinnumarkadur/vinnumarkadsrannsokn/2_arsfjordungstolur/VIN00910.px",
+      "table_folders": [
+        "Society/en/vinnumarkadur/vinnumarkadsrannsokn/2_arsfjordungstolur/VIN00910"
+      ],
+      "table_codes": [
+        "VIN00910"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Aldur: ignored 'Alls': not a category code of this dimension",
+        "Aldur: no category chosen, using '16-74'",
+        "Hlutfall, %: no category chosen, using 'Activity rate, % (of population)'"
+      ],
+      "facts": [
+        "Quarter: 2026Q2; Region: Total; Sex: Males and females; Age: 16-74; Rate: Activity rate, % (of population) = 81.1"
+      ]
+    },
+    {
+      "id": "wages-and-unemployment-2026-is",
+      "language": "is",
+      "level": "hard",
+      "question": "Hver var launavísitalan í ágúst 2026 og hvert var atvinnuleysi á Íslandi á öðrum ársfjórðungi 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 6.182954153046012,
+      "answer": "Launavísitalan í ágúst 2026 var 11.5. Atvinnuleysi á Íslandi á öðrum ársfjórðungi 2026 er ekki birt.",
+      "why": "states none of the expected numbers; answered from VIS02504, expected LAU04000 and VIN00910/VIN00920",
+      "error": "",
+      "source": "Statistics Iceland, table VIS02504 \"Sundurliðun breytinga meginflokka, ágúst 2025-2026\" (updated 2026-09-21): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02504.px",
+      "table_folders": [
+        "Economy/is/visitolur/2_samraemdvnv/samraemdvnv/VIS02504"
+      ],
+      "table_codes": [
+        "VIS02504"
+      ],
+      "unsupported": [],
+      "notes": [],
+      "facts": [
+        "Land: Ísland; Undirvísitala: 10 Menntun = 11.5"
+      ]
+    },
+    {
+      "id": "gdp-and-stays-2025-en",
+      "language": "en",
+      "level": "hard",
+      "question": "What was Iceland's gross domestic product in 2025, and how many overnight stays were there in registered accommodation in Iceland in 2025?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 4.664802867919207,
+      "answer": "In 2025, Iceland's gross domestic product was 8,863,756.504976 million Icelandic krónur. The output of domestic producers in the accommodation sector for the same year was 199,820.876369011 million Icelandic krónur.",
+      "why": "states none of the expected numbers; answered from SAM08004, expected THJ01102 (or 5 other tables with the same number) and SAM01601/SAM01603",
+      "error": "",
+      "source": "Statistics Iceland, table SAM08004 \"Total domestic supply and internal tourism consumption in Iceland 2009-2025\" (updated 2026-05-26): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08004.px",
+      "table_folders": [
+        "Economy/en/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08004"
+      ],
+      "table_codes": [
+        "SAM08004"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Flokkar: no category chosen, using 'Output of domestic producers (at basic prices)'"
+      ],
+      "facts": [
+        "Year: 2025; Activity: Total; Visitors: Output of domestic producers (at basic prices) = 8863756.504976",
+        "Year: 2025; Activity: - Accommodation; Visitors: Output of domestic producers (at basic prices) = 199820.876369011"
+      ]
+    },
+    {
+      "id": "gdp-and-stays-2025-is",
+      "language": "is",
+      "level": "hard",
+      "question": "Hver var verg landsframleiðsla á Íslandi árið 2025 og hve margar gistinætur voru á skráðum gististöðum á Íslandi árið 2025?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 6.160082040121779,
+      "answer": "Verg landsframleiðsla á Íslandi var 791178.999688451 gistinætur árið 2025. Margar gistinætur á skráðum gististöðum var 230967.129551604 á samanlagt.",
+      "why": "states none of the expected numbers; answered from SAM08002, expected THJ01102 (or 5 other tables with the same number) and SAM01601/SAM01603",
+      "error": "",
+      "source": "Statistics Iceland, table SAM08002 \"Neysla í ferðaþjónustu á Íslandi eftir atvinnugreinum 2009-2025\" (updated 2026-05-26): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002.px",
+      "table_folders": [
+        "Economy/is/thjodhagsreikningar/ferdathjonustureikningar/ferdathjonustureikningar/SAM08002"
+      ],
+      "table_codes": [
+        "SAM08002"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Tegund: no category chosen, using 'Innlend neysla í ferðaþjónustu, alls'"
+      ],
+      "facts": [
+        "Ár: 2025; Atvinnugrein: Einkennandi atvinnugreinar í ferðaþjónustu; Tegund: Innlend neysla í ferðaþjónustu, alls = 791178.999688451",
+        "Ár: 2025; Atvinnugrein: - Gistiþjónusta; Tegund: Innlend neysla í ferðaþjónustu, alls = 230967.129551604"
+      ]
+    },
+    {
+      "id": "births-and-immigrants-2026-en",
+      "language": "en",
+      "level": "hard",
+      "question": "How many children were born in Iceland in 2025, and how many immigrants lived in Iceland on 1 January 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 6.967556764837354,
+      "answer": "No number for births in Iceland in 2025 is published. The number of immigrants enrolled in secondary school in 2017 was 1144, and the number enrolled in tertiary school was 1722.",
+      "why": "states none of the expected numbers; answered from SKO04145, expected MAN05101 (or 9 other tables with the same number) and MAN43000 (or 3 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table SKO04145 \"Number of immigrants enrolled in school by school level and length of stay 2008-2017\" (updated 2022-06-10): https://px.hagstofa.is/pxen/api/v1/en/Samfelag/skolamal/4_haskolastig/0_hsNemendur/SKO04145.px",
+      "table_folders": [
+        "Society/en/skolamal/4_haskolastig/0_hsNemendur/SKO04145"
+      ],
+      "table_codes": [
+        "SKO04145"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Ár: ignored '2025': not a category code of this dimension",
+        "Ár: no category chosen, using '2017'"
+      ],
+      "facts": [
+        "Year: 2017; School level: Count in secondary school; Length of stay in Iceland: Total = 1144",
+        "Year: 2017; School level: Count in tertiary school; Length of stay in Iceland: Total = 1722"
+      ]
+    },
+    {
+      "id": "births-and-immigrants-2026-is",
+      "language": "is",
+      "level": "hard",
+      "question": "Hve mörg börn fæddust á Íslandi árið 2025 og hve margir innflytjendur bjuggu á Íslandi 1. janúar 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 10.410985547117889,
+      "answer": "Írið 2025 fæddist 139.663 börn í Höfuðborgarsvæði. Íinni daginn 1. janúar 2026 var 137.476 innflytjendur í Höfuðborgarsvæði.",
+      "why": "states none of the expected numbers; answered from VIN10012, expected MAN05101 (or 9 other tables with the same number) and MAN43000 (or 3 other tables with the same number)",
+      "error": "",
+      "source": "Statistics Iceland, table VIN10012 \"Fjöldi starfandi með lögheimili á Íslandi samkvæmt skrám eftir mánuðum, kyni, aldri, bakgrunni og búsetu 2003-2026\" (updated 2026-10-07): https://px.hagstofa.is/pxis/api/v1/is/Samfelag/vinnumarkadur/vinnuaflskraargogn/VIN10012.px",
+      "table_folders": [
+        "Society/is/vinnumarkadur/vinnuaflskraargogn/VIN10012"
+      ],
+      "table_codes": [
+        "VIN10012"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Búseta: ignored 'Alls': not a category code of this dimension",
+        "Búseta: no category chosen, using 'Höfuðborgarsvæði'",
+        "Kyn: ignored 'Alls': not a category code of this dimension",
+        "Kyn: no category chosen, using 'Alls'",
+        "Aldursflokkar: ignored 'Alls': not a category code of this dimension",
+        "Aldursflokkar: no category chosen, using 'Alls'",
+        "Bakgrunnur: ignored 'Alls': not a category code of this dimension",
+        "Bakgrunnur: no category chosen, using 'Alls'"
+      ],
+      "facts": [
+        "Mánuður: 2025M12; Búseta: Höfuðborgarsvæði; Kyn: Alls; Aldursflokkar: Alls; Bakgrunnur: Alls = 139663",
+        "Mánuður: 2026M01; Búseta: Höfuðborgarsvæði; Kyn: Alls; Aldursflokkar: Alls; Bakgrunnur: Alls = 137476"
+      ]
+    },
+    {
+      "id": "cpi-and-unemployment-2026-en",
+      "language": "en",
+      "level": "hard",
+      "question": "What was the consumer price index in September 2026, and what was the unemployment rate in Iceland in the second quarter of 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 2.795003310078755,
+      "answer": "The consumer price index for September 2026 was not published. The unemployment rate in Iceland for the second quarter of 2026 was also not published.",
+      "why": "states none of the expected numbers; answered from VIS02506, expected VIS01000/VIS01002 and VIN00910/VIN00920",
+      "error": "",
+      "source": "Statistics Iceland, table VIS02506 \"Harmonised index of consumer prices for Iceland, subindices from 2016 -\" (updated 2026-09-21): https://px.hagstofa.is/pxen/api/v1/en/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02506.px",
+      "table_folders": [
+        "Economy/en/visitolur/2_samraemdvnv/samraemdvnv/VIS02506"
+      ],
+      "table_codes": [
+        "VIS02506"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Undirvísitala: ignored 'CP00': not a category code of this dimension",
+        "Undirvísitala: no category chosen, using '01 Food and non-alcoholic beverages'",
+        "Mánuður: ignored '2026M09': not a category code of this dimension",
+        "Mánuður: no category chosen, using '2026M08'"
+      ],
+      "facts": [
+        "Subindex: 01 Food and non-alcoholic beverages; Month: 2026M08 = 104.91"
+      ]
+    },
+    {
+      "id": "cpi-and-unemployment-2026-is",
+      "language": "is",
+      "level": "hard",
+      "question": "Hver var vísitala neysluverðs í september 2026 og hvert var atvinnuleysi á Íslandi á öðrum ársfjórðungi 2026?",
+      "correct": false,
+      "verdict": "WRONG",
+      "numbers_right": false,
+      "right_table": false,
+      "seconds": 8.112867092015222,
+      "answer": "Vísitala neysluverðs í september 2019 var 263.602877222961. Atvinnuleysi á Íslandi á öðrum ársfjórðungi 2026 er ekki prentaður sem tala í gefnum fakum.",
+      "why": "states none of the expected numbers; answered from VIS01303, expected VIS01000/VIS01002 and VIN00910/VIN00920",
+      "error": "",
+      "source": "Statistics Iceland, table VIS01303 \"Vísitala neysluverðs, undirvísitölur frá 2002-2019\" (updated 2020-10-06): https://px.hagstofa.is/pxis/api/v1/is/Efnahagur/visitolur/1_vnv/4_eldraefni/VIS01303.px",
+      "table_folders": [
+        "Economy/is/visitolur/1_vnv/4_eldraefni/VIS01303"
+      ],
+      "table_codes": [
+        "VIS01303"
+      ],
+      "unsupported": [],
+      "notes": [
+        "Ár: ignored '2026': not a category code of this dimension",
+        "Ár: no category chosen, using '2019'"
+      ],
+      "facts": [
+        "Ár: 2019; Mánuður: September; Undirvísitala: Vísitala neysluverðs = 263.602877222961"
+      ]
+    }
+  ]
+}
