@@ -35,9 +35,16 @@ For every dimension, choose the codes of the categories the question needs:
 - For a time dimension (years, months, ...), choose the periods the question asks
   about; if it names none, choose the most recent period.
 - Use the codes exactly as listed, never the labels.
+- A calculation needs all its input cells: select both periods for a change, the
+  subgroup AND total for a share, and all named categories for a sum or comparison.
+- Also classify EVERY dimension as explicit (the question specifies a category,
+  measure, group, place, sex, age or period), unspecified (no restriction at all),
+  or uncertain. Treat paraphrases as explicit; use uncertain when in doubt.
+  Never mark a named metric, sex, age, place or period unspecified.
 
 Answer with JSON only, in this shape:
-{"categories": {"<dimension code>": ["<category code>", ...]}}"""
+{"categories": {"<dimension code>": ["<category code>", ...]},
+ "dimension_scope": {"<dimension code>": "explicit|unspecified|uncertain"}}"""
 
 CHOOSE_CATEGORIES_SCHEMA = {
     "type": "object",
@@ -45,9 +52,16 @@ CHOOSE_CATEGORIES_SCHEMA = {
         "categories": {
             "type": "object",
             "additionalProperties": {"type": "array", "items": {"type": "string"}},
-        }
+        },
+        "dimension_scope": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "string",
+                "enum": ["explicit", "unspecified", "uncertain"],
+            },
+        },
     },
-    "required": ["categories"],
+    "required": ["categories", "dimension_scope"],
 }
 
 WRITE_ANSWER_SYSTEM = """\
