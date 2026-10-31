@@ -37,6 +37,18 @@ class ModelError(Exception):
     """A model could not be reached, refused the request, or gave an unusable answer."""
 
 
+class ModelContentError(ModelError):
+    """The service responded, but its generated content cannot be used.
+
+    Keep this distinct from transport/HTTP errors; the object-only parsing rule
+    below is unchanged. A caller may safely fall back on already fetched facts.
+    """
+
+    def __init__(self, message: str, *, raw_reply: Any = None) -> None:
+        super().__init__(message)
+        self.raw_reply = raw_reply
+
+
 @dataclass(frozen=True)
 class Endpoint:
     """Where one model is served."""
@@ -252,9 +264,13 @@ def _message_content(reply: Any) -> str:
     try:
         content = reply["choices"][0]["message"]["content"]
     except (KeyError, IndexError, TypeError) as e:
-        raise ModelError(f"unexpected reply from the chat model: {reply!r:.300}") from e
+        raise ModelContentError(
+            f"unexpected reply from the chat model: {reply!r:.300}", raw_reply=reply
+        ) from e
     if not isinstance(content, str):  # e.g. null when the model only called a tool
-        raise ModelError(f"the chat model's reply has no text: {reply!r:.300}")
+        raise ModelContentError(
+            f"the chat model's reply has no text: {reply!r:.300}", raw_reply=reply
+        )
     return content
 
 
@@ -262,11 +278,17 @@ def _parse_json_object(content: str) -> dict[str, Any]:
     """The JSON object in a model's reply, allowing for text or code fences around it."""
     start, end = content.find("{"), content.rfind("}")
     if start < 0 or end < start:
-        raise ModelError(f"the model did not answer with JSON: {content!r:.300}")
+        raise ModelContentError(
+            f"the model did not answer with JSON: {content!r:.300}", raw_reply=content
+        )
     try:
         value = json.loads(content[start : end + 1])
     except json.JSONDecodeError as e:
-        raise ModelError(f"the model's JSON could not be read: {content!r:.300}") from e
+        raise ModelContentError(
+            f"the model's JSON could not be read: {content!r:.300}", raw_reply=content
+        ) from e
     if not isinstance(value, dict):
-        raise ModelError(f"the model's JSON is not an object: {content!r:.300}")
+        raise ModelContentError(
+            f"the model's JSON is not an object: {content!r:.300}", raw_reply=content
+        )
     return value

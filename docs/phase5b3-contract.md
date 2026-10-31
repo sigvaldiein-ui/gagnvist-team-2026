@@ -53,3 +53,34 @@ may still score correct under the unchanged evaluator; report that limitation.
 
 A40 stays running at Silli's instruction. Kiddi independently reviews. Only Silli
 may authorize a later merge. Performance gates are targets, not promised outcomes.
+
+## Approved four-point repair after the incomplete attempt
+
+Silli explicitly approved Kidda/Gisli's four-point repair and a fresh 60-question
+run. This section supersedes the original planner shape and fallback above.
+
+The planner returns an object with operation in none/difference/pct_change/share/ratio
+and operands containing at least one distinct zero-based integer index into fetched
+facts. Python rejects booleans, floats, missing/extra keys, unknown operations and
+out-of-range indices before lookup. Binary operations require two operands. The
+existing evidence/unit/period checks remain; division rejects absolute denominators
+at or below 1e-12. The prompt shows both a calculation and an explicit none example.
+
+Invalid/empty content, failed validation and none plans invoke the unchanged 5B-2
+factual writer. Notes record plan_fallback; full cell_references and period_mode
+remain intact. Unsupported-number checks are unchanged. A malformed fallback writer
+payload displays fetched facts without invented values. This is not a guarantee of
+non-regression: category selection and model wording still affect the answers.
+
+ModelContentError is a ModelError subtype for generated-content failures. The
+upstream object-only parser and its acceptance rules remain unchanged; HTTP and
+transport failures retain ModelError and are never swallowed by planner recovery.
+The measurement wrapper records both successful and failed calls and stops only
+when a model service fails. Other per-question errors are recorded by the unchanged
+evaluator and do not stop the fixed 60-case sequence. No question is retried.
+
+New tests exercise the actual ModelClient and an end-to-end Pipeline with a synthetic
+HTTP transport, including [], {}, malformed content, invalid indices, missing
+operands, zero/near-zero division and propagated HTTP/connect/timeout failures.
+All prior 460 tests remain. One executable repair commit is frozen before the new
+measurement, with no post-measurement tuning. Prior results remain unchanged.

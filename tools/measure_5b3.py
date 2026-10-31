@@ -16,6 +16,7 @@ import numpy as np
 from gagnvist.answering.pipeline import Pipeline
 from gagnvist.config import load_settings
 from gagnvist.evaluate import evaluate, read_questions
+from gagnvist.models.client import ModelContentError, ModelError
 
 
 def sha(path):
@@ -34,6 +35,7 @@ def group(rows):
         'other_table': sum(r['verdict'] == 'other table' for r in rows),
         'unsupported_rows': sum(bool(r['unsupported']) for r in rows),
         'unsupported_count': sum(len(r['unsupported']) for r in rows),
+        'plan_fallback_rows': sum(any(n.startswith('plan_fallback:') for n in r['notes']) for r in rows),
         'verified_calculations': sum(c['status']=='verified' and c['operation']!='value'
                                      for r in rows for c in r['calculations']),
         'rejected_calculations': sum(c['status']=='rejected' for r in rows for c in r['calculations']),
@@ -45,18 +47,43 @@ def group(rows):
 class RecordingClient:
     def __init__(self, client, trace):
         self.client, self.trace, self.question_id = client, trace, ''
+        self.service_error = None
+
+    def _record(self, kind, messages, call, schema=None):
+        started = time.perf_counter()
+        event = {'question_id':self.question_id, 'kind':kind,
+                 'messages':messages, 'schema':schema}
+        try:
+            result = call()
+            event['reply'] = result
+            return result
+        except ModelError as error:
+            event['error'] = str(error)
+            event['error_kind'] = 'content' if isinstance(error, ModelContentError) else 'service'
+            if isinstance(error, ModelContentError):
+                event['raw_reply'] = error.raw_reply
+            else:
+                self.service_error = str(error)
+            raise
+        finally:
+            event['seconds'] = time.perf_counter()-started
+            self.trace.write(json.dumps(event,ensure_ascii=False)+'\n')
+            self.trace.flush()
 
     def chat_json(self, messages, schema, **kwargs):
-        started = time.perf_counter()
-        result = self.client.chat_json(messages, schema, **kwargs)
-        self.trace.write(json.dumps({'question_id': self.question_id,
-            'seconds': time.perf_counter()-started, 'messages': messages,
-            'schema': schema, 'reply': result}, ensure_ascii=False)+'\n')
-        self.trace.flush()
-        return result
+        return self._record('chat_json', messages,
+                            lambda: self.client.chat_json(messages, schema, **kwargs), schema)
+
+    def chat(self, messages, **kwargs):
+        return self._record('chat', messages, lambda: self.client.chat(messages, **kwargs))
 
     def embed(self, texts):
-        return self.client.embed(texts)
+        try:
+            return self.client.embed(texts)
+        except ModelError as error:
+            if not isinstance(error, ModelContentError):
+                self.service_error = str(error)
+            raise
 
     def close(self):
         self.client.close()
@@ -129,10 +156,11 @@ def main():
                                         'completed':len(rows),'gpu':gpu})+'\n')
             print(json.dumps({'n':len(rows),'id':row['id'],'verdict':row['verdict'],
                               'seconds':row['seconds'],'error':row['error']}),flush=True)
-            if row['error']:
-                raise RuntimeError('Stopped on execution error: '+row['error'])
+            if recorder.service_error:
+                raise RuntimeError('Stopped on service error: '+recorder.service_error)
         for question in questions:
             recorder.question_id = question.id
+            recorder.service_error = None
             evaluate(pipeline, [question], on_outcome=callback)
     cells = {l:{d:group([r for r in rows if r['language']==l and r['level']==d])
                 for d in ['easy','medium','hard']} for l in ['is','en']}
@@ -165,10 +193,10 @@ def main():
         'by_language_and_level':cells,'comparisons':comparisons,'gates':gates,
         'all_gates_pass':all(gates.values()),
         'candidate_order_unchanged':sum(r['same_candidate_order_as_5b2'] for r in rows),
-        'scope':'5B-3 category guard, cell-reference calculation gate and deterministic templates. No retrieval changes or multi-table expansion.',
+        'scope':'5B-3 four-point JSON recovery repair: validated operation/operands, factual fallback and service-only measurement stop. Retrieval/category selection/evaluator unchanged from 94346a6.',
         'limitations':['Model semantic choices are not certified by numerical validation.',
                        'No sums, unit conversions or new multi-table support.',
-                       'Rejected/empty plans display fetched facts with an explicit warning; official scoring may still count their numbers.',
+                       'Invalid or none plans use the unchanged 5B-2 factual writer; notes and unsupported checks are preserved. This does not guarantee non-regression.',
                        'unsupported_without_calculations preserves the raw check; unsupported also permits numbers computed by the validated gate.'],
         'cases':rows}
     assert not git(repo,'diff','HEAD','--name-only')
